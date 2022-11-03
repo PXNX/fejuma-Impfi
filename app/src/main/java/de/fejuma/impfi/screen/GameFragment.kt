@@ -14,17 +14,16 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.ActivityMainBinding
-import de.fejuma.impfi.databinding.FragmentStartBinding
+import de.fejuma.impfi.databinding.FragmentGameBinding
 
 
-class StartFragment : Fragment() {
+class GameFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
 
-    private var _binding: FragmentStartBinding? = null
+    private var _binding: FragmentGameBinding? = null
     // This property is only valid between onCreateView and
 // onDestroyView.
     private val binding get() = _binding!!
@@ -34,12 +33,23 @@ class StartFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStartBinding.inflate(inflater, container, false)
+        _binding = FragmentGameBinding.inflate(inflater, container, false)
         val view = binding.root
-       binding.btStart.apply{
-           setOnClickListener {
-               findNavController().navigate(R.id.route_start_game)
-           }
+        binding.composeView.apply {
+            // Dispose of the Composition when the view's LifecycleOwner
+            // is destroyed
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                // In Compose world
+                MaterialTheme() {
+                    Button({
+
+                    }){
+                        Text("Hello Compose!")
+                    }
+
+                }
+            }
         }
         return view
     }
