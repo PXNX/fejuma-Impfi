@@ -13,6 +13,7 @@
         android:theme="@style/Theme.Impfi"
         tools:targetApi="31">
         <activity
+            android:screenOrientation="nosensor"
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

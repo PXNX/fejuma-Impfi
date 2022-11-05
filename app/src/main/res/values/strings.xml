@@ -2,4 +2,6 @@
     <string name="app_name">Impfi</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="field_amount">Felder</string>
+    <string name="mines_amount">Viren</string>
 </resources>
