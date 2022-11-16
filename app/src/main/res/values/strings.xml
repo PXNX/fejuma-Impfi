@@ -4,4 +4,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="field_amount">Felder</string>
     <string name="mines_amount">Viren</string>
+    <string name="highscore_user">Nutzername</string>
+    <string name="highscore_time">Benötigte Zeit</string>
 </resources>

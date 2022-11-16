@@ -1,6 +1,8 @@
 package de.fejuma.impfi.screen
 
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,21 +20,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.fragment.app.viewModels
 import de.fejuma.impfi.R
-import de.fejuma.impfi.databinding.FragmentGameBinding
+import de.fejuma.impfi.databinding.FragmentScoreboardBinding
 import de.fejuma.impfi.ui.component.DifficultyCard
+import de.fejuma.impfi.ui.component.HighscoreTable
 
+class ScoreboardFragment : Fragment() {
 
-class GameFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+    private val viewModel by viewModels<ScoreboardViewModel>()
 
-
-    private var _binding: FragmentGameBinding? = null
+    private var _binding: FragmentScoreboardBinding? = null
 
     // This property is only valid between onCreateView and
-// onDestroyView.
+    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -42,7 +41,7 @@ class GameFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentGameBinding.inflate(inflater, container, false)
+        _binding = FragmentScoreboardBinding.inflate(inflater, container, false)
         val view = binding.root
         binding.composeView.apply {
             // Dispose of the Composition when the view's LifecycleOwner
@@ -59,28 +58,8 @@ class GameFragment : Fragment() {
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
 
-                            var difficultySelection by remember { mutableStateOf(0) }
+                            HighscoreTable(difficultyName = "Einfach")
 
-                            val difficulties = listOf(
-                                Difficulty("Leicht", 69, 10),
-                                Difficulty("Mittel", 200, 20),
-                                Difficulty("Schwer", 400, 30)
-                            )
-
-                            repeat(difficulties.size) {
-                                // Modifier.weight(1f,false)
-                                DifficultyCard(
-                                    difficulties[it],
-                                    difficultySelection == it
-                                ) { difficultySelection = it }
-                            }
-
-                            
-                        }
-                        Button(onClick = { 
-                            findNavController().navigate(R.id.action_game_scoreboard)
-                        }) {
-                            Text(text = "Scoreboard")
                         }
                     }
 
@@ -96,7 +75,4 @@ class GameFragment : Fragment() {
         _binding = null
     }
 
-
 }
-
-data class Difficulty(val name: String, val fieldAmount: Int, val minesAmount: Int)
