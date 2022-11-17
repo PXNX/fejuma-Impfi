@@ -1,4 +1,4 @@
-package de.fejuma.impfi.screen
+package de.fejuma.impfi.ui.screen.scoreboard
 
 import androidx.lifecycle.ViewModel
 

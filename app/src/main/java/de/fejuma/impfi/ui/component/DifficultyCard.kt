@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.fejuma.impfi.R
-import de.fejuma.impfi.screen.Difficulty
+import de.fejuma.impfi.model.Difficulty
 
 
 @Composable

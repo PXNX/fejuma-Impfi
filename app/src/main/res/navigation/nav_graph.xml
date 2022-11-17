@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/startFragment"
-        android:name="de.fejuma.impfi.screen.StartFragment"
+        android:name="de.fejuma.impfi.ui.screen.StartFragment"
         android:label="fragment_start"
         tools:layout="@layout/fragment_start">
         <action
@@ -16,16 +16,16 @@
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
-        android:name="de.fejuma.impfi.screen.GameFragment"
+        android:name="de.fejuma.impfi.ui.screen.GameFragment"
         android:label="fragment_game"
-        tools:layout="@layout/fragment_game" >
+        tools:layout="@layout/fragment_game">
         <action
             android:id="@+id/action_game_scoreboard"
             app:destination="@id/scoreboardFragment" />
     </fragment>
     <fragment
         android:id="@+id/scoreboardFragment"
-        android:name="de.fejuma.impfi.screen.ScoreboardFragment"
+        android:name="de.fejuma.impfi.ui.screen.scoreboard.ScoreboardFragment"
         android:label="fragment_scoreboard"
         tools:layout="@layout/fragment_scoreboard" />
 </navigation>

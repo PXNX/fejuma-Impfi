@@ -1,4 +1,4 @@
-package de.fejuma.impfi.screen
+package de.fejuma.impfi.ui.screen
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentGameBinding
+import de.fejuma.impfi.model.Difficulty
 import de.fejuma.impfi.ui.component.DifficultyCard
 
 
@@ -62,7 +63,7 @@ class GameFragment : Fragment() {
                             var difficultySelection by remember { mutableStateOf(0) }
 
                             val difficulties = listOf(
-                                Difficulty("Leicht", 69, 10),
+                                Difficulty("Leicht", 69, 10), //TODO: replace with string resource
                                 Difficulty("Mittel", 200, 20),
                                 Difficulty("Schwer", 400, 30)
                             )
@@ -75,9 +76,9 @@ class GameFragment : Fragment() {
                                 ) { difficultySelection = it }
                             }
 
-                            
+
                         }
-                        Button(onClick = { 
+                        Button(onClick = {
                             findNavController().navigate(R.id.action_game_scoreboard)
                         }) {
                             Text(text = "Scoreboard")
@@ -99,4 +100,3 @@ class GameFragment : Fragment() {
 
 }
 
-data class Difficulty(val name: String, val fieldAmount: Int, val minesAmount: Int)

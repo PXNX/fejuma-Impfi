@@ -1,8 +1,6 @@
-package de.fejuma.impfi.screen
+package de.fejuma.impfi.ui.screen.scoreboard
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,17 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentScoreboardBinding
-import de.fejuma.impfi.ui.component.DifficultyCard
+import de.fejuma.impfi.model.HighScore
 import de.fejuma.impfi.ui.component.HighscoreTable
 
 class ScoreboardFragment : Fragment() {
@@ -58,7 +52,12 @@ class ScoreboardFragment : Fragment() {
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
 
-                            HighscoreTable(difficultyName = "Einfach")
+                            val scores = listOf(
+                                HighScore("Rainer Zufall", 69),
+                                HighScore("Do Ping", 420)
+                            )
+
+                            HighscoreTable(difficultyName = "Einfach", scores = scores)
 
                         }
                     }
@@ -76,3 +75,4 @@ class ScoreboardFragment : Fragment() {
     }
 
 }
+

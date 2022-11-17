@@ -1,4 +1,4 @@
-package de.fejuma.impfi.screen
+package de.fejuma.impfi.ui.screen
 
 import android.os.Bundle
 import android.view.LayoutInflater
