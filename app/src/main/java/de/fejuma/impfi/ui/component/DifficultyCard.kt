@@ -5,73 +5,89 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.fejuma.impfi.R
+import de.fejuma.impfi.model.Difficulty
 
 
 @Composable
-fun DifficultyCard(
-    title: String,
-    fieldSize: Int,
-    minesAmount: Int,
-    setActive: () -> Unit,
-    isActive: Boolean
-){
+fun RowScope.DifficultyCard(
+    difficulty: Difficulty,
+    isActive: Boolean,
+    setActive: () -> Unit
+) {
 
-     var backgroundColor: Color? = null
-    var strokeColor: Color? = null
+    val backgroundColor: Color?
+    val strokeColor: Color?
+    val textColor: Color?
 
-    if (isActive){
+    if (isActive) {
         backgroundColor = colorResource(id = R.color.secondary)
         strokeColor = colorResource(id = R.color.primary)
-    }
-    else{
+        textColor = colorResource(id = R.color.black)
+    } else {
         backgroundColor = colorResource(id = R.color.lightgray)
-        //TODO(MAX): Set Color 4F4F4F; Set FontColor
         strokeColor = colorResource(id = R.color.darkgray)
+        textColor = colorResource(id = R.color.darkgray)
     }
 
-  Column(modifier = Modifier
-      .clip(RoundedCornerShape(4.dp))
-      .background(backgroundColor)
-      .border(1.dp, strokeColor)
-      .clickable { setActive() }
-      .padding(2.dp)
-      ,
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center
-      ) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .weight(1f, false)
+        .clip(RoundedCornerShape(6.dp))
+        /* .indication(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = rememberRipple(bounded = true)
+        ) */
+        .clickable { setActive() }
 
-      Text(text = title,
-      fontWeight = FontWeight.Bold,
-      fontSize = 20.sp,
-      modifier = Modifier.weight(1f, fill = false))
-      
-      Text(text = "$fieldSize ${stringResource(id = R.string.field_amount)}",
-          modifier = Modifier.weight(1f, fill = false))
 
-      Text(text = "$minesAmount ${stringResource(id = R.string.mines_amount)}",
-          modifier = Modifier.weight(1f, fill = false))
-      
+        .background(backgroundColor)
+        .border(1.dp, strokeColor, RoundedCornerShape(6.dp))
 
-  }
+
+        .padding(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Text(
+            text = difficulty.name,
+            modifier = Modifier.weight(1f, fill = false),
+            color = textColor,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+        )
+
+        Text(
+            text = "${difficulty.fieldAmount} ${stringResource(id = R.string.field_amount)}",
+            modifier = Modifier.weight(1f, fill = false),
+            color = textColor,
+            fontSize = 10.sp,
+        )
+
+        Text(
+            text = "${difficulty.minesAmount} ${stringResource(id = R.string.mines_amount)}",
+            modifier = Modifier.weight(1f, fill = false),
+            color = textColor,
+            fontSize = 10.sp,
+        )
+
+
+    }
 
 }
