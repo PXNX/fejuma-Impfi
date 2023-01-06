@@ -11,8 +11,14 @@
         android:label="fragment_start"
         tools:layout="@layout/fragment_start">
         <action
-            android:id="@+id/route_start_game"
+            android:id="@+id/action_start_game"
             app:destination="@id/gameFragment" />
+        <action
+            android:id="@+id/action_start_scoreboard"
+            app:destination="@id/scoreboardFragment" />
+        <action
+            android:id="@+id/action_start_about"
+            app:destination="@id/aboutFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
@@ -28,4 +34,9 @@
         android:name="de.fejuma.impfi.ui.screen.scoreboard.ScoreboardFragment"
         android:label="fragment_scoreboard"
         tools:layout="@layout/fragment_scoreboard" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="de.fejuma.impfi.ui.screen.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" />
 </navigation>

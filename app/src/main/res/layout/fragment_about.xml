@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.screen.GameFragment">
+    tools:context=".ui.screen.AboutFragment">
 
     <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/compose_view_game"
+        android:id="@+id/compose_view_about"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

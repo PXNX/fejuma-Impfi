@@ -9,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import de.fejuma.impfi.R
-import de.fejuma.impfi.model.HighScore
+import de.fejuma.impfi.model.Highscore
 
 @Composable
 fun HighscoreTable(
     difficultyName: String,
-    scores: List<HighScore>
+    scores: List<Highscore>
 ) {
 
     LazyColumn() {

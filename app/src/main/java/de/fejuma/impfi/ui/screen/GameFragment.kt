@@ -4,13 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
@@ -18,14 +24,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentGameBinding
-import de.fejuma.impfi.model.Difficulty
-import de.fejuma.impfi.ui.component.DifficultyCard
+import de.fejuma.impfi.ui.component.MineField
+import de.fejuma.impfi.ui.component.MineFieldState
+import de.fejuma.impfi.ui.component.ZoomBox
 
 
 class GameFragment : Fragment() {
@@ -45,7 +54,7 @@ class GameFragment : Fragment() {
     ): View {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
         val view = binding.root
-        binding.composeView.apply {
+        binding.composeViewGame.apply {
             // Dispose of the Composition when the view's LifecycleOwner
             // is destroyed
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -53,35 +62,99 @@ class GameFragment : Fragment() {
                 // In Compose world
                 MaterialTheme() {
                     Column(modifier = Modifier.fillMaxSize()) {
+
+
                         Row(
                             Modifier
-                                .padding(start = 22.dp, end = 22.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
+                                .padding(12.dp)
+                                .fillMaxWidth()) {
+                            Column(Modifier.weight(1f)) {
+                                Row {
+                                    Icon(
+                                        painterResource(id = R.drawable.alarm),
+                                        contentDescription = ""
+                                    )
+                                    Text("4:20", Modifier.padding(start = 10.dp))
+                                }
 
-                            var difficultySelection by remember { mutableStateOf(0) }
+                                Row(Modifier.padding(top = 6.dp)) {
+                                    Icon(
+                                        painterResource(id = R.drawable.virus_outline),
+                                        contentDescription = "",
 
-                            val difficulties = listOf(
-                                Difficulty("Leicht", 69, 10), //TODO: replace with string resource
-                                Difficulty("Mittel", 200, 20),
-                                Difficulty("Schwer", 400, 30)
-                            )
+                                    )
 
-                            repeat(difficulties.size) {
-                                // Modifier.weight(1f,false)
-                                DifficultyCard(
-                                    difficulties[it],
-                                    difficultySelection == it
-                                ) { difficultySelection = it }
+                                    Text("10", Modifier.padding(start = 10.dp))
+                                }
                             }
 
+                            Button(onClick = { /*TODO*/ }) {
+                                Icon(
+                                    painterResource(id = R.drawable.grave_stone),
+                                    contentDescription = "",
+                                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                                )
+                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                Text("Aufgeben")
+                            }
 
+                            IconButton(onClick = { /*TODO*/ }) {
+                                Icon(
+                                    painterResource(id = R.drawable.cog_outline),
+                                    contentDescription = ""
+                                )
+                            }
                         }
-                        Button(onClick = {
-                            findNavController().navigate(R.id.action_game_scoreboard)
-                        }) {
-                            Text(text = "Scoreboard")
+
+
+
+                        Divider(Modifier.fillMaxWidth(), thickness = 2.dp)
+
+
+
+                        ZoomBox(
+                            Modifier
+                                .fillMaxSize()
+                                .background(Color.DarkGray)
+                        ) {
+
+                            Column(
+                                Modifier
+                                    .graphicsLayer(
+                                        scaleX = scale,
+                                        scaleY = scale,
+                                        translationX = offsetX,
+                                        translationY = offsetY
+                                    ),
+                            ) {
+
+
+                                repeat(14) {
+
+                                    Row {
+                                        repeat(8) {
+                                            var fieldState by remember {
+                                                mutableStateOf(MineFieldState.COVERED)
+                                            }
+
+                                            MineField(
+                                                fieldState,
+                                                {
+                                                    fieldState = MineFieldState.VIRUS
+                                                },
+                                                {
+                                                    fieldState = MineFieldState.FLAG
+                                                }
+                                            )
+                                        }
+                                    }
+
+
+                                }
+
+
+                            }
+
                         }
                     }
 
