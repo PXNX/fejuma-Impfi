@@ -1,4 +1,4 @@
-package de.fejuma.impfi.ui.screen
+package de.fejuma.impfi.ui.screen.start
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -39,14 +37,17 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.findNavController
 import de.fejuma.impfi.R
+import de.fejuma.impfi.data.RepositoryImpl
+import de.fejuma.impfi.data.local.PrefSource
 import de.fejuma.impfi.databinding.FragmentStartBinding
 import de.fejuma.impfi.model.Difficulty
 import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.ui.component.DifficultyCard
 import kotlinx.coroutines.launch
-
 
 class StartFragment : Fragment() {
     // TODO: Rename and change types of parameters
@@ -57,6 +58,9 @@ class StartFragment : Fragment() {
     // This property is only valid between onCreateView and
 // onDestroyView.
     private val binding get() = _binding!!
+
+    val viewModel by viewModels<StartViewModel>()
+
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
@@ -77,6 +81,8 @@ class StartFragment : Fragment() {
 
                 MaterialTheme() {
 
+
+
                     val sheetState = rememberModalBottomSheetState(
                         ModalBottomSheetValue.Hidden
                     )
@@ -84,92 +90,91 @@ class StartFragment : Fragment() {
 
                     ModalBottomSheetLayout(
                         sheetState = sheetState,
-                        sheetContent = { SheetContent() }
+                        sheetContent = { SheetContent(viewModel) }
                     ) {
                         // Screen content
 
                         Box(
-                            modifier=Modifier.fillMaxSize(),
+                            modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
-                        ){
-
-
-
-                        Column(
-                            modifier = Modifier
-
-                                .width(200.dp),
-                            verticalArrangement =Arrangement.spacedBy(8.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
 
-                            Image(
-                                painter = painterResource(id = R.drawable.virus_outline),
-                                contentDescription = ""
-                            )
 
+                            Column(
+                                modifier = Modifier
 
-                            Button(onClick = {
-                                findNavController().navigate(R.id.action_start_game)
+                                    .width(200.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
 
-                            }, modifier = Modifier.fillMaxWidth()) {
-                                Icon(
-                                    painterResource(id = R.drawable.needle),
-                                    contentDescription = "",
-                                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                                Image(
+                                    painter = painterResource(id = R.drawable.virus_outline),
+                                    contentDescription = ""
                                 )
-                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                Text("Impfen")
-                            }
-
-                            Button(onClick = {
-                                findNavController().navigate(R.id.action_start_scoreboard)
-                            }, modifier = Modifier.fillMaxWidth()) {
 
 
-                                Icon(
-                                    painterResource(id = R.drawable.trophy_variant_outline),
-                                    contentDescription = "",
-                                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                                )
-                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                Text("Highscores")
-                            }
+                                Button(onClick = {
+                                    findNavController().navigate(R.id.action_start_game)
+
+                                }, modifier = Modifier.fillMaxWidth()) {
+                                    Icon(
+                                        painterResource(id = R.drawable.needle),
+                                        contentDescription = "",
+                                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                                    )
+                                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                    Text("Impfen")
+                                }
+
+                                Button(onClick = {
+                                    findNavController().navigate(R.id.action_start_scoreboard)
+                                }, modifier = Modifier.fillMaxWidth()) {
 
 
-
-                            Button(onClick = {
-                                scope.launch {
-                                    sheetState.show()
+                                    Icon(
+                                        painterResource(id = R.drawable.trophy_variant_outline),
+                                        contentDescription = "",
+                                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                                    )
+                                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                    Text("Highscores")
                                 }
 
 
-                            },modifier = Modifier.fillMaxWidth()) {
-                                Icon(
-                                    painterResource(id = R.drawable.cog_outline),
-                                    contentDescription = "",
-                                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                                )
-                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                Text("Einstellungen")
+
+                                Button(onClick = {
+                                    scope.launch {
+                                        sheetState.show()
+                                    }
+
+
+                                }, modifier = Modifier.fillMaxWidth()) {
+                                    Icon(
+                                        painterResource(id = R.drawable.cog_outline),
+                                        contentDescription = "",
+                                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                                    )
+                                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                    Text("Einstellungen")
+                                }
+
+                                Button(onClick = {
+                                    findNavController().navigate(R.id.action_start_about)
+
+                                }, modifier = Modifier.fillMaxWidth()) {
+                                    Icon(
+                                        painterResource(id = R.drawable.information_outline),
+                                        contentDescription = "",
+                                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                                    )
+                                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                    Text("Über die App")
+                                }
+
+
                             }
-
-                            Button(onClick = {
-                                findNavController().navigate(R.id.action_start_about)
-
-                            }, modifier = Modifier.fillMaxWidth()) {
-                                Icon(
-                                    painterResource(id = R.drawable.information_outline),
-                                    contentDescription = "",
-                                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                                )
-                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                Text("Über die App")
-                            }
-
-
                         }
-                    }
                     }
 
 
@@ -188,7 +193,7 @@ class StartFragment : Fragment() {
 }
 
 @Composable
-private fun SheetContent() {
+private fun SheetContent(viewModel: StartViewModel) {
     Text(
         "Einstellungen", modifier = Modifier.padding(16.dp),
         fontStyle = MaterialTheme.typography.h5.fontStyle,
@@ -245,15 +250,13 @@ private fun SheetContent() {
         fontStyle = MaterialTheme.typography.h2.fontStyle
     )
 
-    var effectVolume by remember {
-        mutableStateOf(50f)
-    }
+
 
 
     Slider(
-        value = effectVolume,
+        value =  viewModel.sfxVolume.value.toFloat(),
         onValueChange = {
-            effectVolume = it
+            viewModel.setSfxVolume(it.toInt())
         },
         modifier = Modifier
             .fillMaxWidth()
