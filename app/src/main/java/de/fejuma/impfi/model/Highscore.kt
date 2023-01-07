@@ -7,10 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "scores")
 data class Highscore(
-    @PrimaryKey(autoGenerate = true)
-    @NonNull
-    @ColumnInfo(name = "id")
-    var id: Int,
+
 
     @ColumnInfo(name = "username")
     val username: String,
@@ -19,5 +16,10 @@ data class Highscore(
     var difficulty: DifficultyLevel,
 
     @ColumnInfo(name = "seconds")
-    val seconds: Int
-    )
+    val seconds: Int,
+
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name = "id")
+    var id: Int = 0
+)

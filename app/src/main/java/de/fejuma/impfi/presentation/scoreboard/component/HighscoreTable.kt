@@ -13,15 +13,11 @@ import de.fejuma.impfi.model.Highscore
 
 @Composable
 fun HighscoreTable(
-    difficultyName: String,
     scores: List<Highscore>
 ) {
 
     LazyColumn() {
-        item {
-            Text(text = "Highscore • $difficultyName")
 
-        }
 
         item {
 
