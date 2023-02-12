@@ -133,7 +133,7 @@ private fun SheetContent(viewModel: StartViewModel) {
     }
 
     Text(
-        "Effektlautstärke",
+        "Effektlautstärke • ${viewModel.sfxVolume.value}%",
         modifier = Modifier.padding(
             top = 16.dp,
             start = 16.dp,
@@ -154,7 +154,7 @@ private fun SheetContent(viewModel: StartViewModel) {
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
         valueRange = 0f..100f,
-        steps = 10
+        steps = 9
     )
 }
 

@@ -36,7 +36,7 @@ fun RowScope.DifficultyCard(
     val textColor: Color?
 
     if (isActive) {
-        backgroundColor = colorResource(id = R.color.secondary)
+        backgroundColor = difficulty.difficultyColor
         strokeColor = colorResource(id = R.color.primary)
         textColor = colorResource(id = R.color.black)
     } else {

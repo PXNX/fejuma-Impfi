@@ -1,7 +1,8 @@
-package de.fejuma.impfi.ui.component
+package de.fejuma.impfi.presentation.game.component
 
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 
 @Composable
@@ -25,6 +27,7 @@ fun ZoomBox(
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember { mutableStateOf(0f) }
     var size by remember { mutableStateOf(IntSize.Zero) }
+
     Box(
         modifier = modifier
             .clip(RectangleShape)
@@ -58,3 +61,8 @@ private data class ZoomableBoxScopeImpl(
     override val offsetY: Float
 ) : ZoomableBoxScope
 
+@Preview
+@Composable
+fun ZoomBoxPreview() {
+    Text("Resize me")
+}

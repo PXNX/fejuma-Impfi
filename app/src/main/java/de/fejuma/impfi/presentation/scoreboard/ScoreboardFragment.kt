@@ -4,18 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
@@ -23,8 +26,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import de.fejuma.impfi.databinding.FragmentScoreboardBinding
+import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.difficulties
 import de.fejuma.impfi.ui.component.HighscoreTable
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ScoreboardFragment : Fragment() {
@@ -37,6 +42,7 @@ class ScoreboardFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,11 +57,50 @@ class ScoreboardFragment : Fragment() {
             setContent {
                 // In Compose world
                 MaterialTheme {
+Column(Modifier.fillMaxSize()) {
 
 
-                    Column(modifier = Modifier.fillMaxSize()) {
 
-                        CustomTabs(viewModel)
+
+
+                    val pagerState = rememberPagerState()
+                    val scope = rememberCoroutineScope()
+                    val pages = listOf(DifficultyLevel.EASY,DifficultyLevel.NORMAL,DifficultyLevel.HARD)
+
+                    TabRow(
+                        // Our selected tab is our current page
+                        selectedTabIndex = pagerState.currentPage,
+                        // Override the indicator, using the provided pagerTabIndicatorOffset modifier
+
+                    ) {
+                        // Add tabs for all of our pages
+                        pages.forEachIndexed { index, title ->
+                            Tab(
+                                text = { Text(title.toString()) },
+                                selected = pagerState.currentPage == index,
+                                onClick = {
+                                    scope.launch {
+                                        pagerState.scrollToPage(index)
+                                    }
+
+
+                                },
+                            )
+                        }
+                    }
+
+                    HorizontalPager(
+                        pageCount = pages.size,
+                        modifier = Modifier.fillMaxSize(),
+                        state = pagerState,
+                    ) { page -> Column(Modifier.fillMaxSize()) {
+                        
+
+                        Text(text = "Selected: ${viewModel.selectedIndex.value}")
+
+                        Button(onClick = { viewModel.createEntries() }) {
+                            Text("Create Entries")
+                        }
 
                         Row(
                             Modifier
@@ -73,9 +118,12 @@ class ScoreboardFragment : Fragment() {
 
                         }
                     }
+                    }
 
 
-                }
+
+
+                }}
             }
         }
         return view
@@ -86,57 +134,4 @@ class ScoreboardFragment : Fragment() {
         _binding = null
     }
 
-}
-
-@Composable
-fun CustomTabs(viewModel: ScoreboardViewModel) {
-
-
-    TabRow(
-        selectedTabIndex = viewModel.selectedIndex.value,
-        /*  backgroundColor = Color(0xff1E76DA),
-        modifier = Modifier
-             .padding(vertical = 4.dp, horizontal = 8.dp)
-             .clip(RoundedCornerShape(50))
-             .padding(1.dp),
-
-
-         indicator = { tabPositions: List<TabPosition> ->
-             Box {}
-         }  */
-    ) {
-        difficulties.forEachIndexed { index, difficulty ->
-            val selected = viewModel.selectedIndex.value == index
-            Tab(
-                /*    modifier = if (selected) Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(
-                            Color.White
-                        )
-                    else Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(
-                            Color(
-                                0xff1E76DA
-                            )
-                        ),
-
-                 */
-                selected = selected,
-                onClick = { viewModel.setSelectedIndex(difficulty) },
-                text = {
-                    Text(
-                        text = difficulty.name,
-                        //  color = Color(0xff6FAAEE)
-                    )
-                }
-            )
-        }
-    }
-
-    Text(text = "Selected: ${viewModel.selectedIndex.value}")
-
-    Button(onClick = { viewModel.createEntries() }) {
-        Text("Create Entries")
-    }
 }

@@ -19,7 +19,6 @@ data class Highscore(
     val seconds: Int,
 
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     @ColumnInfo(name = "id")
     var id: Int = 0
 )

@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -28,6 +31,7 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,8 +47,9 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentGameBinding
+import de.fejuma.impfi.model.getFieldState
 import de.fejuma.impfi.presentation.game.component.MineField
-import de.fejuma.impfi.ui.component.ZoomBox
+import de.fejuma.impfi.presentation.game.component.ZoomBox
 import kotlinx.coroutines.launch
 
 
@@ -232,7 +237,7 @@ fun GameField(viewModel: GameViewModel) {
             .background(Color.DarkGray)
     ) {
 
-        Column(
+        LazyColumn(
             Modifier
                 .graphicsLayer(
                     scaleX = scale,
@@ -242,11 +247,13 @@ fun GameField(viewModel: GameViewModel) {
                 ),
         ) {
 
+            items( viewModel.board.value) {outer->
 
-            repeat(14) {
+                LazyRow {
+                    items(outer) { tile->
 
-                Row {
-                    repeat(8) {
+
+
                         var fieldState by remember {
                             mutableStateOf(MineFieldState.COVERED)
                         }
@@ -254,10 +261,28 @@ fun GameField(viewModel: GameViewModel) {
                         MineField(
                             fieldState,
                             {
-                                fieldState = MineFieldState.VIRUS
+
+                                if(tile.isMine){
+                                    fieldState = MineFieldState.VIRUS
+                                    //set game state lost
+                                }
+
+                                else{
+                                    fieldState=MineFieldState.NUMBER
+                                }
                             },
                             {
-                                fieldState = MineFieldState.FLAG
+                                 if (tile.isFlagged){
+                                     fieldState =  MineFieldState.COVERED
+                                     tile.isFlagged=false
+                                 }
+
+                                else{
+                                     fieldState =  MineFieldState.FLAG
+                                     tile.isFlagged=true
+                                 }
+
+
                             }
                         )
                     }
