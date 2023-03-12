@@ -5,16 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.ListItem
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.fragment.app.Fragment
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentAboutBinding
+import de.fejuma.impfi.ui.MinesweeperTheme
 
 class AboutFragment : Fragment() {
     // TODO: Rename and change types of parameters
@@ -26,7 +26,6 @@ class AboutFragment : Fragment() {
 // onDestroyView.
     private val binding get() = _binding!!
 
-    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,30 +42,29 @@ class AboutFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
 
-                MaterialTheme() {
+                MinesweeperTheme() {
 
 
                     LazyColumn {
                         item {
 
-                            ListItem(icon = {
+                            ListItem(headlineContent = {
+                                Text(
+                                    "Entwickler",
+                                    fontStyle = MaterialTheme.typography.headlineLarge.fontStyle,
+                                    fontSize = MaterialTheme.typography.headlineLarge.fontSize
+                                )
+                            }, leadingContent = {
                                 Icon(
                                     painterResource(id = R.drawable.account_multiple_outline),
                                     contentDescription = ""
                                 )
-                            }, secondaryText = {
+                            }, supportingContent = {
                                 Text(
                                     text = "Julian Alber, Felix Huber, Maximilian Wankmiller",
                                     softWrap = true
                                 )
-                            }) {
-
-                                Text(
-                                    "Entwickler",
-                                    fontStyle = MaterialTheme.typography.h6.fontStyle,
-                                    fontSize = MaterialTheme.typography.h6.fontSize
-                                )
-                            }
+                            })
 
 
 //Todo: Github, Icons, Lizenzen

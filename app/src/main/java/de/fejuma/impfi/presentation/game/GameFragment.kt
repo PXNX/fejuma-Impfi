@@ -2,55 +2,58 @@ package de.fejuma.impfi.presentation.game
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Text
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentGameBinding
-import de.fejuma.impfi.model.getFieldState
 import de.fejuma.impfi.presentation.game.component.MineField
-import de.fejuma.impfi.presentation.game.component.ZoomBox
-import kotlinx.coroutines.launch
+import de.fejuma.impfi.ui.MinesweeperTheme
+import de.fejuma.impfi.ui.lightGray
 
 
 @AndroidEntryPoint
@@ -65,7 +68,8 @@ class GameFragment : Fragment() {
 // onDestroyView.
     private val binding get() = _binding!!
 
-    @OptIn(ExperimentalMaterialApi::class)
+
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -79,71 +83,64 @@ class GameFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 // In Compose world
-                MaterialTheme() {
-
-                    val sheetState = rememberModalBottomSheetState(
-                        ModalBottomSheetValue.Hidden
-                    )
+                MinesweeperTheme {
 
 
-                    ModalBottomSheetLayout(sheetContent = {
-
-                        Text("ingame settings")
-
-                    }, sheetState = sheetState) {
+                    Column(modifier = Modifier.fillMaxSize()) {
 
 
-                        Column(modifier = Modifier.fillMaxSize()) {
+                        val openDialog = remember { mutableStateOf(false) }
 
 
-                            val openDialog = remember { mutableStateOf(false) }
+                        TopRow(viewModel, openDialog)
+
+                        Divider(
+                            Modifier.fillMaxWidth(),
+                            thickness = 1.dp,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
 
 
-                            TopRow(viewModel, sheetState, openDialog)
-
-                            Divider(Modifier.fillMaxWidth(), thickness = 2.dp)
-
-
-                            GameField(viewModel)
+                        GameField(viewModel)
 
 
 
+                        if (openDialog.value) {
+                            AlertDialog(
+                                onDismissRequest = {
+                                    // Dismiss the dialog when the user clicks outside the dialog or on the back
+                                    // button. If you want to disable that functionality, simply use an empty
+                                    // onCloseRequest.
+                                    openDialog.value = false
+                                },
+                                title = {
+                                    Text(text = "Dialog Title")
+                                },
+                                text = {
+                                    Text("Here is a text ")
+                                },
+                                confirmButton = {
+                                    Button(
 
-                            if (openDialog.value) {
-                                AlertDialog(
-                                    onDismissRequest = {
-                                        // Dismiss the dialog when the user clicks outside the dialog or on the back
-                                        // button. If you want to disable that functionality, simply use an empty
-                                        // onCloseRequest.
-                                        openDialog.value = false
-                                    },
-                                    title = {
-                                        Text(text = "Dialog Title")
-                                    },
-                                    text = {
-                                        Text("Here is a text ")
-                                    },
-                                    confirmButton = {
-                                        Button(
-
-                                            onClick = {
-                                                openDialog.value = false
-                                            }) {
-                                            Text("This is the Confirm Button")
-                                        }
-                                    },
-                                    dismissButton = {
-                                        Button(
-
-                                            onClick = {
-                                                openDialog.value = false
-                                            }) {
-                                            Text("This is the dismiss Button")
-                                        }
+                                        onClick = {
+                                            openDialog.value = false
+                                        }) {
+                                        Text("This is the Confirm Button")
                                     }
-                                )
-                            }
+                                },
+                                dismissButton = {
+                                    Button(
+
+                                        onClick = {
+                                            openDialog.value = false
+                                        }) {
+                                        Text("This is the dismiss Button")
+                                    }
+                                }
+                            )
                         }
+
+
                     }
 
                 }
@@ -160,11 +157,10 @@ class GameFragment : Fragment() {
 
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopRow(
     viewModel: GameViewModel,
-    sheetState: ModalBottomSheetState,
     openDialog: MutableState<Boolean>
 ) {
 //todo: using Units (state hoisting) is smoother than passing down state - also when using scope?
@@ -175,18 +171,22 @@ fun TopRow(
     Row(
         Modifier
             .padding(12.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column(Modifier.weight(1f)) {
             Row {
                 Icon(
                     painterResource(id = R.drawable.alarm),
-                    contentDescription = ""
+                    contentDescription = "",
+                    tint = lightGray
                 )
                 Text("4:20", Modifier.padding(start = 10.dp))
             }
 
-            Row(Modifier.padding(top = 6.dp)) {
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Row {
                 Icon(
                     painterResource(id = R.drawable.virus_outline),
                     contentDescription = "",
@@ -211,89 +211,143 @@ fun TopRow(
             Text("Aufgeben")
         }
 
-        IconButton(onClick = {
 
-            scope.launch {
-                sheetState.show()
-            }
-
-        }) {
-            Icon(
-                painterResource(id = R.drawable.cog_outline),
-                contentDescription = ""
-            )
-        }
     }
 
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun GameField(viewModel: GameViewModel) {
+fun ColumnScope.GameField(viewModel: GameViewModel) {
+    var isInteractive by remember {
+        mutableStateOf(true)
+    }
 
 
-    ZoomBox(
-        Modifier
-            .fillMaxSize()
-            .background(Color.DarkGray)
-    ) {
+    val minScale: Float = 1f
+    val maxScale: Float = 3f
 
-        LazyColumn(
+    var scale by remember { mutableStateOf(1f) }
+    var offset by remember { mutableStateOf(Offset.Zero) }
+    var size by remember { mutableStateOf(IntSize.Zero) }
+    val state = rememberTransformableState { zoomChange, offsetChange, _ ->
+isInteractive=false
+        scale = maxOf(minScale, minOf(scale * zoomChange, maxScale))
+
+        val maxX = (size.width * (scale - 1)) / 2
+        val minX = -maxX
+        val offsetX = maxOf(minX, minOf(maxX, offset.x + offsetChange.x * scale))
+        val maxY = (size.height * (scale - 1)) / 2
+        val minY = -maxY
+        val offsetY = maxOf(minY, minOf(maxY, offset.y + offsetChange.y * scale))
+
+        offset = Offset(offsetX, offsetY)
+        isInteractive=true
+    }
+
+
+    /*
+        ZoomBox(
             Modifier
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    translationX = offsetX,
-                    translationY = offsetY
-                ),
+                .fillMaxSize(),
+            //     .background(Color.DarkGray),
+               onInteract =  {
+                    isInteractive = it
+                }
         ) {
 
-            items( viewModel.board.value) {outer->
+     */
+    Box(
+        Modifier
 
-                LazyRow {
-                    items(outer) { tile->
+            // apply other transformations like rotation and zoom
+            // on the pizza slice emoji
 
+            .graphicsLayer(
+                scaleX = scale,
+                scaleY = scale,
 
+                translationX = offset.x,
+                translationY = offset.y
+            )
+            // add transformable to listen to multitouch transformation events
+            // after offset
+            .transformable(state = state)
+            .onSizeChanged { size = it }
+            .weight(1f, false)
 
-                        var fieldState by remember {
-                            mutableStateOf(MineFieldState.COVERED)
-                        }
+    ) {
 
-                        MineField(
-                            fieldState,
-                            {
-
-                                if(tile.isMine){
-                                    fieldState = MineFieldState.VIRUS
-                                    //set game state lost
-                                }
-
-                                else{
-                                    fieldState=MineFieldState.NUMBER
-                                }
-                            },
-                            {
-                                 if (tile.isFlagged){
-                                     fieldState =  MineFieldState.COVERED
-                                     tile.isFlagged=false
-                                 }
-
-                                else{
-                                     fieldState =  MineFieldState.FLAG
-                                     tile.isFlagged=true
-                                 }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(4),
+            Modifier
 
 
-                            }
-                        )
-                    }
+                .fillMaxSize(),
+        ) {
+
+            items(viewModel.board.value.flatten()) { tile ->
+
+                var fieldState by remember {
+                    mutableStateOf(MineFieldState.COVERED)
                 }
 
+                MineField(
+                    fieldState,
+                    isInteractive = isInteractive,
+                    {
 
+                        fieldState = if (tile.isMine) {
+                            MineFieldState.VIRUS
+                            //set game state lost
+                        } else {
+                            MineFieldState.NUMBER
+                        }
+                    },
+                    {
+                        if (tile.isFlagged) {
+                            fieldState = MineFieldState.COVERED
+                            tile.isFlagged = false
+                        } else {
+                            fieldState = MineFieldState.FLAG
+                            tile.isFlagged = true
+                        }
+
+
+                    }
+                )
+            }
+
+
+        }
+    }
+}
+
+/*    Column(
+        Modifier
+            .graphicsLayer(
+                scaleX = scale,
+                scaleY = scale,
+                translationX = offsetX,
+                translationY = offsetY
+            ),
+    ) {
+
+        for (outer in viewModel.board.value){
+
+           Row {
+                for (tile in outer){
+
+
+
+                }
             }
 
 
         }
 
+
     }
 
-}
+ */
+

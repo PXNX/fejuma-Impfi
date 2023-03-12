@@ -7,7 +7,7 @@ data class TileState(
     val y:Int,
     var isFlagged: Boolean = false,
     val isShown: Boolean = false,
-    val isMine: Boolean = false,
+    var isMine: Boolean = false,
     val nearbyMines: Int? = null
 )
 

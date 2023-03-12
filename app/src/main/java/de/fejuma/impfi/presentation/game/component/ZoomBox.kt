@@ -2,7 +2,7 @@ package de.fejuma.impfi.presentation.game.component
 
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,9 +19,11 @@ import androidx.compose.ui.unit.IntSize
 @Composable
 fun ZoomBox(
     modifier: Modifier = Modifier,
-    minScale: Float = 0.1f,
+    minScale: Float = 1f,
     maxScale: Float = 5f,
-    content: @Composable ZoomableBoxScope.() -> Unit
+    onInteract: (Boolean) -> Unit,
+    content: @Composable ZoomableBoxScope.() -> Unit,
+
 ) {
     var scale by remember { mutableStateOf(1f) }
     var offsetX by remember { mutableStateOf(0f) }
@@ -34,6 +36,8 @@ fun ZoomBox(
             .onSizeChanged { size = it }
             .pointerInput(Unit) {
                 detectTransformGestures { _, pan, zoom, _ ->
+                    onInteract(false)
+
                     scale = maxOf(minScale, minOf(scale * zoom, maxScale))
                     val maxX = (size.width * (scale - 1)) / 2
                     val minX = -maxX
@@ -41,6 +45,9 @@ fun ZoomBox(
                     val maxY = (size.height * (scale - 1)) / 2
                     val minY = -maxY
                     offsetY = maxOf(minY, minOf(maxY, offsetY + pan.y))
+
+
+                    onInteract(true)
                 }
             }
     ) {

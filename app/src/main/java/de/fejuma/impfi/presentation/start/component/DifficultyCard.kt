@@ -1,4 +1,4 @@
-package de.fejuma.impfi.ui.component
+package de.fejuma.impfi.presentation.start.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,7 +9,8 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.fejuma.impfi.R
 import de.fejuma.impfi.model.Difficulty
+import de.fejuma.impfi.ui.darkGray
+import de.fejuma.impfi.ui.lightGray
 
 
 @Composable
@@ -37,12 +40,12 @@ fun RowScope.DifficultyCard(
 
     if (isActive) {
         backgroundColor = difficulty.difficultyColor
-        strokeColor = colorResource(id = R.color.primary)
+        strokeColor = colorResource(id = R.color.lightGreen)
         textColor = colorResource(id = R.color.black)
     } else {
-        backgroundColor = colorResource(id = R.color.lightgray)
-        strokeColor = colorResource(id = R.color.darkgray)
-        textColor = colorResource(id = R.color.darkgray)
+        backgroundColor = lightGray
+        strokeColor = darkGray
+        textColor = darkGray
     }
 
     Column(modifier = Modifier

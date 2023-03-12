@@ -20,23 +20,21 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideHighscoreDatabase(app: Application): HighscoreDatabase {
-        return Room.databaseBuilder(
-            app,
-            HighscoreDatabase::class.java,
-            HighscoreDatabase.DATABASE_NAME
-        ).build()
-    }
+    fun provideHighscoreDatabase(
+        app: Application
+    ): HighscoreDatabase = Room.databaseBuilder(
+        app,
+        HighscoreDatabase::class.java,
+        HighscoreDatabase.DATABASE_NAME
+    ).build()
 
 
     @Singleton
     @Provides
     fun provideRepository(
-        application: Application,
+        app: Application,
         highscoreDatabase: HighscoreDatabase
-    ): Repository {
-        return RepositoryImpl(application as Context, highscoreDatabase.highScoreDao)
-    }
+    ): Repository = RepositoryImpl(app as Context, highscoreDatabase.highScoreDao)
 
 
 }

@@ -13,11 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -28,7 +27,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.fejuma.impfi.databinding.FragmentScoreboardBinding
 import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.difficulties
-import de.fejuma.impfi.ui.component.HighscoreTable
+import de.fejuma.impfi.ui.MinesweeperTheme
+import de.fejuma.impfi.presentation.scoreboard.component.HighscoreTable
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -56,7 +56,7 @@ class ScoreboardFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 // In Compose world
-                MaterialTheme {
+                MinesweeperTheme {
 Column(Modifier.fillMaxSize()) {
 
 

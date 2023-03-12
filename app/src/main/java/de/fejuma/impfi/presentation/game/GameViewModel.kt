@@ -1,5 +1,6 @@
 package de.fejuma.impfi.presentation.game
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
@@ -26,11 +27,29 @@ class GameViewModel @Inject constructor(
     private val mineCount =  10
 
     init{
-        startGame(6,8)
+        startGame(6,8, 10)
     }
 
-    fun startGame(height:Int,width:Int){
-        _board.value =  List(height) { x -> List(width) { y-> TileState(x,y) } }
+    fun startGame(height:Int,width:Int, mines:Int){
+
+        val newBoard =  List(height) { x -> List(width) { y-> TileState(x,y) } }
+
+        val cords = mutableListOf<Pair<Int,Int>>()
+
+        for (x in 0 until height){
+            for (y in 0 until width){
+                cords.add(Pair(x,y))
+            }
+        }
+        cords.shuffle()
+
+        (0 until mines).forEach{i->
+
+            newBoard[cords[i].first][cords[i].second].isMine = true
+        }
+
+        Log.d("GameVM", "New Board: $newBoard")
+        _board.value = newBoard
     }
 
     private fun checkWin(): Boolean {

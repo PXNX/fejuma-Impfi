@@ -12,25 +12,31 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Slider
-import androidx.compose.material.Text
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -38,10 +44,12 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import de.fejuma.impfi.R
+import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.databinding.FragmentStartBinding
 import de.fejuma.impfi.model.difficulties
-import de.fejuma.impfi.ui.component.DifficultyCard
-import kotlinx.coroutines.launch
+import de.fejuma.impfi.presentation.start.component.DifficultyCard
+import de.fejuma.impfi.ui.MinesweeperTheme
+
 
 @AndroidEntryPoint
 class StartFragment : Fragment() {
@@ -57,7 +65,6 @@ class StartFragment : Fragment() {
     private val binding get() = _binding!!
 
 
-    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -73,15 +80,7 @@ class StartFragment : Fragment() {
             // is destroyed
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-
-
-                MaterialTheme {
-
-
-                    StartScreen(findNavController(), viewModel)
-
-
-                }
+                MinesweeperTheme { StartScreen(findNavController(), viewModel) }
             }
         }
         return view
@@ -91,31 +90,28 @@ class StartFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }
+
 
 @Composable
 private fun SheetContent(viewModel: StartViewModel) {
-    Text(
-        "Einstellungen", modifier = Modifier.padding(16.dp),
-        fontStyle = MaterialTheme.typography.h5.fontStyle,
-        fontSize = MaterialTheme.typography.h5.fontSize,
-        fontWeight = MaterialTheme.typography.h5.fontWeight
-    )
+
+
 
 
     Text(
         "Schwierigkeit",
-        modifier = Modifier.padding(horizontal = 16.dp),
-        fontStyle = MaterialTheme.typography.h6.fontStyle,
-        fontSize = MaterialTheme.typography.h6.fontSize
+        Modifier
+            .padding(horizontal = 16.dp),
+       style = MaterialTheme.typography.titleMedium
     )
+
+    Spacer(modifier = Modifier.height(16.dp))
 
 
     Row(
         Modifier
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -132,14 +128,13 @@ private fun SheetContent(viewModel: StartViewModel) {
 
     }
 
+    Spacer(modifier = Modifier.height(32.dp))
+
     Text(
         "Effektlautstärke • ${viewModel.sfxVolume.value}%",
-        modifier = Modifier.padding(
-            top = 16.dp,
-            start = 16.dp,
-            end = 16.dp
-        ),
-        fontStyle = MaterialTheme.typography.h2.fontStyle
+        Modifier
+            .padding(horizontal = 16.dp),
+        style = MaterialTheme.typography.titleMedium
     )
 
 
@@ -158,103 +153,105 @@ private fun SheetContent(viewModel: StartViewModel) {
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StartScreen(
     navController: NavController,
     viewModel: StartViewModel  //= hiltViewModel()
 ) {
-    val sheetState = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden
-    )
-    val scope = rememberCoroutineScope()
+    val sheetState = rememberModalBottomSheetState()
+    var openBottomSheet by rememberSaveable { mutableStateOf(false) }
 
-    ModalBottomSheetLayout(
-        sheetState = sheetState,
-        sheetContent = { SheetContent(viewModel) }
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        // Screen content
 
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+        Column(
+            modifier = Modifier
+
+                .width(200.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            Image(
+                painter = painterResource(id = R.drawable.virus_outline),
+                contentDescription = ""
+            )
 
-            Column(
-                modifier = Modifier
 
-                    .width(200.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Image(
-                    painter = painterResource(id = R.drawable.virus_outline),
-                    contentDescription = ""
+            Button(onClick = {
+                navController.navigate(R.id.action_start_game)
+            }, modifier = Modifier.fillMaxWidth()) {
+                Icon(
+                    painterResource(id = R.drawable.needle),
+                    contentDescription = "",
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
-
-
-                Button(onClick = {
-                    navController.navigate(R.id.action_start_game)
-
-                }, modifier = Modifier.fillMaxWidth()) {
-                    Icon(
-                        painterResource(id = R.drawable.needle),
-                        contentDescription = "",
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
-                    )
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("Impfen")
-                }
-
-                Button(onClick = {
-                    navController.navigate(R.id.action_start_scoreboard)
-                }, modifier = Modifier.fillMaxWidth()) {
-
-
-                    Icon(
-                        painterResource(id = R.drawable.trophy_variant_outline),
-                        contentDescription = "",
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
-                    )
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("Highscores")
-                }
-
-
-
-                Button(onClick = {
-                    scope.launch {
-                        sheetState.show()
-                    }
-
-
-                }, modifier = Modifier.fillMaxWidth()) {
-                    Icon(
-                        painterResource(id = R.drawable.cog_outline),
-                        contentDescription = "",
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
-                    )
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("Einstellungen")
-                }
-
-                Button(onClick = {
-                    navController.navigate(R.id.action_start_about)
-
-                }, modifier = Modifier.fillMaxWidth()) {
-                    Icon(
-                        painterResource(id = R.drawable.information_outline),
-                        contentDescription = "",
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
-                    )
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("Über die App")
-                }
-
-
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text("Impfen")
             }
+
+            Button(onClick = {
+                navController.navigate(R.id.action_start_scoreboard)
+            }, modifier = Modifier.fillMaxWidth()) {
+                Icon(
+                    painterResource(id = R.drawable.trophy_variant_outline),
+                    contentDescription = "",
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text("Highscores")
+            }
+
+            Button(onClick = {
+                openBottomSheet = true
+            }, modifier = Modifier.fillMaxWidth()) {
+                Icon(
+                    painterResource(id = R.drawable.cog_outline),
+                    contentDescription = "",
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text("Einstellungen")
+            }
+
+            Button(onClick = {
+                navController.navigate(R.id.action_start_about)
+
+            }, modifier = Modifier.fillMaxWidth()) {
+                Icon(
+                    painterResource(id = R.drawable.information_outline),
+                    contentDescription = "",
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text("Über die App")
+            }
+
+
         }
     }
+
+    if (openBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { openBottomSheet = false },
+            sheetState = sheetState,
+
+        ) {
+            SheetContent(viewModel = viewModel)
+        }
+    }
+
+
 }
+
+@Preview
+@Composable
+private fun SheetPreview() = Column{
+    SheetContent(viewModel = StartViewModel(RepositoryMock))
+}
+
