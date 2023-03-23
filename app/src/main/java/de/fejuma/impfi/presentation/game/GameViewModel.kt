@@ -30,6 +30,10 @@ class GameViewModel @Inject constructor(
         startGame(6,8, 10)
     }
 
+    fun newGame(){
+        startGame(10,19,20)
+    }
+
     fun startGame(height:Int,width:Int, mines:Int){
 
         val newBoard =  List(height) { x -> List(width) { y-> TileState(x,y) } }
@@ -56,4 +60,6 @@ class GameViewModel @Inject constructor(
         return ((board.value.flatten().count { !it.isMine } == mineCount) or board.value.flatten().filter { it.isMine }.all { it.isFlagged })
               //  && (winState != EndState.LOST)
     }
+
+    
 }

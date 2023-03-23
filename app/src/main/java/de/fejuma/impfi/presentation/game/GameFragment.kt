@@ -2,7 +2,6 @@ package de.fejuma.impfi.presentation.game
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.gestures.rememberTransformableState
@@ -40,7 +39,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
@@ -48,6 +46,8 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentGameBinding
@@ -100,10 +100,19 @@ class GameFragment : Fragment() {
                             color = MaterialTheme.colorScheme.onPrimary
                         )
 
+                        val (openEndDialog, setOpenDialog) = remember { mutableStateOf(false) }
 
-                        GameField(viewModel)
+                        GameField(viewModel) {
+                            setOpenDialog
+                        }
 
 
+
+                        if (openEndDialog) {
+                            GameEndDialog(false, findNavController(), {
+                                setOpenDialog(it)
+                            }, viewModel)
+                        }
 
                         if (openDialog.value) {
                             AlertDialog(
@@ -216,13 +225,61 @@ fun TopRow(
 
 }
 
+@Composable
+fun GameEndDialog(
+    has_won: Boolean,
+    navController: NavController,
+    onDismiss: (Boolean) -> Unit,
+    viewModel: GameViewModel
+) {
+
+
+    AlertDialog(
+        onDismissRequest = {
+
+        },
+        title = {
+            // three states: won, lost, new highsscroe?
+            Text(text = "Dialog Title")
+        },
+        text = {
+            Icon(
+                painterResource(id = R.drawable.alarm),
+                contentDescription = "",
+                tint = lightGray
+            )
+            Text("Benötigte Zeit 4:20", Modifier.padding(start = 10.dp))
+        },
+        confirmButton = {
+            Button(
+                {
+                    navController.navigate(R.id.action_game_scoreboard)
+                }
+            ) {
+                Text("Weiter")
+            }
+        },
+        dismissButton = {
+            Button(
+
+                onClick = {
+                    onDismiss(false)
+                    viewModel.newGame()
+                }) {
+                Text("This is the dismiss Button")
+            }
+        }
+    )
+
+
+}
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ColumnScope.GameField(viewModel: GameViewModel) {
+fun ColumnScope.GameField(viewModel: GameViewModel, setActive: () -> (Boolean) -> Unit) {
     var isInteractive by remember {
         mutableStateOf(true)
     }
-
 
     val minScale: Float = 1f
     val maxScale: Float = 3f
@@ -231,7 +288,7 @@ fun ColumnScope.GameField(viewModel: GameViewModel) {
     var offset by remember { mutableStateOf(Offset.Zero) }
     var size by remember { mutableStateOf(IntSize.Zero) }
     val state = rememberTransformableState { zoomChange, offsetChange, _ ->
-isInteractive=false
+        isInteractive = false
         scale = maxOf(minScale, minOf(scale * zoomChange, maxScale))
 
         val maxX = (size.width * (scale - 1)) / 2
@@ -242,7 +299,7 @@ isInteractive=false
         val offsetY = maxOf(minY, minOf(maxY, offset.y + offsetChange.y * scale))
 
         offset = Offset(offsetX, offsetY)
-        isInteractive=true
+        isInteractive = true
     }
 
 
