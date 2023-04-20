@@ -10,21 +10,23 @@ import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.Highscore
 import kotlinx.coroutines.flow.Flow
 
+//Data Access Object; SQL-Statements zur DB-Ansprache
+// Kategorisieren der DAOs nach Table oder Feature
 @Dao
 interface HighscoreDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addHighScore(HighScore: Highscore)
+    suspend fun addHighScore(highScore: Highscore)
 
-    @Query("SELECT * FROM scores WHERE difficulty = :difficultyLevel")
+    @Query("SELECT * FROM scores WHERE difficulty = :difficultyLevel ORDER BY seconds  LIMIT 10;")
     fun findHighScoresByDifficultyLevel(difficultyLevel: DifficultyLevel): Flow<List<Highscore>?>
 
     @Query("SELECT * FROM scores")
     fun getAllHighScores(): Flow<List<Highscore>>
 
     @Update
-    suspend fun updateHighScoreDetails(HighScore: Highscore)
+    suspend fun updateHighScoreDetails(highScore: Highscore)
 
     @Delete
-    suspend fun deleteHighScore(HighScore: Highscore)
+    suspend fun deleteHighScore(highScore: Highscore)
 }

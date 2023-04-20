@@ -2,7 +2,7 @@ package de.fejuma.impfi.model
 
 import androidx.compose.ui.graphics.Color
 
-
+//TODO sealed class?? @nyx69
 data class Difficulty(
     val level: DifficultyLevel,
     val name: String,

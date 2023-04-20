@@ -23,7 +23,7 @@ fun MinesweeperTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) =   MaterialTheme(
-       colorScheme =         if (!useDarkTheme) {
+       colorScheme =         if (useDarkTheme) {
            DarkColors
        } else {
            LightColors

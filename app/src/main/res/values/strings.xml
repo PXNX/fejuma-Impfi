@@ -6,4 +6,5 @@
     <string name="mines_amount">Viren</string>
     <string name="highscore_user">Nutzername</string>
     <string name="highscore_time">Benötigte Zeit</string>
+    <string name="no_score">Kein Highscore in der Schwierigkeit %1$s verfügbar.</string>
 </resources>

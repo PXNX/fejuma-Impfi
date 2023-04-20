@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.fejuma.impfi.data.repository.Repository
+import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.model.Difficulty
 import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.Highscore
@@ -13,13 +14,14 @@ import de.fejuma.impfi.model.difficulties
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+//inject the dependencies in the constructor
+//find repository in the modules an inject it
 @HiltViewModel
 class ScoreboardViewModel @Inject constructor(
     private val repo: Repository
 ) : ViewModel() {
 
-
-    private val _highscores = mutableStateOf<List<Highscore>?>(emptyList())
+    private val _highscores = mutableStateOf<List<Highscore>?>(null)
     val highscores: State<List<Highscore>?>
         get() = _highscores
 
@@ -49,8 +51,9 @@ class ScoreboardViewModel @Inject constructor(
         viewModelScope.launch {
             repo.insertHighscore(
                 Highscore(
-                    listOf("Peter", "AAAAAA", "TESTCHT").random(),
-                    DifficultyLevel.values().random(),
+                    listOf("Felix", "Julian", "Max").random(),
+                   DifficultyLevel.EASY,
+                    //DifficultyLevel.values().random(),
                     (10..10000 step 25).toList().random()
                 )
             )

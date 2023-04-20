@@ -14,26 +14,25 @@ import de.fejuma.impfi.data.repository.RepositoryImpl
 import javax.inject.Singleton
 
 
+//define, how long dependencies in this module will life (this case, as long as the application dose)
 @InstallIn(SingletonComponent::class)
 @Module
 object AppModule {
 
+    //define, how dagger-hilt has to build the class HighscoreDatabase
     @Provides
     @Singleton
     fun provideHighscoreDatabase(
         app: Application
     ): HighscoreDatabase = Room.databaseBuilder(
-        app,
-        HighscoreDatabase::class.java,
-        HighscoreDatabase.DATABASE_NAME
+        app, HighscoreDatabase::class.java, HighscoreDatabase.DATABASE_NAME
     ).build()
 
 
     @Singleton
     @Provides
     fun provideRepository(
-        app: Application,
-        highscoreDatabase: HighscoreDatabase
+        app: Application, highscoreDatabase: HighscoreDatabase
     ): Repository = RepositoryImpl(app as Context, highscoreDatabase.highScoreDao)
 
 
