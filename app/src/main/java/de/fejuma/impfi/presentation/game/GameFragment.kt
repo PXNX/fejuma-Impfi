@@ -9,51 +9,40 @@ import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentGameBinding
+import de.fejuma.impfi.presentation.game.component.GameEndDialog
 import de.fejuma.impfi.presentation.game.component.MineField
+import de.fejuma.impfi.presentation.game.component.TopRow
 import de.fejuma.impfi.ui.MinesweeperTheme
-import de.fejuma.impfi.ui.lightGray
 
 
 @AndroidEntryPoint
@@ -89,10 +78,10 @@ class GameFragment : Fragment() {
                     Column(modifier = Modifier.fillMaxSize()) {
 
 
-                        val openDialog = remember { mutableStateOf(false) }
+                        val (openSurrenderDialog, setOpenSurrenderDialog) = remember { mutableStateOf(false) }
 
 
-                        TopRow(viewModel, openDialog)
+                        TopRow(viewModel, setOpenSurrenderDialog)
 
                         Divider(
                             Modifier.fillMaxWidth(),
@@ -100,27 +89,28 @@ class GameFragment : Fragment() {
                             color = MaterialTheme.colorScheme.onPrimary
                         )
 
-                        val (openEndDialog, setOpenDialog) = remember { mutableStateOf(false) }
+                        val (openEndDialog, setOpenEndDialog) = remember { mutableStateOf(false) }
 
                         GameField(viewModel) {
-                            setOpenDialog
+                            setOpenEndDialog
                         }
 
 
 
                         if (openEndDialog) {
-                            GameEndDialog(false, findNavController(), {
-                                setOpenDialog(it)
+                            GameEndDialog(false,
+                                {findNavController().navigate(R.id.action_game_scoreboard)}, {
+                                setOpenEndDialog(it)
                             }, viewModel)
                         }
 
-                        if (openDialog.value) {
+                        if (openSurrenderDialog) {
                             AlertDialog(
                                 onDismissRequest = {
                                     // Dismiss the dialog when the user clicks outside the dialog or on the back
                                     // button. If you want to disable that functionality, simply use an empty
                                     // onCloseRequest.
-                                    openDialog.value = false
+                                    setOpenSurrenderDialog(false)
                                 },
                                 title = {
                                     Text(text = "Dialog Title")
@@ -132,7 +122,7 @@ class GameFragment : Fragment() {
                                     Button(
 
                                         onClick = {
-                                            openDialog.value = false
+                                            setOpenSurrenderDialog(false)
                                         }) {
                                         Text("This is the Confirm Button")
                                     }
@@ -141,7 +131,7 @@ class GameFragment : Fragment() {
                                     Button(
 
                                         onClick = {
-                                            openDialog.value = false
+                                            setOpenSurrenderDialog(false)
                                         }) {
                                         Text("This is the dismiss Button")
                                     }
@@ -166,113 +156,8 @@ class GameFragment : Fragment() {
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopRow(
-    viewModel: GameViewModel,
-    openDialog: MutableState<Boolean>
-) {
-//todo: using Units (state hoisting) is smoother than passing down state - also when using scope?
 
 
-    val scope = rememberCoroutineScope()
-
-    Row(
-        Modifier
-            .padding(12.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(Modifier.weight(1f)) {
-            Row {
-                Icon(
-                    painterResource(id = R.drawable.alarm),
-                    contentDescription = "",
-                    tint = lightGray
-                )
-                Text("4:20", Modifier.padding(start = 10.dp))
-            }
-
-            Spacer(modifier = Modifier.height(6.dp))
-
-            Row {
-                Icon(
-                    painterResource(id = R.drawable.virus_outline),
-                    contentDescription = "",
-
-                    )
-
-                Text("10", Modifier.padding(start = 10.dp))
-            }
-        }
-
-        Button(onClick = {
-            openDialog.value = true
-
-        }) {
-
-            Icon(
-                painterResource(id = R.drawable.grave_stone),
-                contentDescription = "",
-                modifier = Modifier.size(ButtonDefaults.IconSize)
-            )
-            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-            Text("Aufgeben")
-        }
-
-
-    }
-
-}
-
-@Composable
-fun GameEndDialog(
-    has_won: Boolean,
-    navController: NavController,
-    onDismiss: (Boolean) -> Unit,
-    viewModel: GameViewModel
-) {
-
-
-    AlertDialog(
-        onDismissRequest = {
-
-        },
-        title = {
-            // three states: won, lost, new highsscroe?
-            Text(text = "Dialog Title")
-        },
-        text = {
-            Icon(
-                painterResource(id = R.drawable.alarm),
-                contentDescription = "",
-                tint = lightGray
-            )
-            Text("Benötigte Zeit 4:20", Modifier.padding(start = 10.dp))
-        },
-        confirmButton = {
-            Button(
-                {
-                    navController.navigate(R.id.action_game_scoreboard)
-                }
-            ) {
-                Text("Weiter")
-            }
-        },
-        dismissButton = {
-            Button(
-
-                onClick = {
-                    onDismiss(false)
-                    viewModel.newGame()
-                }) {
-                Text("This is the dismiss Button")
-            }
-        }
-    )
-
-
-}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -379,6 +264,8 @@ fun ColumnScope.GameField(viewModel: GameViewModel, setActive: () -> (Boolean) -
         }
     }
 }
+
+
 
 /*    Column(
         Modifier

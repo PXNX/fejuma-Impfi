@@ -34,13 +34,13 @@ fun MineField(
         border = BorderStroke(1.dp, darkGray),
         modifier = Modifier
             .size(40.dp)
-       /*     .pointerInput(Unit){
+            .pointerInput(Unit){
                 detectTapGestures(
                     onLongPress = {  setFlag() },
                 onTap = {  setState() }
                     )
             }
-        /*    .combinedClickable(
+            .combinedClickable(
                 enabled = isInteractive,
                 onClick = {
                     setState()
@@ -51,9 +51,7 @@ fun MineField(
                 },
             )
 
-        */
-
-         */
+        
     ) {
         when (state) {
             MineFieldState.FLAG -> Icon(
