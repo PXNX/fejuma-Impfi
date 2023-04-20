@@ -11,7 +11,7 @@ private val LightColors = lightColorScheme(
     primary = darkGreen,
     onPrimary = white,
 
-)
+    )
 private val DarkColors = darkColorScheme(
     primary = black,
     onPrimary = white,
@@ -22,12 +22,12 @@ private val DarkColors = darkColorScheme(
 fun MinesweeperTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
-) =   MaterialTheme(
-       colorScheme =         if (useDarkTheme) {
-           DarkColors
-       } else {
-           LightColors
-       },
-        content = content
-    )
+) = MaterialTheme(
+    colorScheme = if (useDarkTheme) {
+        DarkColors
+    } else {
+        LightColors
+    },
+    content = content
+)
 

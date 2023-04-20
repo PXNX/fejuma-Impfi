@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.fejuma.impfi.data.repository.Repository
-import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.model.Difficulty
 import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.Highscore
@@ -52,7 +51,7 @@ class ScoreboardViewModel @Inject constructor(
             repo.insertHighscore(
                 Highscore(
                     listOf("Felix", "Julian", "Max").random(),
-                   DifficultyLevel.EASY,
+                    DifficultyLevel.EASY,
                     //DifficultyLevel.values().random(),
                     (10..10000 step 25).toList().random()
                 )

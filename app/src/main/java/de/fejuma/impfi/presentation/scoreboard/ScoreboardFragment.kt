@@ -5,36 +5,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Button
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import de.fejuma.impfi.R
 import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.databinding.FragmentScoreboardBinding
 import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.difficulties
-import de.fejuma.impfi.ui.MinesweeperTheme
 import de.fejuma.impfi.presentation.scoreboard.component.HighscoreTable
+import de.fejuma.impfi.ui.MinesweeperTheme
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -140,7 +131,7 @@ private fun ScoreBoardList(viewModel: ScoreboardViewModel) {
     viewModel.highscores.value?.let {
         HighscoreTable(scores = it, viewModel = viewModel)
     }
-   //Nach HighscoreTable.kt ausgelagert (Max)
+    //Nach HighscoreTable.kt ausgelagert (Max)
     /* ?: Text(
          text = "Noch keine Highscores in der Schwierigkeit '${difficulties[viewModel.selectedIndex.value].name}' verfügbar.",
           color = Color.Red

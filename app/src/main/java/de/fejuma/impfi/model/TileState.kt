@@ -3,8 +3,8 @@ package de.fejuma.impfi.model
 import de.fejuma.impfi.presentation.game.MineFieldState
 
 data class TileState(
-    val x:Int,
-    val y:Int,
+    val x: Int,
+    val y: Int,
     var isFlagged: Boolean = false,
     val isShown: Boolean = false,
     var isMine: Boolean = false,

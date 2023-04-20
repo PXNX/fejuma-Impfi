@@ -4,6 +4,7 @@ package de.fejuma.impfi.data.data_source
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import de.fejuma.impfi.model.Highscore
+
 //TODO Klasse erklären was macht (Room-DB bzw. SQLite DB)
 @Database(
     entities = [Highscore::class],

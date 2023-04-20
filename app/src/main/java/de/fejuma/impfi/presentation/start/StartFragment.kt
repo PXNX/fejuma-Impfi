@@ -34,8 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -97,13 +95,11 @@ class StartFragment : Fragment() {
 private fun SheetContent(viewModel: StartViewModel) {
 
 
-
-
     Text(
         "Schwierigkeit",
         Modifier
             .padding(horizontal = 16.dp),
-       style = MaterialTheme.typography.titleMedium
+        style = MaterialTheme.typography.titleMedium
     )
 
     Spacer(modifier = Modifier.height(16.dp))
@@ -241,7 +237,7 @@ private fun StartScreen(
             onDismissRequest = { openBottomSheet = false },
             sheetState = sheetState,
 
-        ) {
+            ) {
             SheetContent(viewModel = viewModel)
         }
     }
@@ -251,7 +247,7 @@ private fun StartScreen(
 
 @Preview
 @Composable
-private fun SheetPreview() = Column{
+private fun SheetPreview() = Column {
     SheetContent(viewModel = StartViewModel(RepositoryMock))
 }
 

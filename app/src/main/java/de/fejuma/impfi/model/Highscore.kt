@@ -1,9 +1,9 @@
 package de.fejuma.impfi.model
 
-import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+
 //TODO to datasource???
 @Entity(tableName = "scores")
 data class Highscore(
