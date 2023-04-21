@@ -27,10 +27,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
+import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.formatTime
 import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.Highscore
+import de.fejuma.impfi.model.difficulties
+import de.fejuma.impfi.presentation.scoreboard.ScoreboardViewModel
 
 //TODO: What about having statistics and e.g. top 3 rounds here instead?
 // or what about also having the Date/Time at which a core was achieved saved here?
@@ -144,4 +148,12 @@ fun HighscoreTable(
     }
 
 
+}
+
+@DefaultPreviews
+@Composable
+fun ScoreBoardPreview() {
+    val viewModel = ScoreboardViewModel(RepositoryMock)
+  //  viewModel.loadHighscores(difficulties[0].level)
+    HighscoreTable(scores = viewModel.highscores, difficulties[0].level)
 }

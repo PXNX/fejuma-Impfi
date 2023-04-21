@@ -8,6 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,8 +24,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
 import de.fejuma.impfi.model.Difficulty
+import de.fejuma.impfi.model.difficulties
+import de.fejuma.impfi.ui.MinesweeperTheme
 import de.fejuma.impfi.ui.darkGray
 import de.fejuma.impfi.ui.darkGreen
 import de.fejuma.impfi.ui.lightGray
@@ -89,4 +93,14 @@ fun RowScope.DifficultyCard(
 
     }
 
+}
+
+@DefaultPreviews
+@Composable
+private fun DifficultyCardPreview() = MinesweeperTheme {
+
+        Row{
+            DifficultyCard(difficulties[0],true,{})
+            DifficultyCard(difficulties[1],false,{})
+        }
 }

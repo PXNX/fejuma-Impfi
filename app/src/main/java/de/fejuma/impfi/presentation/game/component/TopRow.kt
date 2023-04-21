@@ -17,8 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
+import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.presentation.game.GameViewModel
+import de.fejuma.impfi.ui.MinesweeperTheme
 import de.fejuma.impfi.ui.lightGray
 
 @Composable
@@ -78,3 +81,10 @@ fun TopRow(
     }
 
 }
+
+@DefaultPreviews
+@Composable
+fun TopRowPreview() = MinesweeperTheme {
+    TopRow(viewModel = GameViewModel(RepositoryMock), openDialog = {})
+}
+

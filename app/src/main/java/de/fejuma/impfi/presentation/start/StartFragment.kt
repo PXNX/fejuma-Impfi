@@ -41,6 +41,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
 import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.databinding.FragmentStartBinding
@@ -240,9 +241,9 @@ private fun StartScreen(
 
 }
 
-@Preview
+@DefaultPreviews
 @Composable
-private fun SheetPreview() = Column {
+private fun SheetPreview()  = MinesweeperTheme { Column {
     SheetContent(viewModel = StartViewModel(RepositoryMock))
-}
+}}
 

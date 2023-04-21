@@ -8,10 +8,15 @@ import androidx.compose.foundation.gestures.calculatePan
 import androidx.compose.foundation.gestures.calculateRotation
 import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,14 +31,17 @@ import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
+import androidx.compose.ui.tooling.preview.Preview
+import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.presentation.game.GameViewModel
 import de.fejuma.impfi.presentation.game.MineFieldState
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.absoluteValue
 
 
 @Composable
-fun GameField(viewModel: GameViewModel) {
+fun GameField(viewModel: GameViewModel, onFailure: ()->Unit) {
     /*  var isInteractive by remember {
      mutableStateOf(true)
  }
@@ -82,12 +90,61 @@ val minScale: Float = 1f
                                   _,
                                   changes: List<PointerInputChange> ->
 
+
+
+                 /*       val scaleValue = (    gestureZoom)
+                            .coerceAtLeast(1f)
+                            .coerceAtMost(3f)
+                        zoom = scaleValue
+
+                        val modTranslateX = getScaledTranslation(
+                            originalSize = this.size.width,
+                            scaleFactor = scaleValue
+                        )
+
+                        val modTranslateY = getScaledTranslation(
+                            originalSize = this.size.height,
+                            scaleFactor = scaleValue
+                        )
+
+                        offset  =Offset( (gesturePan.x)
+                            .coerceAtLeast(-modTranslateX)
+                            .coerceAtMost(modTranslateX),
+ (gesturePan.y)
+                            .coerceAtLeast(-modTranslateY)
+                            .coerceAtMost(modTranslateY))
+
+                  */
+
+
+
                         val oldScale = zoom
                         val newScale = (zoom * gestureZoom).coerceIn(0.5f..3f)
-                        offset =
-                            (offset + gestureCentroid / oldScale) - (gestureCentroid / newScale + gesturePan / oldScale)
-                        zoom = newScale
 
+                        /*   val maxX = (size.width * (newScale - 1)) / 2
+                        val minX = -maxX
+                        val offsetX = maxOf(minX, minOf(maxX, offset.x + gesturePan.x * newScale))
+                        val maxY = (size.height * (newScale - 1)) / 2
+                        val minY = -maxY
+                        val offsetY = maxOf(minY, minOf(maxY, offset.y + gesturePan.y * newScale))
+
+                        offset = Offset(offsetX, offsetY)*/
+
+                      val maxX = (size.width * (zoom - 1) / 2f)
+                        val maxY = (size.height * (zoom - 1) / 2f)
+
+                        /*       val newOffset = offset + gesturePan.times(zoom)
+                             offset = Offset(
+                                 newOffset.x.coerceIn(-maxX, maxX),
+                                 newOffset.y.coerceIn(-maxY, maxY)
+                             ) */
+
+
+                           offset = (offset + gestureCentroid / oldScale) - (gestureCentroid / newScale + gesturePan / oldScale)
+
+                        //   offset = Offset(noffset.x.coerceIn(-maxX,maxX),noffset.y.coerceIn(-maxY,maxY))
+
+                        zoom = newScale
 
 // 🔥Consume touch when multiple fingers down
 // This prevents click and long click if your finger touches a
@@ -101,8 +158,7 @@ val minScale: Float = 1f
             }) {
 
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(viewModel.board.size),
+        LazyRow(
             modifier = Modifier
                 .clipToBounds()
                 .fillMaxSize()
@@ -118,42 +174,48 @@ val minScale: Float = 1f
         ) {
 
 
-            items(viewModel.board.flatten()) { tile ->
+            itemsIndexed(viewModel.board) { x, row ->
+
+                LazyColumn(Modifier.fillMaxSize()) {
+                    itemsIndexed(row) {y, cell->
+
+              var cellState by remember{ mutableStateOf(cell) }
 
 
-                var fieldState by remember {
-                    mutableStateOf(MineFieldState.COVERED)
-                }
 
                 MineField(
-                    fieldState,
-                    tile.nearbyMines,
+                    cellState,
 
                     {
 
 
 //TODO: simplify
-                        fieldState = if (tile.isMine) {
-                            MineFieldState.VIRUS
-                            //set game state lost
+                        if ( cellState.isMine) {
+
+                           return@MineField onFailure()
                         } else {
-                            MineFieldState.NUMBER
-                        }
-                    },
-                    {
-                        if (tile.isFlagged) {
-                            fieldState = MineFieldState.COVERED
-                            tile.isFlagged = false
-                        } else {
-                            fieldState = MineFieldState.FLAG
-                            tile.isFlagged = true
-                        }
+
+                            if( cell.isFlagged) return@MineField
 
 
+                          //
+                        }
+                        viewModel.updateBoard(x,y, cellState.copy(isShown = true))
+                        cellState =  cellState.copy(isShown = true)
+                        viewModel.floodFill(x,y)
+                    },{
+                        if (!cell.isShown)
+                            viewModel.updateBoard(x,y,cellState.copy(isFlagged = !cellState.isFlagged))
+                                cellState = cellState.copy(isFlagged = !cellState.isFlagged)
+                     //   cellState = cellState.copy(isFlagged = !cellState.isFlagged)
                     }
+
+
+
+
                 )
 
-
+                }            }
             }
         }
     }
@@ -268,4 +330,22 @@ internal suspend fun PointerInputScope.detectTransformGestures(
         } while (!canceled && event.changes.any { it.pressed })
         onGestureEnd(pointer)
     }
+}
+
+@Preview
+@Composable
+fun GameFieldPreview() {
+    val viewModel =  GameViewModel(RepositoryMock)
+    viewModel.startGame(10,20,10)
+GameField(viewModel =viewModel, {})
+}
+
+
+private fun getScaledTranslation(
+    originalSize: Int,
+    scaleFactor: Float,
+): Float {
+    val scaledWidth = originalSize * scaleFactor
+    val widthDiff = abs(scaledWidth - originalSize)
+    return (widthDiff / 2)
 }

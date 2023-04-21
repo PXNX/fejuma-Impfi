@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.databinding.FragmentScoreboardBinding
 import de.fejuma.impfi.model.DifficultyLevel
@@ -136,10 +137,4 @@ class ScoreboardFragment : Fragment() {
 }
 
 
-@Preview
-@Composable
-fun ScoreBoardPreview() {
-    val viewModel = ScoreboardViewModel(RepositoryMock)
-    viewModel.loadHighscores(difficulties[0].level)
-    HighscoreTable(scores = viewModel.highscores, difficulties[0].level)
-}
+

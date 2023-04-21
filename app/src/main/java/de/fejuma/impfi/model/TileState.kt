@@ -4,7 +4,7 @@ import de.fejuma.impfi.presentation.game.MineFieldState
 
 data class Cell(
     var isFlagged: Boolean = false,
-    val isShown: Boolean = false,
+    var isShown: Boolean = false,
     var isMine: Boolean = false,
     var nearbyMines: Int = 0
 )
