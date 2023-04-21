@@ -18,8 +18,8 @@ interface HighscoreDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addHighScore(highScore: Highscore)
 
-    @Query("SELECT * FROM scores WHERE difficulty = :difficultyLevel ORDER BY seconds  LIMIT 10;")
-    fun findHighScoresByDifficultyLevel(difficultyLevel: DifficultyLevel): Flow<List<Highscore>?>
+    @Query("SELECT * FROM scores WHERE difficulty = :difficultyLevel ORDER BY seconds  LIMIT 20;")
+    fun findHighScoresByDifficultyLevel(difficultyLevel: DifficultyLevel): Flow<List<Highscore>>
 
     @Query("SELECT * FROM scores")
     fun getAllHighScores(): Flow<List<Highscore>>

@@ -37,7 +37,7 @@ class RepositoryImpl(
         return highscoreDao.getAllHighScores()
     }
 
-    override suspend fun getHighscoresByDifficulty(difficultyLevel: DifficultyLevel): Flow<List<Highscore>?> =
+    override suspend fun getHighscoresByDifficulty(difficultyLevel: DifficultyLevel): Flow<List<Highscore>> =
         highscoreDao.findHighScoresByDifficultyLevel(difficultyLevel)
 
     override suspend fun insertHighscore(highscore: Highscore) {

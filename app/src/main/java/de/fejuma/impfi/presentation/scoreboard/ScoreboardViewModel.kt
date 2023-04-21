@@ -1,15 +1,14 @@
 package de.fejuma.impfi.presentation.scoreboard
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.fejuma.impfi.data.repository.Repository
-import de.fejuma.impfi.model.Difficulty
 import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.Highscore
-import de.fejuma.impfi.model.difficulties
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,27 +19,25 @@ class ScoreboardViewModel @Inject constructor(
     private val repo: Repository
 ) : ViewModel() {
 
-    private val _highscores = mutableStateOf<List<Highscore>?>(null)
-    val highscores: State<List<Highscore>?>
-        get() = _highscores
 
-    private val _selectedIndex = mutableStateOf(0)
-    val selectedIndex: State<Int>
-        get() = _selectedIndex
+    var highscores by mutableStateOf<List<Highscore>>(emptyList())
+        private set
 
-
-    fun setSelectedIndex(difficulty: Difficulty) {
-        getHighscores(difficulty.level)
-        _selectedIndex.value = difficulties.indexOf(difficulty)
+    init {
+        loadHighscores(repo.getDifficulty())
     }
 
 
-    private fun getHighscores(difficultyLevel: DifficultyLevel) {
+    fun loadHighscores(difficultyLevel: DifficultyLevel) {
         viewModelScope.launch {
+
+            //TODO: use some actual result sealed class here, that allows for loading states with circularprogressindicator later on
             val result = repo.getHighscoresByDifficulty(difficultyLevel)
             result.collect {
-                _highscores.value = it
+                highscores = it
             }
+
+
         }
 
     }
@@ -50,13 +47,14 @@ class ScoreboardViewModel @Inject constructor(
         viewModelScope.launch {
             repo.insertHighscore(
                 Highscore(
-                    listOf("Felix", "Julian", "Max").random(),
+                    listOf("Felix", "Julian", "Max", "Test").random(),
                     DifficultyLevel.EASY,
                     //DifficultyLevel.values().random(),
-                    (10..10000 step 25).toList().random()
+                    (10..10000 step 250).toList().random()
                 )
             )
         }
 
     }
 }
+

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -25,7 +26,8 @@ import de.fejuma.impfi.ui.darkGray
 @Composable
 fun MineField(
     state: MineFieldState,
-    isInteractive: Boolean,
+    nearbyMines: Int,
+
     setState: () -> Unit,
     setFlag: () -> Unit
 ) {
@@ -41,7 +43,7 @@ fun MineField(
             .indication(interactionSource, LocalIndication.current)
 
             .combinedClickable(
-                enabled = isInteractive,
+
                 onClick = {
                     setState()
 
@@ -67,6 +69,8 @@ fun MineField(
                 modifier = Modifier.fillMaxSize(),
                 tint = Color.Red
             )
+
+            MineFieldState.NUMBER -> Text("$nearbyMines")
 
             else -> {
 

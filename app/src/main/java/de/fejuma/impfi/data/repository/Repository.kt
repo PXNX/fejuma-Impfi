@@ -13,7 +13,7 @@ interface Repository {
     fun getDifficulty(): DifficultyLevel
 
     fun getHighscores(): Flow<List<Highscore>>
-    suspend fun getHighscoresByDifficulty(difficultyLevel: DifficultyLevel): Flow<List<Highscore>?>
+    suspend fun getHighscoresByDifficulty(difficultyLevel: DifficultyLevel): Flow<List<Highscore>>
     suspend fun insertHighscore(highscore: Highscore)
     suspend fun deleteHighscore(highscore: Highscore)
 }

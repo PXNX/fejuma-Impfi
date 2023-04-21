@@ -73,6 +73,8 @@ class ScoreboardFragment : Fragment() {
                                     text = { Text(title.toString()) },
                                     selected = pagerState.currentPage == index,
                                     onClick = {
+                                        //   viewModel.getHighscores( pages[index])
+                                        //      viewModel.getHighscores(pages[pagerState.currentPage])
                                         scope.launch {
                                             pagerState.scrollToPage(index)
                                         }
@@ -80,36 +82,45 @@ class ScoreboardFragment : Fragment() {
 
                                     },
                                 )
+
                             }/* set current index of tab / difficulties to show entries */
-                            viewModel.setSelectedIndex(difficulties[pagerState.currentPage])
+
                         }
+
+
+
+
+
+
+
 
                         HorizontalPager(
                             pageCount = pages.size,
                             modifier = Modifier.fillMaxSize(),
                             state = pagerState,
                         ) { page ->
-                            Column(Modifier.fillMaxSize()) {
 
-                                /*
-                                                                Text(
-                                                                    text = "Selected: ${viewModel.selectedIndex.value}",
-                                                                    color = Color.White
-                                                                )
+                            viewModel.loadHighscores(pages[pagerState.settledPage])
+
+                            HighscoreTable(scores = viewModel.highscores, pages[page])
+                            /*    Text("LIST::: ${viewModel.highscores}", color = Color.Magenta)
+
+
 
                                 Button(
                                     onClick = { viewModel.createEntries() },
                                 ) {
                                     Text("Create Entries")
-                                }*/
+                                }
 
-                                ScoreBoardList(viewModel)
-
-                            }
+                             */
                         }
 
 
                     }
+                    // }
+
+
                 }
             }
         }
@@ -124,27 +135,11 @@ class ScoreboardFragment : Fragment() {
 
 }
 
-@Composable
-private fun ScoreBoardList(viewModel: ScoreboardViewModel) {
-
-
-    viewModel.highscores.value?.let {
-        HighscoreTable(scores = it, viewModel = viewModel)
-    }
-    //Nach HighscoreTable.kt ausgelagert (Max)
-    /* ?: Text(
-         text = "Noch keine Highscores in der Schwierigkeit '${difficulties[viewModel.selectedIndex.value].name}' verfügbar.",
-          color = Color.Red
-
-         ) */
-
-
-}
 
 @Preview
 @Composable
 fun ScoreBoardPreview() {
     val viewModel = ScoreboardViewModel(RepositoryMock)
-    viewModel.setSelectedIndex(difficulties[0])
-    ScoreBoardList(viewModel = viewModel)
+    viewModel.loadHighscores(difficulties[0].level)
+    HighscoreTable(scores = viewModel.highscores, difficulties[0].level)
 }

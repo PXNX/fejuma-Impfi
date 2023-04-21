@@ -102,7 +102,7 @@ val minScale: Float = 1f
 
 
         LazyVerticalGrid(
-            columns = GridCells.Fixed(viewModel.board.value.size),
+            columns = GridCells.Fixed(viewModel.board.size),
             modifier = Modifier
                 .clipToBounds()
                 .fillMaxSize()
@@ -118,7 +118,7 @@ val minScale: Float = 1f
         ) {
 
 
-            items(viewModel.board.value.flatten()) { tile ->
+            items(viewModel.board.flatten()) { tile ->
 
 
                 var fieldState by remember {
@@ -127,9 +127,12 @@ val minScale: Float = 1f
 
                 MineField(
                     fieldState,
-                    isInteractive = true,
+                    tile.nearbyMines,
+
                     {
 
+
+//TODO: simplify
                         fieldState = if (tile.isMine) {
                             MineFieldState.VIRUS
                             //set game state lost

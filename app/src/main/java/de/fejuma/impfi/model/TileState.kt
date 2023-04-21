@@ -2,16 +2,14 @@ package de.fejuma.impfi.model
 
 import de.fejuma.impfi.presentation.game.MineFieldState
 
-data class TileState(
-    val x: Int,
-    val y: Int,
+data class Cell(
     var isFlagged: Boolean = false,
     val isShown: Boolean = false,
     var isMine: Boolean = false,
-    val nearbyMines: Int? = null
+    var nearbyMines: Int = 0
 )
 
-fun TileState.getFieldState(): MineFieldState = if (this.isShown) {
+fun Cell.getFieldState(): MineFieldState = if (this.isShown) {
     if (this.isMine) MineFieldState.VIRUS
     else MineFieldState.NUMBER
 } else {

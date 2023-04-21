@@ -52,16 +52,13 @@ import de.fejuma.impfi.ui.MinesweeperTheme
 @AndroidEntryPoint
 class StartFragment : Fragment() {
 
-
     private val viewModel by viewModels<StartViewModel>()
-
 
     private var _binding: FragmentStartBinding? = null
 
     // This property is only valid between onCreateView and
 // onDestroyView.
     private val binding get() = _binding!!
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,8 +67,6 @@ class StartFragment : Fragment() {
     ): View {
         _binding = FragmentStartBinding.inflate(inflater, container, false)
         val view = binding.root
-
-
 
         binding.composeViewStart.apply {
             // Dispose of the Composition when the view's LifecycleOwner
@@ -117,8 +112,8 @@ private fun SheetContent(viewModel: StartViewModel) {
             // Modifier.weight(1f,false)
             DifficultyCard(
                 difficulties[it],
-                viewModel.difficulty.value == difficulties[it].level
-            ) { viewModel.setDifficulty(difficulties[it].level) }
+                viewModel.difficulty == difficulties[it].level
+            ) { viewModel.changeDifficulty(difficulties[it].level) }
         }
 
 
@@ -127,7 +122,7 @@ private fun SheetContent(viewModel: StartViewModel) {
     Spacer(modifier = Modifier.height(32.dp))
 
     Text(
-        "Effektlautstärke • ${viewModel.sfxVolume.value}%",
+        "Effektlautstärke • ${viewModel.sfxVolume}%",
         Modifier
             .padding(horizontal = 16.dp),
         style = MaterialTheme.typography.titleMedium
@@ -137,9 +132,9 @@ private fun SheetContent(viewModel: StartViewModel) {
 
 
     Slider(
-        value = viewModel.sfxVolume.value.toFloat(),
+        value = viewModel.sfxVolume.toFloat(),
         onValueChange = {
-            viewModel.setSfxVolume(it.toInt())
+            viewModel.changeSfxVolume(it.toInt())
         },
         modifier = Modifier
             .fillMaxWidth()

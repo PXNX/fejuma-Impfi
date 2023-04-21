@@ -1,7 +1,8 @@
 package de.fejuma.impfi.presentation.start
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.fejuma.impfi.data.repository.Repository
@@ -13,34 +14,26 @@ class StartViewModel @Inject constructor(
     private val repo: Repository
 ) : ViewModel() {
 
-    private val _sfxVolume = mutableStateOf(getSfxVolume())
-    val sfxVolume: State<Int>
-        get() = _sfxVolume
+    var sfxVolume by mutableStateOf<Int>(repo.getSfxVolume())
+        private set
 
-    private val _difficulty = mutableStateOf(getDifficulty())
-    val difficulty: State<DifficultyLevel>
-        get() = _difficulty
+    var difficulty by mutableStateOf<DifficultyLevel>(repo.getDifficulty())
+        private set
 
-    fun setSfxVolume(sfxVolume: Int) {
+    fun changeSfxVolume(sfxVolume: Int) {
         val result = repo.setSfxVolume(sfxVolume)
 
         if (result) {
-            _sfxVolume.value = sfxVolume
+            this.sfxVolume = sfxVolume
         }
     }
 
 
-    private fun getSfxVolume() = repo.getSfxVolume()
-
-    fun setDifficulty(difficultyLevel: DifficultyLevel) {
+    fun changeDifficulty(difficultyLevel: DifficultyLevel) {
         val result = repo.setDifficulty(difficultyLevel)
 
         if (result) {
-            _difficulty.value = difficultyLevel
+            this.difficulty = difficultyLevel
         }
-
     }
-
-    private fun getDifficulty() = repo.getDifficulty()
-
 }
