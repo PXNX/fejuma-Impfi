@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
 import de.fejuma.impfi.model.Difficulty
+import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.difficulties
 import de.fejuma.impfi.ui.MinesweeperTheme
 import de.fejuma.impfi.ui.darkGray
@@ -44,15 +45,15 @@ fun RowScope.DifficultyCard(
     val strokeColor: Color?
     val textColor: Color?
     val backgroundColor: Color by animateColorAsState(
-        if (isActive) darkGreen else lightGray,
+        if (isActive) darkGreen else Color.Transparent,
         animationSpec = tween(300, easing = LinearEasing), label = "backgroundColor"
     )
 
     if (isActive) {
-        strokeColor = Color.White
+        strokeColor = Color.Transparent
         textColor = Color.White
     } else {
-        strokeColor = Color.Transparent
+        strokeColor = darkGray
         textColor = darkGray
     }
 
@@ -77,14 +78,14 @@ fun RowScope.DifficultyCard(
         )
 
         Text(
-            text = "${difficulty.fieldAmount} ${stringResource(id = R.string.field_amount)}",
+            text = "${difficulty.height} × ${difficulty.width} ${stringResource(id = R.string.field_amount)}",
             modifier = Modifier.weight(1f, fill = false),
             color = textColor,
             fontSize = 10.sp,
         )
 
         Text(
-            text = "${difficulty.minesAmount} ${stringResource(id = R.string.mines_amount)}",
+            text = "${difficulty.mines} ${stringResource(id = R.string.mines_amount)}",
             modifier = Modifier.weight(1f, fill = false),
             color = textColor,
             fontSize = 10.sp,
@@ -100,7 +101,7 @@ fun RowScope.DifficultyCard(
 private fun DifficultyCardPreview() = MinesweeperTheme {
 
         Row{
-            DifficultyCard(difficulties[0],true,{})
-            DifficultyCard(difficulties[1],false,{})
+            DifficultyCard(difficulties[DifficultyLevel.EASY]!!,true,{})
+            DifficultyCard(difficulties[DifficultyLevel.NORMAL]!!,false,{})
         }
 }

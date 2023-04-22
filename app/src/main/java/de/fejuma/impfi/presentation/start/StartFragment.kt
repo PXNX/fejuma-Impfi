@@ -109,12 +109,12 @@ private fun SheetContent(viewModel: StartViewModel) {
     ) {
 
 
-        repeat(difficulties.size) {
+        difficulties.forEach { (level, difficulty) ->
             // Modifier.weight(1f,false)
             DifficultyCard(
-                difficulties[it],
-                viewModel.difficulty == difficulties[it].level
-            ) { viewModel.changeDifficulty(difficulties[it].level) }
+                difficulty ,
+                viewModel.difficulty == level
+            ) { viewModel.changeDifficulty(level) }
         }
 
 

@@ -54,7 +54,7 @@ fun GameEndDialog(
 
                 onClick = {
                     onDismiss(false)
-                    viewModel.newGame()
+                   // viewModel.newGame()
                 }) {
                 Text("This is the dismiss Button")
             }

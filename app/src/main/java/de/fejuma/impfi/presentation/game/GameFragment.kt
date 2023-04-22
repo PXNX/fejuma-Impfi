@@ -14,7 +14,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -23,13 +24,16 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentGameBinding
 import de.fejuma.impfi.presentation.game.component.GameEndDialog
-import de.fejuma.impfi.presentation.game.component.GameField
+
+import de.fejuma.impfi.presentation.game.component.GameMap
 import de.fejuma.impfi.presentation.game.component.TopRow
+import de.fejuma.impfi.presentation.game.game.Game
 import de.fejuma.impfi.ui.MinesweeperTheme
 
 
@@ -46,6 +50,8 @@ class GameFragment : Fragment() {
     private val binding get() = _binding!!
 
 
+
+
     @OptIn(
         ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
         ExperimentalFoundationApi::class
@@ -57,6 +63,13 @@ class GameFragment : Fragment() {
     ): View {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
         val view = binding.root
+
+
+
+        val game = Game()
+        game.configure(200,100,200)
+
+
         binding.composeViewGame.apply {
             // Dispose of the Composition when the view's LifecycleOwner
             // is destroyed
@@ -64,6 +77,26 @@ class GameFragment : Fragment() {
             setContent {
                 // In Compose world
                 MinesweeperTheme {
+
+                    val map by game.gameStateHolder.map.collectAsStateWithLifecycle()
+                    val time by  game.gameStateHolder.time.collectAsStateWithLifecycle()
+                    val minesRemaining by  game.gameStateHolder.minesRemaining.collectAsStateWithLifecycle()
+                    val gameState by  game.gameStateHolder.status.collectAsStateWithLifecycle()
+
+
+
+                    /*        MainView(
+                            time,
+                            minesRemaining,
+                            map,
+                            gameState,
+                            { column, row -> game.primaryAction(column, row) },
+                            { column, row -> game.secondaryAction(column, row) },
+                            { game.configure() },
+                        )
+
+                     */
+
 
 
                     Column(modifier = Modifier.fillMaxSize()) {
@@ -86,8 +119,11 @@ class GameFragment : Fragment() {
 
                         val (openEndDialog, setOpenEndDialog) = remember { mutableStateOf(false) }
 
+                        GameMap(map =  map,
+                            onTileSelected =     { column, row ->  game.primaryAction(column, row) },
+                            onTileSelectedSecondary =   { column, row ->  game.secondaryAction(column, row) })
 
-                        GameField(viewModel) { setOpenEndDialog(true) } //replace with loss diaolog
+                   //     GameField(viewModel) { setOpenEndDialog(true) } //replace with loss diaolog
 
 
 

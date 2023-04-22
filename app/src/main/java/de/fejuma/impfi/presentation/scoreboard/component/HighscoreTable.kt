@@ -155,5 +155,5 @@ fun HighscoreTable(
 fun ScoreBoardPreview() {
     val viewModel = ScoreboardViewModel(RepositoryMock)
   //  viewModel.loadHighscores(difficulties[0].level)
-    HighscoreTable(scores = viewModel.highscores, difficulties[0].level)
+    HighscoreTable(scores = viewModel.highscores, DifficultyLevel.NORMAL)
 }

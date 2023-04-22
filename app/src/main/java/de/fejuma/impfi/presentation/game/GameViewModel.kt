@@ -1,17 +1,24 @@
 package de.fejuma.impfi.presentation.game
 
-import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.fejuma.impfi.data.repository.Repository
-import de.fejuma.impfi.model.Cell
+import de.fejuma.impfi.model.difficulties
+import de.fejuma.impfi.presentation.game.game.Game
+import de.fejuma.impfi.presentation.game.game.GameStateHolder
+import de.fejuma.impfi.presentation.game.game.MutableGameStateHolder
+import de.fejuma.impfi.presentation.game.game.Status
+import de.fejuma.impfi.presentation.game.game.Tile
+import de.fejuma.impfi.presentation.game.game.TileCoverMode
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.properties.Delegates
 import kotlin.random.Random
 
 @HiltViewModel
@@ -19,118 +26,25 @@ class GameViewModel @Inject constructor(
     private val repo: Repository
 ) : ViewModel() {
 
-    //instead of using lots of separate states, it may be better to go for dataclass -- less bloat
+
+  val difficulty = difficulties[repo.getDifficulty()]!!
+  /*  val game = Game()
 
 
-    var board by mutableStateOf<Array<Array<Cell>>>(emptyArray())
-        private set
 
-    private val mineCount = 10
 
-    private lateinit var minefield: Array<Array<Cell>>
-    private var width by Delegates.notNull<Int>()
-    private var height by Delegates.notNull<Int>()
+
 
     init {
-        startGame(6, 8, 10)
+
+        game.configure(
+            columns = difficulty.width,
+            rows = difficulty.height,
+            mines =difficulty.mines,
+        )
     }
 
-    fun newGame() {
-        // startGame(10, 19, 20)
-    }
-
-    fun startGame(height: Int, width: Int, mineAmount: Int) {
-        minefield = Array(width) { Array(height) { Cell() } }
-        this.width = width
-        this.height = height
-
-        var noOfMinesPlaced = 0
-        while (noOfMinesPlaced < mineAmount) {
-            val row = Random.nextInt(width)
-            val col = Random.nextInt(height)
-            if (!minefield[row][col].isMine) {
-                minefield[row][col].isMine = true
-                increaseAllNeighbors(row, col)
-                noOfMinesPlaced++
-            }
-        }
-
-
-
-
-        Log.d("GameVM", "New Board: $minefield")
-        board = minefield
-    }
-
-    /*   private fun checkWin(): Boolean {
-           return ((board.value.flatten().count { !it.isMine } == mineCount) or board.value.flatten()
-               .filter { it.isMine }.all { it.isFlagged })
-           //  && (winState != EndState.LOST)
-       }
-
-     */
-
-
-    // we know 'row'/'col' indicates a mine, so all its neighbors
-// are increased by 1 (if they are not a mine)
-    private fun increaseAllNeighbors(row: Int, col: Int) {
-        for (x in (row - 1)..(row + 1)) {
-            for (y in (col - 1)..(col + 1)) {
-                if (isWithinBoundary(x, y)) {
-                    if (minefield[x][y].isMine) {
-                        continue
-                    }
-                    minefield[x][y].nearbyMines++
-                }
-            }
-        }
-    }
-
-
-    //is this even needed?
-    fun floodFill(row: Int, col: Int) {
-        if (isWithinBoundary(row, col)) {
-            val cell = board[row][col]
-            if (!cell.isMine && !cell.isShown) {
-                board[row][col].isShown = true
-                board[row][col].isFlagged = false
-
-                floodFill(row - 1, col)
-                floodFill(row + 1, col)
-                floodFill(row, col - 1)
-                floodFill(row, col + 1)
-            }
-        }
-    }
-
-    fun isGameWon(): Boolean {
-        var countCorrectMarkers = 0
-        var countWrongMarkers = 0
-
-        for (row in 0 until width) {
-            for (col in 0 until height) {
-                val cell = minefield[row][col]
-
-                if (cell.isFlagged && cell.isMine) {
-                    countCorrectMarkers++
-                }
-                if (cell.isFlagged && !cell.isMine) {
-                    countWrongMarkers++
-                }
-            }
-        }
-        return countCorrectMarkers == mineCount && countWrongMarkers == 0
-    }
-
-    fun updateBoard(x:Int,y:Int,cell:Cell){
-        val temp = board
-        temp[x][y]=cell
-        board = temp
-
-    }
-
-
-    private fun isWithinBoundary(x: Int, y: Int) = x in 0 until width && y in 0 until height
+   */
 
 }
 

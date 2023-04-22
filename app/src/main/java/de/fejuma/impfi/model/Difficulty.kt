@@ -2,18 +2,18 @@ package de.fejuma.impfi.model
 
 import androidx.compose.ui.graphics.Color
 
-//TODO sealed class?? @nyx69
+
 data class Difficulty(
-    val level: DifficultyLevel,
     val name: String,
-    val fieldAmount: Int,
-    val minesAmount: Int,
+    val height: Int,
+    val width: Int,
+    val mines: Int,
     val difficultyColor: Color
 )
 
 //TODO: replace with string resource
-val difficulties = listOf(
-    Difficulty(DifficultyLevel.EASY, "Leicht", 69, 10, Color.Green),
-    Difficulty(DifficultyLevel.NORMAL, "Mittel", 200, 20, Color.Yellow),
-    Difficulty(DifficultyLevel.HARD, "Schwer", 400, 30, Color.Red)
+val difficulties = mapOf(
+    DifficultyLevel.EASY to  Difficulty("Leicht", 10, 15, 10, Color.Green),
+DifficultyLevel.NORMAL to  Difficulty("Mittel", 32, 24, 40, Color.Yellow),
+DifficultyLevel.HARD to  Difficulty("Schwer", 100, 48, 120, Color.Red)
 )

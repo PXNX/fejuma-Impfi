@@ -47,7 +47,7 @@ fun TopRow(
                     contentDescription = "",
                     tint = lightGray
                 )
-                Text("4:20", Modifier.padding(start = 10.dp))
+                Text("4:20", Modifier.padding(start = 10.dp), color = lightGray)
             }
 
             Spacer(modifier = Modifier.height(6.dp))
@@ -56,10 +56,10 @@ fun TopRow(
                 Icon(
                     painterResource(id = R.drawable.virus_outline),
                     contentDescription = "",
-
+                    tint = lightGray
                     )
 
-                Text("10", Modifier.padding(start = 10.dp))
+                Text("10", Modifier.padding(start = 10.dp), color = lightGray)
             }
         }
 

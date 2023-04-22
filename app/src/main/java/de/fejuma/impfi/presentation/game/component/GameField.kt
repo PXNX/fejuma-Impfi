@@ -9,15 +9,11 @@ import androidx.compose.foundation.gestures.calculateRotation
 import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,14 +30,20 @@ import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.tooling.preview.Preview
 import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.presentation.game.GameViewModel
-import de.fejuma.impfi.presentation.game.MineFieldState
+import de.fejuma.impfi.presentation.game.game.Game
+import de.fejuma.impfi.presentation.game.game.Tile
 import kotlin.math.PI
 import kotlin.math.abs
-import kotlin.math.absoluteValue
 
 
 @Composable
-fun GameField(viewModel: GameViewModel, onFailure: ()->Unit) {
+internal fun GameMap(
+    map: List<List<Tile>>,
+    onTileSelected: (column: Int, row: Int) -> Unit,
+    onTileSelectedSecondary: (column: Int, row: Int) -> Unit,
+) {
+
+
     /*  var isInteractive by remember {
      mutableStateOf(true)
  }
@@ -78,6 +80,7 @@ val minScale: Float = 1f
     Box(
         Modifier
             .fillMaxSize()
+            .clipToBounds()
             .pointerInput(Unit) {
 
                 //zoom in/out and move around
@@ -158,10 +161,10 @@ val minScale: Float = 1f
             }) {
 
 
-        LazyRow(
+        Column(
             modifier = Modifier
-                .clipToBounds()
-                .fillMaxSize()
+             //   .clipToBounds()
+               .wrapContentSize(unbounded = true)
                 .graphicsLayer {
                     translationX = -offset.x * zoom
                     translationY = -offset.y * zoom
@@ -174,45 +177,23 @@ val minScale: Float = 1f
         ) {
 
 
-            itemsIndexed(viewModel.board) { x, row ->
+          map.forEachIndexed { y, column ->
 
-                LazyColumn(Modifier.fillMaxSize()) {
-                    itemsIndexed(row) {y, cell->
+                Row(Modifier
+                   .wrapContentSize(unbounded = true)
+                ) {
+                  column.forEachIndexed {x, cell->
 
-              var cellState by remember{ mutableStateOf(cell) }
+          //    var cellState by remember{ mutableStateOf(cell) }
 
 
 
                 MineField(
-                    cellState,
-
-                    {
-
-
-//TODO: simplify
-                        if ( cellState.isMine) {
-
-                           return@MineField onFailure()
-                        } else {
-
-                            if( cell.isFlagged) return@MineField
-
-
-                          //
-                        }
-                        viewModel.updateBoard(x,y, cellState.copy(isShown = true))
-                        cellState =  cellState.copy(isShown = true)
-                        viewModel.floodFill(x,y)
-                    },{
-                        if (!cell.isShown)
-                            viewModel.updateBoard(x,y,cellState.copy(isFlagged = !cellState.isFlagged))
-                                cellState = cellState.copy(isFlagged = !cellState.isFlagged)
-                     //   cellState = cellState.copy(isFlagged = !cellState.isFlagged)
-                    }
-
-
-
-
+                    cell,
+                    x,
+                    y,
+                    onTileSelected,
+                    onTileSelectedSecondary
                 )
 
                 }            }
@@ -336,8 +317,18 @@ internal suspend fun PointerInputScope.detectTransformGestures(
 @Composable
 fun GameFieldPreview() {
     val viewModel =  GameViewModel(RepositoryMock)
-    viewModel.startGame(10,20,10)
-GameField(viewModel =viewModel, {})
+
+    val game = Game()
+    game.configure(200,100,200)
+
+
+    val map by game.gameStateHolder.map.collectAsState()
+
+ //   viewModel.startGame(10,20,10)
+GameMap(map,
+    { column, row -> game.primaryAction(column, row) },
+    { column, row -> game.secondaryAction(column, row) }
+)
 }
 
 
