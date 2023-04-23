@@ -67,7 +67,7 @@ class GameFragment : Fragment() {
 
 
         val game = Game()
-        game.configure(200,100,200)
+        game.configure(30,16,80)
 
 
         binding.composeViewGame.apply {
@@ -109,7 +109,7 @@ class GameFragment : Fragment() {
                         }
 
 
-                        TopRow(viewModel, setOpenSurrenderDialog)
+                        TopRow(viewModel,time, setOpenSurrenderDialog)
 
                         Divider(
                             Modifier.fillMaxWidth(),

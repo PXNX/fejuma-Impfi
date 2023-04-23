@@ -10,16 +10,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
 import de.fejuma.impfi.data.repository.RepositoryMock
+import de.fejuma.impfi.formatTime
 import de.fejuma.impfi.presentation.game.GameViewModel
 import de.fejuma.impfi.ui.MinesweeperTheme
 import de.fejuma.impfi.ui.lightGray
@@ -27,6 +32,7 @@ import de.fejuma.impfi.ui.lightGray
 @Composable
 fun TopRow(
     viewModel: GameViewModel,
+    time:Int,
     openDialog: (Boolean) -> Unit
 ) {
 //todo: using Units (state hoisting) is smoother than passing down state - also when using scope?
@@ -47,7 +53,28 @@ fun TopRow(
                     contentDescription = "",
                     tint = lightGray
                 )
-                Text("4:20", Modifier.padding(start = 10.dp), color = lightGray)
+
+
+                val timeFormat = formatTime(time.toLong())
+
+                AnimatingCharacter(modifier=Modifier.padding(start=16.dp),character =timeFormat[0])
+
+                AnimatingCharacter(character = timeFormat[1])
+
+                Text(
+                    text = ":",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Red,
+                    )
+                )
+
+
+                AnimatingCharacter(character = timeFormat[2])
+                AnimatingCharacter(character = timeFormat[3])
+
+
             }
 
             Spacer(modifier = Modifier.height(6.dp))
@@ -85,6 +112,6 @@ fun TopRow(
 @DefaultPreviews
 @Composable
 fun TopRowPreview() = MinesweeperTheme {
-    TopRow(viewModel = GameViewModel(RepositoryMock), openDialog = {})
+    TopRow(viewModel = GameViewModel(RepositoryMock),120, openDialog = {})
 }
 
