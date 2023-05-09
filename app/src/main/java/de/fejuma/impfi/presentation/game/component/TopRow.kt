@@ -112,6 +112,6 @@ fun TopRow(
 @DefaultPreviews
 @Composable
 fun TopRowPreview() = MinesweeperTheme {
-    TopRow(viewModel = GameViewModel(RepositoryMock),120, openDialog = {})
+    TopRow(viewModel = GameViewModel(RepositoryMock),120) {}
 }
 

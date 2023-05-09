@@ -1,6 +1,9 @@
 package de.fejuma.impfi.presentation.game.game
 
 
+import de.fejuma.impfi.data.repository.RepositoryMock
+import de.fejuma.impfi.presentation.game.GameViewModel
+import de.fejuma.impfi.presentation.game.component.GameEndDialog
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -141,6 +144,7 @@ class Game {
             }
         }
         _statusHolder.status.value = Status.LOST
+
     }
 
     private fun winGame() {
@@ -241,4 +245,6 @@ class Game {
             it.toList()
         }
     }
+
+
 }

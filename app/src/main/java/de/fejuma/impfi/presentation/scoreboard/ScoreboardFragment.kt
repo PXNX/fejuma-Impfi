@@ -109,7 +109,7 @@ class ScoreboardFragment : Fragment() {
 
 
                                 Button(
-                                    onClick = { viewModel.createEntries() },
+                     t               onClick = { viewModel.createEntries() },
                                 ) {
                                     Text("Create Entries")
                                 }

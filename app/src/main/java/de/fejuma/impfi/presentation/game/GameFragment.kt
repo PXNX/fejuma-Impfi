@@ -14,6 +14,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +22,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -67,7 +70,7 @@ class GameFragment : Fragment() {
 
 
         val game = Game()
-        game.configure(30,16,80)
+        game.configure(10,10,10)
 
 
         binding.composeViewGame.apply {
@@ -139,6 +142,7 @@ class GameFragment : Fragment() {
                         }
 
                         if (openSurrenderDialog) {
+
                             AlertDialog(
                                 onDismissRequest = {
                                     // Dismiss the dialog when the user clicks outside the dialog or on the back
@@ -147,27 +151,30 @@ class GameFragment : Fragment() {
                                     setOpenSurrenderDialog(false)
                                 },
                                 title = {
-                                    Text(text = "Dialog Title")
+                                    Text(stringResource(id = R.string.game_abort_dialog))
                                 },
-                                text = {
+                              /*  text = {
                                     Text("Here is a text ")
-                                },
+                                }, */
                                 confirmButton = {
                                     Button(
 
                                         onClick = {
                                             setOpenSurrenderDialog(false)
+                                            findNavController().navigate(R.id.startFragment)
                                         }) {
-                                        Text("This is the Confirm Button")
+                                        Text(stringResource(id = R.string.confirm_button))
                                     }
                                 },
                                 dismissButton = {
                                     Button(
 
                                         onClick = {
+
                                             setOpenSurrenderDialog(false)
+
                                         }) {
-                                        Text("This is the dismiss Button")
+                                        Text(stringResource(id = R.string.dismiss_button))
                                     }
                                 }
                             )
@@ -175,6 +182,8 @@ class GameFragment : Fragment() {
 
 
                     }
+
+
 
                 }
             }
@@ -189,4 +198,3 @@ class GameFragment : Fragment() {
 
 
 }
-

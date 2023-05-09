@@ -7,4 +7,9 @@
     <string name="highscore_user">Nutzername</string>
     <string name="highscore_time">Benötigte Zeit</string>
     <string name="no_score">Kein Highscore in der Schwierigkeit %1$s verfügbar.</string>
+    
+    <string name="game_abort_dialog">Spiel beenden?</string>
+    <string name="confirm_button">Bestätigen</string>
+    <string name="dismiss_button">Abbrechen</string>
+    
 </resources>
