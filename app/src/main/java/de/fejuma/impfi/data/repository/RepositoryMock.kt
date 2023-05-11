@@ -24,8 +24,8 @@ object RepositoryMock : Repository {
     override fun getHighscores(): Flow<List<Highscore>> {
         return flowOf(
             listOf(
-                Highscore("Felix", DifficultyLevel.EASY, 10, 4),
-                Highscore("Julian", DifficultyLevel.EASY, 25, 500),
+                Highscore("Felix", DifficultyLevel.EASY, 120, 4),
+                Highscore("Julian", DifficultyLevel.EASY, 180, 500),
                 Highscore("Max", DifficultyLevel.NORMAL, 6000, 2)
             )
         )
@@ -34,8 +34,8 @@ object RepositoryMock : Repository {
     override suspend fun getHighscoresByDifficulty(difficultyLevel: DifficultyLevel): Flow<List<Highscore>> =
         flowOf(
             listOf(
-                Highscore("Felix", DifficultyLevel.EASY, 10, 4),
-                Highscore("Julian", DifficultyLevel.EASY, 25, 500),
+                Highscore("Felix", DifficultyLevel.EASY, 120, 4),
+                Highscore("Julian", DifficultyLevel.EASY, 180, 500),
 
                 )
         )

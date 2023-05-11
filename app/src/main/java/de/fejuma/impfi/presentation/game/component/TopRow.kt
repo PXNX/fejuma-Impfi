@@ -33,6 +33,7 @@ import de.fejuma.impfi.ui.lightGray
 fun TopRow(
     viewModel: GameViewModel,
     time:Int,
+    mines:Int,
     openDialog: (Boolean) -> Unit
 ) {
 //todo: using Units (state hoisting) is smoother than passing down state - also when using scope?
@@ -78,6 +79,8 @@ fun TopRow(
             }
 
             Spacer(modifier = Modifier.height(6.dp))
+            
+
 
             Row {
                 Icon(
@@ -86,7 +89,7 @@ fun TopRow(
                     tint = lightGray
                     )
 
-                Text("10", Modifier.padding(start = 10.dp), color = lightGray)
+                Text(mines.toString(), Modifier.padding(start = 10.dp), color = Color.Red, fontWeight = FontWeight.Bold)
             }
         }
 
@@ -112,6 +115,6 @@ fun TopRow(
 @DefaultPreviews
 @Composable
 fun TopRowPreview() = MinesweeperTheme {
-    TopRow(viewModel = GameViewModel(RepositoryMock),120) {}
+    TopRow(viewModel = GameViewModel(RepositoryMock),120, 15) {}
 }
 

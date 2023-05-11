@@ -65,6 +65,7 @@ android {
         // kotlinCompilerExtensionVersion compose_version // Change this
         kotlinCompilerExtensionVersion = "1.4.5"
     }
+    buildToolsVersion '34.0.0 rc4'
 
 
 }

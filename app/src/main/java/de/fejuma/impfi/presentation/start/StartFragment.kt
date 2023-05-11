@@ -32,6 +32,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,6 +50,7 @@ import de.fejuma.impfi.databinding.FragmentStartBinding
 import de.fejuma.impfi.model.difficulties
 import de.fejuma.impfi.presentation.start.component.DifficultyCard
 import de.fejuma.impfi.ui.MinesweeperTheme
+import de.fejuma.impfi.ui.lightGray
 
 
 @AndroidEntryPoint
@@ -169,9 +172,10 @@ private fun StartScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Image(
+            Icon(
                 painter = painterResource(id = R.drawable.virus_outline),
-                contentDescription = ""
+                contentDescription = "",
+                tint = lightGray
             )
 
 

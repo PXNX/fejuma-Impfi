@@ -37,6 +37,7 @@ import de.fejuma.impfi.presentation.game.component.GameEndDialog
 import de.fejuma.impfi.presentation.game.component.GameMap
 import de.fejuma.impfi.presentation.game.component.TopRow
 import de.fejuma.impfi.presentation.game.game.Game
+import de.fejuma.impfi.presentation.game.game.Status
 import de.fejuma.impfi.ui.MinesweeperTheme
 
 
@@ -112,7 +113,7 @@ class GameFragment : Fragment() {
                         }
 
 
-                        TopRow(viewModel,time, setOpenSurrenderDialog)
+                        TopRow(viewModel,time, minesRemaining, setOpenSurrenderDialog)
 
                         Divider(
                             Modifier.fillMaxWidth(),
@@ -133,11 +134,19 @@ class GameFragment : Fragment() {
 
 
 
-                        if (openEndDialog) {
+                        if (gameState == Status.LOST) {
                             GameEndDialog(false,
+                                { findNavController().navigate(R.id.startFragment) }, {
+                                    setOpenEndDialog(it)
+                                }, viewModel, time
+                            )
+                        }
+
+                        if (gameState == Status.WON) {
+                            GameEndDialog(true,
                                 { findNavController().navigate(R.id.action_game_scoreboard) }, {
                                     setOpenEndDialog(it)
-                                }, viewModel
+                                }, viewModel, time
                             )
                         }
 
