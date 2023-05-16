@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.fejuma.impfi.R
 import de.fejuma.impfi.data.data_source.HighscoreDao
@@ -56,7 +57,7 @@ fun GameEndDialog(
             },
             title = {
                 // three states: won, lost, new highsscroe?
-                Text(text = "Dialog Title")
+                Text(text = "Game Won!")
             },
             text = {
 
@@ -87,12 +88,9 @@ fun GameEndDialog(
             },
             dismissButton = {
                 Button(
-
-                    onClick = {
-                        onDismiss(false)
-                        // viewModel.newGame()
-                    }) {
-                    Text("This is the dismiss Button")
+                    {onConfirm()})
+                     {
+                    Text("Abbrechen")
                 }
             }
         )

@@ -112,11 +112,11 @@ fun HighscoreTable(
                             .padding(4.dp, 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-
+                        var time = formatTime( item.seconds.toLong())
                         // Display the index as the place an the Username
                         Text(text = "${key + 1}. ${item.username}")
                         //Display the time column
-                        Text(text = formatTime(item.seconds.toLong())) //todo: parse to some actual time or pass timestamp
+                        Text(text = time[0]+""+time[1]+":"+time[2]+time[3]) //todo: parse to some actual time or pass timestamp
 
 
                     }

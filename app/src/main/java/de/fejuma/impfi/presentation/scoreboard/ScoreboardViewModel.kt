@@ -43,7 +43,7 @@ class ScoreboardViewModel @Inject constructor(
     }
 
 
-    fun createEntries() {
+    /*fun createEntries() {
         viewModelScope.launch {
             repo.insertHighscore(
                 Highscore(
@@ -55,6 +55,6 @@ class ScoreboardViewModel @Inject constructor(
             )
         }
 
-    }
+    }*/
 }
 
