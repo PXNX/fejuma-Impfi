@@ -2,6 +2,7 @@ package de.fejuma.impfi.presentation.game.component
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,17 +20,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
 import de.fejuma.impfi.presentation.game.game.Tile
 import de.fejuma.impfi.presentation.game.game.TileCoverMode
+import de.fejuma.impfi.ui.MinesweeperTheme
 
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun MineField(
     tile: Tile,
-    x: Int,
-    y: Int,
+
     onTileSelected: (column: Int, row: Int) -> Unit,
     onTileSelectedSecondary: (column: Int, row: Int) -> Unit,
 ) {
@@ -46,11 +49,11 @@ fun MineField(
             .combinedClickable(
                 enabled = tile.coverMode != TileCoverMode.UNCOVERED,
                 onClick = {
-                    onTileSelected(x, y)
+                    onTileSelected(tile.x, tile.y)
 
                 },
                 onLongClick = {
-                    onTileSelectedSecondary(x, y)
+                    onTileSelectedSecondary(tile.x, tile.y)
                 },
             )
             // .clip(RoundedCornerShape(4.dp))
@@ -76,7 +79,7 @@ fun MineField(
                     "${tile.risk}",
                     fontSize = 8.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onBackground
                 )
 
                 is Tile.Empty -> {
@@ -91,11 +94,18 @@ fun MineField(
                         tint = Color.Red
                     )
 
-                    false -> Icon(
-                        painter = painterResource(id = R.drawable.virus_outline),
-                        contentDescription = "Virus",
-                        modifier = Modifier.fillMaxSize(),
-                        tint = Color.Yellow
+                    /*   false -> Icon(
+                           painter = painterResource(id = R.drawable.virus_outline),
+                           contentDescription = "Virus",
+                           modifier = Modifier.fillMaxSize(),
+                           tint = Color.Yellow
+                       )
+
+                     */
+                    false -> Image(
+                        painterResource(id = R.mipmap.ogre),
+                        contentDescription = null,
+                        Modifier.fillMaxSize()
                     )
                 }
             }
@@ -103,4 +113,16 @@ fun MineField(
     }
 
 
+}
+
+@DefaultPreviews
+@Composable
+fun MineFieldPreview() {
+    MinesweeperTheme {
+
+        MineField(
+            tile = Tile.Bomb(TileCoverMode.UNCOVERED, 0, 0, false),
+            onTileSelected = { _, _ -> },
+            onTileSelectedSecondary = { _, _ -> })
+    }
 }

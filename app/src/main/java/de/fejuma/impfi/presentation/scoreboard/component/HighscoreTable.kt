@@ -33,7 +33,6 @@ import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.formatTime
 import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.Highscore
-import de.fejuma.impfi.model.difficulties
 import de.fejuma.impfi.presentation.scoreboard.ScoreboardViewModel
 
 //TODO: What about having statistics and e.g. top 3 rounds here instead?
@@ -105,18 +104,18 @@ fun HighscoreTable(
 
 
                 // Display the score as a card with "username" and "time" columns
-                Card() {
+                Card {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(4.dp, 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        var time = formatTime( item.seconds.toLong())
+                        var time = formatTime(item.seconds.toLong())
                         // Display the index as the place an the Username
                         Text(text = "${key + 1}. ${item.username}")
                         //Display the time column
-                        Text(text = time[0]+""+time[1]+":"+time[2]+time[3]) //todo: parse to some actual time or pass timestamp
+                        Text(text = time[0] + "" + time[1] + ":" + time[2] + time[3]) //todo: parse to some actual time or pass timestamp
 
 
                     }
@@ -154,6 +153,6 @@ fun HighscoreTable(
 @Composable
 fun ScoreBoardPreview() {
     val viewModel = ScoreboardViewModel(RepositoryMock)
-  //  viewModel.loadHighscores(difficulties[0].level)
+    //  viewModel.loadHighscores(difficulties[0].level)
     HighscoreTable(scores = viewModel.highscores, DifficultyLevel.NORMAL)
 }

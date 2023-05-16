@@ -14,8 +14,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,7 +21,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -33,7 +30,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentGameBinding
 import de.fejuma.impfi.presentation.game.component.GameEndDialog
-
 import de.fejuma.impfi.presentation.game.component.GameMap
 import de.fejuma.impfi.presentation.game.component.TopRow
 import de.fejuma.impfi.presentation.game.game.Game
@@ -54,8 +50,6 @@ class GameFragment : Fragment() {
     private val binding get() = _binding!!
 
 
-
-
     @OptIn(
         ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
         ExperimentalFoundationApi::class
@@ -69,9 +63,13 @@ class GameFragment : Fragment() {
         val view = binding.root
 
 
-
+        //fixme: this bleongs to VM, also GAME should maybe be VM?
         val game = Game()
-        game.configure(10,10,10)
+        game.configure(
+            viewModel.difficulty.width,
+            viewModel.difficulty.height,
+            viewModel.difficulty.mines
+        )
 
 
         binding.composeViewGame.apply {
@@ -81,12 +79,6 @@ class GameFragment : Fragment() {
             setContent {
                 // In Compose world
                 MinesweeperTheme {
-
-                    val map by game.gameStateHolder.map.collectAsStateWithLifecycle()
-                    val time by  game.gameStateHolder.time.collectAsStateWithLifecycle()
-                    val minesRemaining by  game.gameStateHolder.minesRemaining.collectAsStateWithLifecycle()
-                    val gameState by  game.gameStateHolder.status.collectAsStateWithLifecycle()
-
 
 
                     /*        MainView(
@@ -104,7 +96,10 @@ class GameFragment : Fragment() {
 
 
                     Column(modifier = Modifier.fillMaxSize()) {
-
+                        val map by game.gameStateHolder.map.collectAsStateWithLifecycle()
+                        val time by game.gameStateHolder.time.collectAsStateWithLifecycle()
+                        val minesRemaining by game.gameStateHolder.minesRemaining.collectAsStateWithLifecycle()
+                        val gameState by game.gameStateHolder.status.collectAsStateWithLifecycle()
 
                         val (openSurrenderDialog, setOpenSurrenderDialog) = remember {
                             mutableStateOf(
@@ -113,7 +108,7 @@ class GameFragment : Fragment() {
                         }
 
 
-                        TopRow(viewModel,time, minesRemaining, setOpenSurrenderDialog)
+                        TopRow(viewModel, time, minesRemaining, setOpenSurrenderDialog)
 
                         Divider(
                             Modifier.fillMaxWidth(),
@@ -123,15 +118,13 @@ class GameFragment : Fragment() {
 
                         val (openEndDialog, setOpenEndDialog) = remember { mutableStateOf(false) }
 
-                        GameMap(map =  map,
-                            onTileSelected =     { column, row ->  game.primaryAction(column, row) },
-                            onTileSelectedSecondary =   { column, row ->  game.secondaryAction(column, row) })
+                        GameMap(
+                            map = map,
+                            onTileSelected = game::primaryAction,
+                            onTileSelectedSecondary = game::secondaryAction
+                        )
 
-                   //     GameField(viewModel) { setOpenEndDialog(true) } //replace with loss diaolog
-
-
-
-
+                        //     GameField(viewModel) { setOpenEndDialog(true) } //replace with loss diaolog
 
 
                         if (gameState == Status.LOST) {
@@ -162,9 +155,9 @@ class GameFragment : Fragment() {
                                 title = {
                                     Text(stringResource(id = R.string.game_abort_dialog))
                                 },
-                              /*  text = {
-                                    Text("Here is a text ")
-                                }, */
+                                /*  text = {
+                                      Text("Here is a text ")
+                                  }, */
                                 confirmButton = {
                                     Button(
 
@@ -191,7 +184,6 @@ class GameFragment : Fragment() {
 
 
                     }
-
 
 
                 }

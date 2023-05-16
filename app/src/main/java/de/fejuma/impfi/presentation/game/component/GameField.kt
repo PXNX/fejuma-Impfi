@@ -1,5 +1,6 @@
 package de.fejuma.impfi.presentation.game.component
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.calculateCentroid
@@ -8,16 +9,17 @@ import androidx.compose.foundation.gestures.calculatePan
 import androidx.compose.foundation.gestures.calculateRotation
 import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
@@ -36,6 +38,7 @@ import kotlin.math.PI
 import kotlin.math.abs
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun GameMap(
     map: List<List<Tile>>,
@@ -94,31 +97,29 @@ val minScale: Float = 1f
                                   changes: List<PointerInputChange> ->
 
 
+                        /*       val scaleValue = (    gestureZoom)
+                                   .coerceAtLeast(1f)
+                                   .coerceAtMost(3f)
+                               zoom = scaleValue
 
-                 /*       val scaleValue = (    gestureZoom)
-                            .coerceAtLeast(1f)
-                            .coerceAtMost(3f)
-                        zoom = scaleValue
+                               val modTranslateX = getScaledTranslation(
+                                   originalSize = this.size.width,
+                                   scaleFactor = scaleValue
+                               )
 
-                        val modTranslateX = getScaledTranslation(
-                            originalSize = this.size.width,
-                            scaleFactor = scaleValue
-                        )
+                               val modTranslateY = getScaledTranslation(
+                                   originalSize = this.size.height,
+                                   scaleFactor = scaleValue
+                               )
 
-                        val modTranslateY = getScaledTranslation(
-                            originalSize = this.size.height,
-                            scaleFactor = scaleValue
-                        )
+                               offset  =Offset( (gesturePan.x)
+                                   .coerceAtLeast(-modTranslateX)
+                                   .coerceAtMost(modTranslateX),
+        (gesturePan.y)
+                                   .coerceAtLeast(-modTranslateY)
+                                   .coerceAtMost(modTranslateY))
 
-                        offset  =Offset( (gesturePan.x)
-                            .coerceAtLeast(-modTranslateX)
-                            .coerceAtMost(modTranslateX),
- (gesturePan.y)
-                            .coerceAtLeast(-modTranslateY)
-                            .coerceAtMost(modTranslateY))
-
-                  */
-
+                         */
 
 
                         val oldScale = zoom
@@ -133,7 +134,7 @@ val minScale: Float = 1f
 
                         offset = Offset(offsetX, offsetY)*/
 
-                      val maxX = (size.width * (zoom - 1) / 2f)
+                        val maxX = (size.width * (zoom - 1) / 2f)
                         val maxY = (size.height * (zoom - 1) / 2f)
 
                         /*       val newOffset = offset + gesturePan.times(zoom)
@@ -143,7 +144,8 @@ val minScale: Float = 1f
                              ) */
 
 
-                           offset = (offset + gestureCentroid / oldScale) - (gestureCentroid / newScale + gesturePan / oldScale)
+                        offset =
+                            (offset + gestureCentroid / oldScale) - (gestureCentroid / newScale + gesturePan / oldScale)
 
                         //   offset = Offset(noffset.x.coerceIn(-maxX,maxX),noffset.y.coerceIn(-maxY,maxY))
 
@@ -158,13 +160,15 @@ val minScale: Float = 1f
                         }
                     }
                 )
-            }) {
+            }, contentAlignment = Alignment.Center
+    ) {
 
 
-        Column(
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(map.size),
             modifier = Modifier
-             //   .clipToBounds()
-               .wrapContentSize(unbounded = true)
+                //   .clipToBounds()
+                ///  .wrapContentSize(unbounded = true)
                 .graphicsLayer {
                     translationX = -offset.x * zoom
                     translationY = -offset.y * zoom
@@ -175,29 +179,21 @@ val minScale: Float = 1f
 
 
         ) {
+            itemsIndexed(map.flatten()) { index, cell ->
 
 
-          map.forEachIndexed { y, column ->
-
-                Row(Modifier
-                   .wrapContentSize(unbounded = true)
-                ) {
-                  column.forEachIndexed {x, cell->
-
-          //    var cellState by remember{ mutableStateOf(cell) }
-
+                //    var cellState by remember{ mutableStateOf(cell) }
 
 
                 MineField(
                     cell,
-                    x,
-                    y,
+
                     onTileSelected,
                     onTileSelectedSecondary
                 )
 
-                }            }
             }
+
         }
     }
 }
@@ -316,19 +312,19 @@ internal suspend fun PointerInputScope.detectTransformGestures(
 @Preview
 @Composable
 fun GameFieldPreview() {
-    val viewModel =  GameViewModel(RepositoryMock)
+    val viewModel = GameViewModel(RepositoryMock)
 
     val game = Game()
-    game.configure(200,100,200)
+    game.configure(200, 100, 200)
 
 
     val map by game.gameStateHolder.map.collectAsState()
 
- //   viewModel.startGame(10,20,10)
-GameMap(map,
-    { column, row -> game.primaryAction(column, row) },
-    { column, row -> game.secondaryAction(column, row) }
-)
+    //   viewModel.startGame(10,20,10)
+    GameMap(map,
+        { column, row -> game.primaryAction(column, row) },
+        { column, row -> game.secondaryAction(column, row) }
+    )
 }
 
 

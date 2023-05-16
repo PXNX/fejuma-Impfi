@@ -18,7 +18,7 @@ fun MainView(
     onRestartSelected: () -> Unit,
 ) {
     Column {
-      //  GameBar(time, minesRemaining, status, onRestartSelected)
+        //  GameBar(time, minesRemaining, status, onRestartSelected)
         GameMap(map, onTileSelected, onTileSelectedSecondary)
     }
 }
@@ -28,19 +28,19 @@ fun MainView(
 fun AppPreview() {
     MainView(20, 5, listOf(
         listOf(
-            Tile.Empty(TileCoverMode.COVERED),
-            Tile.Empty(TileCoverMode.UNCOVERED),
-            Tile.Empty(TileCoverMode.COVERED)
+            Tile.Empty(TileCoverMode.COVERED, 0, 0),
+            Tile.Empty(TileCoverMode.UNCOVERED, 0, 1),
+            Tile.Empty(TileCoverMode.COVERED, 0, 2)
         ),
         listOf(
-            Tile.Bomb(TileCoverMode.COVERED),
-            Tile.Bomb(TileCoverMode.FLAGGED),
-            Tile.Bomb(TileCoverMode.COVERED)
+            Tile.Bomb(TileCoverMode.COVERED, 1, 0),
+            Tile.Bomb(TileCoverMode.FLAGGED, 1, 1),
+            Tile.Bomb(TileCoverMode.COVERED, 1, 2)
         ),
         listOf(
-            Tile.Adjacent(1, TileCoverMode.UNCOVERED),
-            Tile.Adjacent(2, TileCoverMode.UNCOVERED),
-            Tile.Adjacent(3, TileCoverMode.COVERED)
+            Tile.Adjacent(1, TileCoverMode.UNCOVERED, 2, 0),
+            Tile.Adjacent(2, TileCoverMode.UNCOVERED, 2, 1),
+            Tile.Adjacent(3, TileCoverMode.COVERED, 2, 1)
         ),
     ), Status.WON, { _, _ -> }, { _, _ -> }, {})
 }

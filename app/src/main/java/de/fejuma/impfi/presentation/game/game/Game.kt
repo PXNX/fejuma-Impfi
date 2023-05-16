@@ -1,14 +1,11 @@
 package de.fejuma.impfi.presentation.game.game
 
 
-import de.fejuma.impfi.data.repository.RepositoryMock
-import de.fejuma.impfi.presentation.game.GameViewModel
-import de.fejuma.impfi.presentation.game.component.GameEndDialog
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -50,10 +47,10 @@ class Game {
         timerJob?.cancel()
 
         _map.clear()
-        repeat(rows) {
+        repeat(rows) { y ->
             val row = mutableListOf<Tile>()
-            repeat(columns) {
-                row.add(Tile.Empty(TileCoverMode.COVERED))
+            repeat(columns) { x ->
+                row.add(Tile.Empty(TileCoverMode.COVERED, x, y))
             }
             _map.add(row)
         }
@@ -62,7 +59,6 @@ class Game {
         _statusHolder.time.value = 0
         updateMapState()
     }
-
 
 
     private fun initializeMap(initialColumn: Int, initialRow: Int) {
@@ -80,7 +76,7 @@ class Game {
                 val isPositionAvailable = !mineAlreadyInPlace && !isInitialPosition
 
                 if (isPositionAvailable) {
-                    _map[randomY][randomX] = Tile.Bomb(TileCoverMode.COVERED)
+                    _map[randomY][randomX] = Tile.Bomb(TileCoverMode.COVERED, randomX, randomY)
                     break
                 }
             }
@@ -96,7 +92,7 @@ class Game {
         isGameRunning = true
 
         timerJob?.cancel()
-        timerJob = GlobalScope.launch {
+        timerJob = CoroutineScope(IO).launch {
             _statusHolder.time.value = 0
             while (isGameRunning) {
                 delay(1000)
@@ -124,7 +120,7 @@ class Game {
         ).count { it is Tile.Bomb }
 
         if (adjacentBombs > 0) {
-            _map[row][column] = Tile.Adjacent(adjacentBombs, TileCoverMode.COVERED)
+            _map[row][column] = Tile.Adjacent(adjacentBombs, TileCoverMode.COVERED, column, row)
         }
     }
 
@@ -161,17 +157,23 @@ class Game {
             return
         }
 
-        _map[row][column] = when(currentTile) {
+        _map[row][column] = when (currentTile) {
             is Tile.Bomb -> return
-            is Tile.Adjacent,  -> Tile.Adjacent(currentTile.risk, TileCoverMode.UNCOVERED)
-            is Tile.Empty -> Tile.Empty(TileCoverMode.UNCOVERED)
+            is Tile.Adjacent -> Tile.Adjacent(
+                currentTile.risk,
+                TileCoverMode.UNCOVERED,
+                column,
+                row
+            )
+
+            is Tile.Empty -> Tile.Empty(TileCoverMode.UNCOVERED, column, row)
         }
 
         if (currentTile !is Tile.Empty) {
             return
         }
 
-        uncoverTile(column - 1, row -1)
+        uncoverTile(column - 1, row - 1)
         uncoverTile(column - 1, row)
         uncoverTile(column - 1, row + 1)
         uncoverTile(column, row - 1)
@@ -245,6 +247,4 @@ class Game {
             it.toList()
         }
     }
-
-
 }

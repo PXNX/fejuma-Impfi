@@ -32,8 +32,8 @@ import de.fejuma.impfi.ui.lightGray
 @Composable
 fun TopRow(
     viewModel: GameViewModel,
-    time:Int,
-    mines:Int,
+    time: Int,
+    mines: Int,
     openDialog: (Boolean) -> Unit
 ) {
 //todo: using Units (state hoisting) is smoother than passing down state - also when using scope?
@@ -58,7 +58,10 @@ fun TopRow(
 
                 val timeFormat = formatTime(time.toLong())
 
-                AnimatingCharacter(modifier=Modifier.padding(start=16.dp),character =timeFormat[0])
+                AnimatingCharacter(
+                    modifier = Modifier.padding(start = 16.dp),
+                    character = timeFormat[0]
+                )
 
                 AnimatingCharacter(character = timeFormat[1])
 
@@ -79,7 +82,7 @@ fun TopRow(
             }
 
             Spacer(modifier = Modifier.height(6.dp))
-            
+
 
 
             Row {
@@ -87,9 +90,21 @@ fun TopRow(
                     painterResource(id = R.drawable.virus_outline),
                     contentDescription = "",
                     tint = lightGray
-                    )
+                )
 
-                Text(mines.toString(), Modifier.padding(start = 10.dp), color = Color.Red, fontWeight = FontWeight.Bold)
+
+
+                AnimatingCharacter(
+
+                    modifier = Modifier.padding(start = 16.dp),
+                    character = if (mines.toString().length > 1) mines.toString()[0] else '0'
+                )
+
+                AnimatingCharacter(
+                    character = mines.toString()[1]
+                )
+
+
             }
         }
 
@@ -115,6 +130,6 @@ fun TopRow(
 @DefaultPreviews
 @Composable
 fun TopRowPreview() = MinesweeperTheme {
-    TopRow(viewModel = GameViewModel(RepositoryMock),120, 15) {}
+    TopRow(viewModel = GameViewModel(RepositoryMock), 120, 15) {}
 }
 

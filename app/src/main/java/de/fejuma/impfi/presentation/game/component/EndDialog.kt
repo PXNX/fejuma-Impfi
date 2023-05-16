@@ -14,19 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import de.fejuma.impfi.R
-import de.fejuma.impfi.data.data_source.HighscoreDao
-import de.fejuma.impfi.data.repository.Repository
 import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.formatTime
 import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.Highscore
 import de.fejuma.impfi.presentation.game.GameViewModel
 import de.fejuma.impfi.ui.lightGray
-import kotlinx.coroutines.launch
-import kotlin.time.toDuration
 
 @Composable
 fun GameEndDialog(
@@ -44,7 +38,7 @@ fun GameEndDialog(
     //if verzweigung, welches jeweil unterschiedliche Dialogbox öffnet? (Gewonnen und neuer HighScore || Gewonnen aber kein neuer HS || verloren
 //TODO: Fix focus and layout (Material Compose TextField Validation...)
 
-    if(has_won) {
+    if (has_won) {
         AlertDialog(
             onDismissRequest = {
 
@@ -64,7 +58,10 @@ fun GameEndDialog(
                 Column {
 
 
-                    Text("Benötigte Zeit: " + timeFormat[0]+timeFormat[1]+":"+timeFormat[2]+timeFormat[3], Modifier.padding(start = 10.dp))
+                    Text(
+                        "Benötigte Zeit: " + timeFormat[0] + timeFormat[1] + ":" + timeFormat[2] + timeFormat[3],
+                        Modifier.padding(start = 10.dp)
+                    )
 
                     TextField(value = userName, onValueChange = {
                         setUserName(it)
@@ -79,7 +76,13 @@ fun GameEndDialog(
                 Button(
                     {
                         //TODO: DifficultyLevel dynamisch auslesen
-                    viewModel.saveHighscore(highscore = Highscore(userName, DifficultyLevel.EASY,timePlayed))
+                        viewModel.saveHighscore(
+                            highscore = Highscore(
+                                userName,
+                                DifficultyLevel.EASY,
+                                timePlayed
+                            )
+                        )
                         onConfirm()
                     }
                 ) {
@@ -88,8 +91,8 @@ fun GameEndDialog(
             },
             dismissButton = {
                 Button(
-                    {onConfirm()})
-                     {
+                    { onConfirm() })
+                {
                     Text("Abbrechen")
                 }
             }
@@ -97,7 +100,7 @@ fun GameEndDialog(
     }
 
 
-    if(!has_won) {
+    if (!has_won) {
         AlertDialog(
             onDismissRequest = {
 
@@ -118,7 +121,7 @@ fun GameEndDialog(
                 }
             },
 
-        )
+            )
     }
 
 

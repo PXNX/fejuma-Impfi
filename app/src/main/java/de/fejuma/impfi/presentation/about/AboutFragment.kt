@@ -42,7 +42,7 @@ class AboutFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
 
-                MinesweeperTheme() {
+                MinesweeperTheme {
 
 
                     LazyColumn {

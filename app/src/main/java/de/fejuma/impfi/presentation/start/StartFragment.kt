@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,11 +31,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -115,7 +111,7 @@ private fun SheetContent(viewModel: StartViewModel) {
         difficulties.forEach { (level, difficulty) ->
             // Modifier.weight(1f,false)
             DifficultyCard(
-                difficulty ,
+                difficulty,
                 viewModel.difficulty == level
             ) { viewModel.changeDifficulty(level) }
         }
@@ -247,7 +243,9 @@ private fun StartScreen(
 
 @DefaultPreviews
 @Composable
-private fun SheetPreview()  = MinesweeperTheme { Column {
-    SheetContent(viewModel = StartViewModel(RepositoryMock))
-}}
+private fun SheetPreview() = MinesweeperTheme {
+    Column {
+        SheetContent(viewModel = StartViewModel(RepositoryMock))
+    }
+}
 

@@ -5,26 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import de.fejuma.impfi.DefaultPreviews
-import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.databinding.FragmentScoreboardBinding
 import de.fejuma.impfi.model.DifficultyLevel
-import de.fejuma.impfi.model.difficulties
 import de.fejuma.impfi.presentation.scoreboard.component.HighscoreTable
 import de.fejuma.impfi.ui.MinesweeperTheme
 import kotlinx.coroutines.launch
@@ -54,13 +54,19 @@ class ScoreboardFragment : Fragment() {
                 // In Compose world
                 MinesweeperTheme {
                     Column(Modifier.fillMaxSize()) {
-
-
-                        val pagerState = rememberPagerState()
-                        val scope = rememberCoroutineScope()
                         val pages = listOf(
                             DifficultyLevel.EASY, DifficultyLevel.NORMAL, DifficultyLevel.HARD
                         )
+
+                        val pagerState = rememberPagerState(
+                            initialPage = 0,
+                            initialPageOffsetFraction = 0f
+                        ) {
+                            pages.size
+                        }
+
+                        val scope = rememberCoroutineScope()
+
 
                         TabRow(
                             // Our selected tab is our current page
@@ -89,18 +95,33 @@ class ScoreboardFragment : Fragment() {
                         }
 
 
+                        /*    Text("LIST::: ${viewModel.highscores}", color = Color.Magenta)
 
 
 
+                                Button(
+                     t               onClick = { viewModel.createEntries() },
+                                ) {
+                                    Text("Create Entries")
+                                }
 
-
-
+                             */
                         HorizontalPager(
-                            pageCount = pages.size,
                             modifier = Modifier.fillMaxSize(),
                             state = pagerState,
-                        ) { page ->
+                            pageSpacing = 0.dp,
 
+                            userScrollEnabled = true,
+                            reverseLayout = false,
+                            contentPadding = PaddingValues(0.dp),
+                            beyondBoundsPageCount = 0,
+                            pageSize = PageSize.Fill,
+                            //   flingBehavior = PagerDefaults.flingBehavior(state = state),
+                            //     key = pagerState.currentPage,
+                            pageNestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
+                                Orientation.Horizontal
+                            ),
+                        ) { page ->
                             viewModel.loadHighscores(pages[pagerState.settledPage])
 
                             HighscoreTable(scores = viewModel.highscores, pages[page])

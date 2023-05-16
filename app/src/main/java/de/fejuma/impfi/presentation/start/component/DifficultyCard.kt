@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,8 +32,6 @@ import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.difficulties
 import de.fejuma.impfi.ui.MinesweeperTheme
 import de.fejuma.impfi.ui.darkGray
-import de.fejuma.impfi.ui.darkGreen
-import de.fejuma.impfi.ui.lightGray
 
 
 @Composable
@@ -45,7 +44,8 @@ fun RowScope.DifficultyCard(
     val strokeColor: Color?
     val textColor: Color?
     val backgroundColor: Color by animateColorAsState(
-        if (isActive) darkGreen else Color.Transparent,
+        if (isActive)
+            MaterialTheme.colorScheme.primary else Color.Transparent,
         animationSpec = tween(300, easing = LinearEasing), label = "backgroundColor"
     )
 
@@ -100,8 +100,8 @@ fun RowScope.DifficultyCard(
 @Composable
 private fun DifficultyCardPreview() = MinesweeperTheme {
 
-        Row{
-            DifficultyCard(difficulties[DifficultyLevel.EASY]!!,true,{})
-            DifficultyCard(difficulties[DifficultyLevel.NORMAL]!!,false,{})
-        }
+    Row {
+        DifficultyCard(difficulties[DifficultyLevel.EASY]!!, true, {})
+        DifficultyCard(difficulties[DifficultyLevel.NORMAL]!!, false, {})
+    }
 }
