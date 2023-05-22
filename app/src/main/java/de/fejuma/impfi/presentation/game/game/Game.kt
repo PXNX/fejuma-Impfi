@@ -221,7 +221,8 @@ class Game {
         val tile = _map[row][column]
         val nextCoverMode = when (tile.coverMode) {
             TileCoverMode.COVERED -> TileCoverMode.FLAGGED
-            TileCoverMode.FLAGGED -> TileCoverMode.COVERED
+            TileCoverMode.FLAGGED -> TileCoverMode.QUESTIONED
+            TileCoverMode.QUESTIONED -> TileCoverMode.COVERED
             TileCoverMode.UNCOVERED -> return
         }
 

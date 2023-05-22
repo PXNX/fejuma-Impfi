@@ -1,6 +1,7 @@
 package de.fejuma.impfi.presentation.game.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.calculateCentroid
@@ -29,7 +30,12 @@ import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
+import de.fejuma.impfi.R
 import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.presentation.game.GameViewModel
 import de.fejuma.impfi.presentation.game.game.Game
@@ -46,38 +52,9 @@ internal fun GameMap(
     onTileSelectedSecondary: (column: Int, row: Int) -> Unit,
 ) {
 
-
-    /*  var isInteractive by remember {
-     mutableStateOf(true)
- }
-
-val minScale: Float = 1f
- val maxScale: Float = 3f
-
-
- var scale by remember { mutableStateOf(1f) }
- var offset by remember { mutableStateOf(Offset.Zero) }
- var size by remember { mutableStateOf(IntSize.Zero) }
- val state = rememberTransformableState { zoomChange, offsetChange, _ ->
-     isInteractive = false
-     scale = maxOf(minScale, minOf(scale * zoomChange, maxScale))
-
-     //float.coerceIn() might be nicer
-     val maxX = (size.width * (scale - 1)) / 2
-     val minX = -maxX
-     val offsetX = maxOf(minX, minOf(maxX, offset.x + offsetChange.x * scale))
-     val maxY = (size.height * (scale - 1)) / 2
-     val minY = -maxY
-     val offsetY = maxOf(minY, minOf(maxY, offset.y + offsetChange.y * scale))
-
-     offset = Offset(offsetX, offsetY)
-
-     isInteractive = true
- } */
-
-
     var zoom by remember { mutableStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
+    var parentSize by remember { mutableStateOf(IntSize.Zero) }
 
 
     Box(
@@ -97,59 +74,25 @@ val minScale: Float = 1f
                                   changes: List<PointerInputChange> ->
 
 
-                        /*       val scaleValue = (    gestureZoom)
-                                   .coerceAtLeast(1f)
-                                   .coerceAtMost(3f)
-                               zoom = scaleValue
+                        // Limit the amount of zoom
+                        val newScale = (zoom * gestureZoom).coerceIn(0.5f, 3f)
 
-                               val modTranslateX = getScaledTranslation(
-                                   originalSize = this.size.width,
-                                   scaleFactor = scaleValue
-                               )
+                        // Limit how much the child can be dragged within its parent
+                        val maxX = abs((size.width - parentSize.width * newScale) / 2)
+                        val maxY = abs((size.height - parentSize.height * newScale) / 2)
 
-                               val modTranslateY = getScaledTranslation(
-                                   originalSize = this.size.height,
-                                   scaleFactor = scaleValue
-                               )
+                        /*  val newOffset =
+                              (offset + gestureCentroid / zoom) - (gestureCentroid / newScale + gesturePan / zoom) */
 
-                               offset  =Offset( (gesturePan.x)
-                                   .coerceAtLeast(-modTranslateX)
-                                   .coerceAtMost(modTranslateX),
-        (gesturePan.y)
-                                   .coerceAtLeast(-modTranslateY)
-                                   .coerceAtMost(modTranslateY))
+                        val newOffset = offset + gesturePan
 
-                         */
-
-
-                        val oldScale = zoom
-                        val newScale = (zoom * gestureZoom).coerceIn(0.5f..3f)
-
-                        /*   val maxX = (size.width * (newScale - 1)) / 2
-                        val minX = -maxX
-                        val offsetX = maxOf(minX, minOf(maxX, offset.x + gesturePan.x * newScale))
-                        val maxY = (size.height * (newScale - 1)) / 2
-                        val minY = -maxY
-                        val offsetY = maxOf(minY, minOf(maxY, offset.y + gesturePan.y * newScale))
-
-                        offset = Offset(offsetX, offsetY)*/
-
-                        val maxX = (size.width * (zoom - 1) / 2f)
-                        val maxY = (size.height * (zoom - 1) / 2f)
-
-                        /*       val newOffset = offset + gesturePan.times(zoom)
-                             offset = Offset(
-                                 newOffset.x.coerceIn(-maxX, maxX),
-                                 newOffset.y.coerceIn(-maxY, maxY)
-                             ) */
-
-
-                        offset =
-                            (offset + gestureCentroid / oldScale) - (gestureCentroid / newScale + gesturePan / oldScale)
-
-                        //   offset = Offset(noffset.x.coerceIn(-maxX,maxX),noffset.y.coerceIn(-maxY,maxY))
+                        offset = Offset(
+                            newOffset.x.coerceIn(-maxX, maxX),
+                            newOffset.y.coerceIn(-maxY, maxY)
+                        )
 
                         zoom = newScale
+
 
 // 🔥Consume touch when multiple fingers down
 // This prevents click and long click if your finger touches a
@@ -164,17 +107,121 @@ val minScale: Float = 1f
     ) {
 
 
+        /*     Column(
+                 Modifier     .onSizeChanged {
+                 parentSize = it
+             }
+
+                 .graphicsLayer {
+                     translationX = offset.x
+                     translationY = offset.y
+                     scaleX = zoom
+                     scaleY = zoom
+                 }
+             ){
+             (1..60).chunked(6).forEach{
+                 x->
+
+
+                     Row{
+                         x.forEach{ y->
+
+                             val col =   when(y%5) {
+                                 0 -> Color.Green
+                                 1 -> Color.Red
+
+                                 2->Color.Yellow
+
+                                3-> Color.LightGray
+                                 else -> Color.Transparent
+                             }
+
+                             var mod = Modifier.padding(4.dp).clip(
+                                 CircleShape)
+
+                             if (y%5==4 || y%5==4){
+                                 mod = mod.border(2.dp,Color.LightGray, shape = CircleShape)
+                             }
+
+
+
+                             Box(mod.background(col).size(42.dp).padding(8.dp), contentAlignment = Alignment.Center){
+
+
+
+                         when(y%5){
+                             0-> Icon(
+                                 painterResource(id = R.drawable.needle),
+                                 modifier = Modifier.fillMaxSize(),
+                                 tint=Color.Black,
+                                 contentDescription = null,
+
+                             )
+                             1-> Icon(
+                                 painterResource(id = R.drawable.virus_outline),
+                                 modifier = Modifier.fillMaxSize(),
+                                 contentDescription = null,
+                                 tint=Color.White,
+                             )
+                             2-> {
+                                 Icon(
+                                     painterResource(id = R.drawable.help),
+                                     modifier = Modifier.fillMaxSize(),
+                                     contentDescription = null,
+                                     tint=Color.Black,
+                                 )
+                             }
+                             else-> {
+
+                             }
+                         }      }
+
+
+                     }
+                 }}
+             }
+
+         */
+
+
+        /*    Surface(onClick = { /*TODO*/ }, modifier = Modifier     .onSizeChanged {
+                sizee = it
+            }
+
+
+                .graphicsLayer {
+                    translationX = -offset.x
+                    translationY = -offset.y
+                    scaleX = zoom
+                    scaleY = zoom
+                }) {
+                Text("YEEE",Modifier.background(Color.Cyan).padding(10.dp))
+            }
+
+         */
+
+
         LazyVerticalGrid(
-            columns = GridCells.Fixed(map.size),
+            columns = GridCells.Adaptive(24.dp),
             modifier = Modifier
                 //   .clipToBounds()
-                ///  .wrapContentSize(unbounded = true)
+                //      .wrapContentSize(unbounded = true)
+                //       .fillMaxSize()
+                //       .clipToBounds()
+
+
+                .onSizeChanged {
+                    parentSize = it
+                }
+
                 .graphicsLayer {
-                    translationX = -offset.x * zoom
-                    translationY = -offset.y * zoom
+                    translationX = offset.x
+                    translationY = offset.y
                     scaleX = zoom
                     scaleY = zoom
                 }
+
+
             //   .background(Color.Cyan)
 
 
@@ -185,6 +232,12 @@ val minScale: Float = 1f
                 //    var cellState by remember{ mutableStateOf(cell) }
 
 
+                Image(
+                    painterResource(id = R.mipmap.box),
+                    contentDescription = null,
+                    Modifier.fillMaxSize()
+                )
+
                 MineField(
                     cell,
 
@@ -192,9 +245,12 @@ val minScale: Float = 1f
                     onTileSelectedSecondary
                 )
 
+
             }
 
         }
+
+
     }
 }
 
@@ -315,7 +371,7 @@ fun GameFieldPreview() {
     val viewModel = GameViewModel(RepositoryMock)
 
     val game = Game()
-    game.configure(200, 100, 200)
+    game.configure(20, 10, 20)
 
 
     val map by game.gameStateHolder.map.collectAsState()
@@ -327,12 +383,3 @@ fun GameFieldPreview() {
     )
 }
 
-
-private fun getScaledTranslation(
-    originalSize: Int,
-    scaleFactor: Float,
-): Float {
-    val scaledWidth = originalSize * scaleFactor
-    val widthDiff = abs(scaledWidth - originalSize)
-    return (widthDiff / 2)
-}

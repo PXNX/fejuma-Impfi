@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -59,7 +58,7 @@ fun TopRow(
                 val timeFormat = formatTime(time.toLong())
 
                 AnimatingCharacter(
-                    modifier = Modifier.padding(start = 16.dp),
+                    modifier = Modifier.padding(start = 10.dp),
                     character = timeFormat[0]
                 )
 
@@ -70,7 +69,7 @@ fun TopRow(
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Red,
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 )
 
@@ -92,17 +91,20 @@ fun TopRow(
                     tint = lightGray
                 )
 
+                //fixme: ugly af
+                mines.toString().forEachIndexed { index, c ->
+                    if (index == 0)
+                        AnimatingCharacter(
 
+                            modifier = Modifier.padding(start = 10.dp),
+                            character = if (mines.toString().length > 1) '0' else mines.toString()[0]
+                        ) else
 
-                AnimatingCharacter(
+                        AnimatingCharacter(
+                            character = mines.toString()[index]
+                        )
 
-                    modifier = Modifier.padding(start = 16.dp),
-                    character = if (mines.toString().length > 1) mines.toString()[0] else '0'
-                )
-
-                AnimatingCharacter(
-                    character = mines.toString()[1]
-                )
+                }
 
 
             }

@@ -4,17 +4,22 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,7 +48,7 @@ fun MineField(
     Box(
         modifier = Modifier
             .padding(1.dp)
-            .size(16.dp)
+            .size(20.dp)
             //       .indication(interactionSource, LocalIndication.current)
 
             .combinedClickable(
@@ -57,6 +62,7 @@ fun MineField(
                 },
             )
             // .clip(RoundedCornerShape(4.dp))
+            //    .neumorphic(neuShape =  Pressed.Rounded(4.dp), strokeWidth = 2.dp),
             .background(if (tile.coverMode == TileCoverMode.UNCOVERED) Color.Transparent else Color.DarkGray),
 
         contentAlignment = Alignment.Center
@@ -72,6 +78,13 @@ fun MineField(
                 contentDescription = "Flag",
                 modifier = Modifier.fillMaxSize(),
                 tint = Color.Green
+            )
+
+            TileCoverMode.QUESTIONED -> Icon(
+                painter = painterResource(id = R.drawable.help),
+                contentDescription = "Question",
+                modifier = Modifier.fillMaxSize(),
+                tint = Color.Yellow
             )
 
             TileCoverMode.UNCOVERED -> when (tile) {
@@ -120,9 +133,61 @@ fun MineField(
 fun MineFieldPreview() {
     MinesweeperTheme {
 
-        MineField(
-            tile = Tile.Bomb(TileCoverMode.UNCOVERED, 0, 0, false),
-            onTileSelected = { _, _ -> },
-            onTileSelectedSecondary = { _, _ -> })
+        Row {
+
+
+            MineField(
+                tile = Tile.Bomb(TileCoverMode.UNCOVERED, 0, 0, false),
+                onTileSelected = { _, _ -> },
+                onTileSelectedSecondary = { _, _ -> })
+
+            Box(
+                modifier = Modifier
+                    .padding(1.dp)
+                    .size(20.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .border(2.dp, Color.White, RoundedCornerShape(4.dp))
+
+                    .background(Color.DarkGray),
+
+                contentAlignment = Alignment.Center
+
+            ) {
+
+            }
+
+            Box(
+                modifier = Modifier
+                    .padding(1.dp)
+                    .size(20.dp)
+
+
+                    .clip(CircleShape)
+                    .border(2.dp, Color.White, CircleShape)
+                    .background(Color.DarkGray),
+
+                contentAlignment = Alignment.Center
+
+            ) {
+
+            }
+
+
+
+            Image(
+                painterResource(id = R.mipmap.box),
+                contentDescription = null,
+                Modifier.fillMaxSize()
+            )
+
+
+        }
     }
 }
+
+
+
+
+
+
+

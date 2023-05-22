@@ -46,7 +46,7 @@ class ScoreboardFragment : Fragment() {
     ): View {
         _binding = FragmentScoreboardBinding.inflate(inflater, container, false)
         val view = binding.root
-        binding.composeView.apply {
+        binding.composeViewScoreboard.apply {
             // Dispose of the Composition when the view's LifecycleOwner
             // is destroyed
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
