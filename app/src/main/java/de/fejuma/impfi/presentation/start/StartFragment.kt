@@ -151,7 +151,7 @@ private fun StartScreen(
     navController: NavController,
     viewModel: StartViewModel  //= hiltViewModel()
 ) {
-    val sheetState = rememberModalBottomSheetState()
+//    val sheetState = rememberModalBottomSheetState()
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
 
 
@@ -229,13 +229,13 @@ private fun StartScreen(
     }
 
     if (openBottomSheet) {
-        ModalBottomSheet(
-            onDismissRequest = { openBottomSheet = false },
-            sheetState = sheetState,
-
-            ) {
-            SheetContent(viewModel = viewModel)
-        }
+//        ModalBottomSheet(
+//            onDismissRequest = { openBottomSheet = false },
+////            sheetState = sheetState,
+//
+//            ) {
+//            SheetContent(viewModel = viewModel)
+//        }
     }
 
 
