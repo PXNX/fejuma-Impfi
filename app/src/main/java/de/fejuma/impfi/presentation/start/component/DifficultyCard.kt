@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
+import de.fejuma.impfi.difficulties
 import de.fejuma.impfi.model.Difficulty
 import de.fejuma.impfi.model.DifficultyLevel
-import de.fejuma.impfi.model.difficulties
 import de.fejuma.impfi.ui.MinesweeperTheme
 import de.fejuma.impfi.ui.darkGray
 

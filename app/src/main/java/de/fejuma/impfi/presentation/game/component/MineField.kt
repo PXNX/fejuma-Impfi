@@ -46,19 +46,28 @@ fun MineField(
 
     Box(
         modifier = Modifier
-
-            .size(24.dp)
+            .clip(CircleShape)
+            .size(48.dp)
 
 
             .then(
                 if (tile.coverMode == TileCoverMode.UNCOVERED)
 
-                    Modifier
-                        .background(Color.Transparent)
-                        .border(1.dp, Color.DarkGray) else Modifier
+                    if (tile is Tile.Empty || tile is Tile.Adjacent)
+                        Modifier
+                            .background(Color.Transparent)
+                            .border(1.dp, Color.DarkGray)
+                    else
+                        Modifier.background(Color.Red)
+                else if (tile.coverMode == TileCoverMode.FLAGGED)
+                    Modifier.background(Color.Yellow)
+                else if (tile.coverMode == TileCoverMode.QUESTIONED)
+                    Modifier.background(Color.Green)
+                else Modifier
 
 
             )
+
 
             //       .indication(interactionSource, LocalIndication.current)
 

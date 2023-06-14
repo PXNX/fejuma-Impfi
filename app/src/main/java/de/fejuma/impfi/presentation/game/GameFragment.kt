@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.activity.addCallback
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,13 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -37,8 +35,8 @@ import de.fejuma.impfi.presentation.game.component.AnimatingCharacter
 import de.fejuma.impfi.presentation.game.component.GameEndDialog
 import de.fejuma.impfi.presentation.game.component.GameMap
 import de.fejuma.impfi.presentation.game.component.TopRow
-import de.fejuma.impfi.presentation.game.game.Game
 import de.fejuma.impfi.presentation.game.game.Status
+import de.fejuma.impfi.timeLimit
 import de.fejuma.impfi.ui.MinesweeperTheme
 import kotlin.math.abs
 
@@ -56,10 +54,6 @@ class GameFragment : Fragment() {
     private val binding get() = _binding!!
 
 
-    @OptIn(
-        ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
-        ExperimentalFoundationApi::class
-    )
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -70,12 +64,13 @@ class GameFragment : Fragment() {
 
 
         //fixme: this bleongs to VM, also GAME should maybe be VM?
-        val game = Game()
-        game.configure(
+        //  val game = Game()
+        viewModel.configure(
             viewModel.difficulty.width,
             viewModel.difficulty.height,
             viewModel.difficulty.mines
         )
+
 
 
         binding.composeViewGame.apply {
@@ -101,25 +96,28 @@ class GameFragment : Fragment() {
 
 
 
+
+
                     Column(modifier = Modifier.fillMaxSize()) {
-                        val map by game.gameStateHolder.map.collectAsStateWithLifecycle()
-                        val time by game.gameStateHolder.time.collectAsStateWithLifecycle()
-                        val minesRemaining by game.gameStateHolder.minesRemaining.collectAsStateWithLifecycle()
-                        val gameState by game.gameStateHolder.status.collectAsStateWithLifecycle()
-
-                        val (openSurrenderDialog, setOpenSurrenderDialog) = remember {
-                            mutableStateOf(
-                                false
-                            )
-                        }
 
 
-                        TopRow(viewModel,
+                        val map by viewModel.gameStateHolder.map.collectAsStateWithLifecycle()
+                        val time by viewModel.gameStateHolder.time.collectAsStateWithLifecycle(
+                            initialValue = 0
+                        )
+                        val minesRemaining by viewModel.gameStateHolder.minesRemaining.collectAsStateWithLifecycle()
+                        val gameState by viewModel.gameStateHolder.status.collectAsStateWithLifecycle()
+
+
+
+
+                        TopRow(
+                            viewModel,
                             {
 
 
                                 Row {
-                                    if (time >= 3600) { //end after 1h
+                                    if (time >= timeLimit) { //end after 1h
                                         //TODO -- maybe end game
                                     } else {
                                         formatTime(time).forEach {
@@ -161,7 +159,7 @@ class GameFragment : Fragment() {
                                 }
 
 
-                            }, minesRemaining, setOpenSurrenderDialog
+                            }, minesRemaining, viewModel::setOpenSurrenderDialog
                         )
 
                         Divider(
@@ -174,8 +172,8 @@ class GameFragment : Fragment() {
 
                         GameMap(
                             map = map,
-                            onTileSelected = game::primaryAction,
-                            onTileSelectedSecondary = game::secondaryAction
+                            onTileSelected = viewModel::primaryAction,
+                            onTileSelectedSecondary = viewModel::secondaryAction
                         )
 
                         //     GameField(viewModel) { setOpenEndDialog(true) } //replace with loss diaolog
@@ -197,14 +195,14 @@ class GameFragment : Fragment() {
                             )
                         }
 
-                        if (openSurrenderDialog) {
+                        if (viewModel.isSurrenderDialog) {
 
                             AlertDialog(
                                 onDismissRequest = {
                                     // Dismiss the dialog when the user clicks outside the dialog or on the back
                                     // button. If you want to disable that functionality, simply use an empty
                                     // onCloseRequest.
-                                    setOpenSurrenderDialog(false)
+                                    viewModel.setOpenSurrenderDialog(false)
                                 },
                                 title = {
                                     Text(stringResource(id = R.string.game_abort_dialog))
@@ -216,7 +214,7 @@ class GameFragment : Fragment() {
                                     Button(
 
                                         onClick = {
-                                            setOpenSurrenderDialog(false)
+                                            viewModel.setOpenSurrenderDialog(false)
                                             findNavController().navigate(R.id.startFragment)
                                         }) {
                                         Text(stringResource(id = R.string.confirm_button))
@@ -227,7 +225,7 @@ class GameFragment : Fragment() {
 
                                         onClick = {
 
-                                            setOpenSurrenderDialog(false)
+                                            viewModel.setOpenSurrenderDialog(false)
 
                                         }) {
                                         Text(stringResource(id = R.string.dismiss_button))
@@ -242,13 +240,33 @@ class GameFragment : Fragment() {
 
                 }
             }
+
+
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+
+            viewModel.setOpenSurrenderDialog(true)
+        }
+
         return view
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.isTimerActive = false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!viewModel.isSurrenderDialog)
+            viewModel.isTimerActive = true
     }
 
 

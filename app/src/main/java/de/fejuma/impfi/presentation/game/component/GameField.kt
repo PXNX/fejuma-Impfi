@@ -34,7 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.presentation.game.GameViewModel
-import de.fejuma.impfi.presentation.game.game.Game
 import de.fejuma.impfi.presentation.game.game.Tile
 import kotlin.math.PI
 import kotlin.math.abs
@@ -360,16 +359,16 @@ internal suspend fun PointerInputScope.detectTransformGestures(
 fun GameFieldPreview() {
     val viewModel = GameViewModel(RepositoryMock)
 
-    val game = Game()
-    game.configure(20, 10, 20)
+    // val game = Game()
+    viewModel.configure(20, 10, 20)
 
 
-    val map by game.gameStateHolder.map.collectAsState()
+    val map by viewModel.gameStateHolder.map.collectAsState()
 
     //   viewModel.startGame(10,20,10)
     GameMap(map,
-        { column, row -> game.primaryAction(column, row) },
-        { column, row -> game.secondaryAction(column, row) }
+        { column, row -> viewModel.primaryAction(column, row) },
+        { column, row -> viewModel.secondaryAction(column, row) }
     )
 }
 

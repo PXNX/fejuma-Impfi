@@ -43,7 +43,7 @@ import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
 import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.databinding.FragmentStartBinding
-import de.fejuma.impfi.model.difficulties
+import de.fejuma.impfi.difficulties
 import de.fejuma.impfi.presentation.start.component.DifficultyCard
 import de.fejuma.impfi.ui.MinesweeperTheme
 import de.fejuma.impfi.ui.lightGray

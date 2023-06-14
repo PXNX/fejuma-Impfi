@@ -59,7 +59,7 @@ fun GameEndDialog(
 
 
                     Text(
-                        "Benötigte Zeit: " + timeFormat[0] + timeFormat[1] + ":" + timeFormat[2] + timeFormat[3],
+                        "Benötigte Zeit: $timeFormat",
                         Modifier.padding(start = 10.dp)
                     )
 
@@ -76,10 +76,10 @@ fun GameEndDialog(
                 Button(
                     {
                         //TODO: DifficultyLevel dynamisch auslesen
-                        viewModel.saveHighscore(
-                            highscore = Highscore(
+                        viewModel.saveHighScore(
+                            highScore = Highscore(
                                 userName,
-                                DifficultyLevel.EASY,
+                                DifficultyLevel.valueOf(viewModel.difficulty.name),
                                 timePlayed
                             )
                         )

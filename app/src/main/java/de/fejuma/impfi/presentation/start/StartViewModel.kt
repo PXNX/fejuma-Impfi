@@ -1,6 +1,7 @@
 package de.fejuma.impfi.presentation.start
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -14,10 +15,10 @@ class StartViewModel @Inject constructor(
     private val repo: Repository
 ) : ViewModel() {
 
-    var sfxVolume by mutableStateOf<Int>(repo.getSfxVolume())
+    var sfxVolume by mutableIntStateOf(repo.getSfxVolume())
         private set
 
-    var difficulty by mutableStateOf<DifficultyLevel>(repo.getDifficulty())
+    var difficulty by mutableStateOf(repo.getDifficulty())
         private set
 
     fun changeSfxVolume(sfxVolume: Int) {
