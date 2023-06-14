@@ -1,7 +1,6 @@
 package de.fejuma.impfi.presentation.game.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.calculateCentroid
@@ -10,10 +9,10 @@ import androidx.compose.foundation.gestures.calculatePan
 import androidx.compose.foundation.gestures.calculateRotation
 import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,11 +30,8 @@ import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.dp
-import de.fejuma.impfi.R
 import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.presentation.game.GameViewModel
 import de.fejuma.impfi.presentation.game.game.Game
@@ -201,8 +197,8 @@ internal fun GameMap(
          */
 
 
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(24.dp),
+        Column(
+
             modifier = Modifier
                 //   .clipToBounds()
                 //      .wrapContentSize(unbounded = true)
@@ -226,28 +222,22 @@ internal fun GameMap(
 
 
         ) {
-            itemsIndexed(map.flatten()) { index, cell ->
+
+            map.forEach { row ->
+                LazyRow {
+                    items(row) { cell ->
 
 
-                //    var cellState by remember{ mutableStateOf(cell) }
+                        MineField(
+                            cell,
 
+                            onTileSelected,
+                            onTileSelectedSecondary
+                        )
 
-                Image(
-                    painterResource(id = R.mipmap.box),
-                    contentDescription = null,
-                    Modifier.fillMaxSize()
-                )
-
-                MineField(
-                    cell,
-
-                    onTileSelected,
-                    onTileSelectedSecondary
-                )
-
-
+                    }
+                }
             }
-
         }
 
 

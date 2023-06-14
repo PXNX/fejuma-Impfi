@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.fejuma.impfi.data.repository.Repository
 import de.fejuma.impfi.model.Highscore
 import de.fejuma.impfi.model.difficulties
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,12 +18,29 @@ class GameViewModel @Inject constructor(
 
     val difficulty = difficulties[repo.getDifficulty()]!!
 
+    var recordTime: Int? = null
+
+    init {
+        viewModelScope.launch {
+
+            val scores = repo.getHighscoresByDifficulty(repo.getDifficulty()).first()
+
+            if (scores.isNotEmpty()) {
+                recordTime = scores[0].seconds
+            }
+
+        }
+    }
+
     fun saveHighscore(highscore: Highscore) {
         viewModelScope.launch {
             repo.insertHighscore(highscore)
         }
     }
+
+
     /*  val game = Game()
+
 
 
 

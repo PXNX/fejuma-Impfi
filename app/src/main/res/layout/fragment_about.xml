@@ -1,26 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.compose.ui.platform.ComposeView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/compose_view_about"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.about.AboutFragment">
+    tools:context=".presentation.about.AboutFragment" />
 
-    <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/compose_view_about"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <de.fejuma.impfi.presentation.about.AboutEntryView
-        android:id="@+id/about_entry_authors"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/compose_view_about" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
 

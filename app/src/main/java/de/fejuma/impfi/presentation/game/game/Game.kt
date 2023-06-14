@@ -5,13 +5,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class Game {
 
     private lateinit var random: Random
+
 
     private val _map: MutableList<MutableList<Tile>> = mutableListOf()
     private val _statusHolder = MutableGameStateHolder(
@@ -21,6 +25,13 @@ class Game {
         MutableStateFlow(Status.NORMAL)
     )
     val gameStateHolder: GameStateHolder = _statusHolder
+
+    fun timeFlow(isPaused: Boolean): Flow<Int> = flow {
+        for (i in 0..14_400) {
+            emit(i)
+            delay(1_000)
+        }
+    }.filter { !isPaused }
 
 
     private var timerJob: Job? = null

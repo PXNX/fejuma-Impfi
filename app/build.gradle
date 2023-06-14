@@ -1,9 +1,9 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.android.gms.oss-licenses-plugin'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
-    id 'com.google.android.gms.oss-licenses-plugin'
 }
 
 kapt {
@@ -44,6 +44,7 @@ android {
         }
         debug {
             minifyEnabled false
+
         }
     }
 
@@ -66,7 +67,7 @@ android {
 
     composeOptions {
         // kotlinCompilerExtensionVersion compose_version // Change this
-        kotlinCompilerExtensionVersion = "1.4.6"
+        kotlinCompilerExtensionVersion = "1.4.7"
     }
 
 
@@ -76,13 +77,11 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
-    implementation "androidx.emoji2:emoji2-views-helper:1.4.0-beta04" //doesn't work
+    implementation "androidx.emoji2:emoji2-views-helper:1.4.0-beta05" //doesn't work
 
     //  implementation 'com.google.android.material:material:1.10.0-alpha01'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0-alpha10'
-    implementation 'androidx.fragment:fragment-ktx:1.6.0-rc01'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'androidx.fragment:fragment-ktx:1.6.0'
 
     def lifecycle_version = '2.6.1'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -102,13 +101,13 @@ dependencies {
     implementation "androidx.compose.ui:ui-util:$compose_version"
     // implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    def material_version = '1.2.0-alpha01'
+    def material_version = '1.2.0-alpha02'
     implementation "androidx.compose.material3:material3:$material_version"
     implementation "androidx.compose.material3:material3-window-size-class:$material_version"
     ////   implementation "androidx.compose.material3:material3-icons-core:1.1.0-alpha08"
 
 
-    def nav_version = '2.7.0-alpha01'
+    def nav_version = '2.7.0-beta01'
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 

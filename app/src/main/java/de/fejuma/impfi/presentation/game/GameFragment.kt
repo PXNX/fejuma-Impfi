@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
@@ -19,9 +20,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -29,12 +32,15 @@ import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentGameBinding
+import de.fejuma.impfi.formatTime
+import de.fejuma.impfi.presentation.game.component.AnimatingCharacter
 import de.fejuma.impfi.presentation.game.component.GameEndDialog
 import de.fejuma.impfi.presentation.game.component.GameMap
 import de.fejuma.impfi.presentation.game.component.TopRow
 import de.fejuma.impfi.presentation.game.game.Game
 import de.fejuma.impfi.presentation.game.game.Status
 import de.fejuma.impfi.ui.MinesweeperTheme
+import kotlin.math.abs
 
 
 @AndroidEntryPoint
@@ -108,7 +114,55 @@ class GameFragment : Fragment() {
                         }
 
 
-                        TopRow(viewModel, time, minesRemaining, setOpenSurrenderDialog)
+                        TopRow(viewModel,
+                            {
+
+
+                                Row {
+                                    if (time >= 3600) { //end after 1h
+                                        //TODO -- maybe end game
+                                    } else {
+                                        formatTime(time).forEach {
+                                            AnimatingCharacter(it)
+                                        }
+                                    }
+                                }
+
+
+
+                                viewModel.recordTime?.let { recTime ->
+
+                                    Row {
+                                        val timeDifference = time - recTime
+                                        val recordTimeFormat =
+                                            formatTime(abs(timeDifference))
+                                        val color =
+                                            if (timeDifference >= 0) Color.Red else Color.Green
+
+
+                                        AnimatingCharacter(
+
+                                            if (timeDifference >= 0) '+' else '-',
+                                            fontSize = 14.sp,
+                                            color = color
+                                        )
+
+                                        recordTimeFormat.forEach {
+                                            AnimatingCharacter(
+
+                                                it,
+                                                fontSize = 14.sp,
+                                                color = color
+                                            )
+                                        }
+
+
+                                    }
+                                }
+
+
+                            }, minesRemaining, setOpenSurrenderDialog
+                        )
 
                         Divider(
                             Modifier.fillMaxWidth(),

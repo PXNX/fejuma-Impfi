@@ -12,11 +12,9 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentAboutBinding
@@ -39,8 +37,6 @@ class AboutFragment : Fragment() {
     ): View {
         _binding = FragmentAboutBinding.inflate(inflater, container, false)
         val view = binding.root
-
-    binding.aboutEntryAuthors.setOnClickListener{ findNavController().navigate(R.id.action_about_license) }
 
         binding.composeViewAbout.apply {
             // Dispose of the Composition when the view's LifecycleOwner
@@ -80,7 +76,8 @@ class AboutFragment : Fragment() {
                                 )
                                 },
                                 modifier = Modifier.clickable {
-                                    startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
+
+                                startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
                                 },
                                 leadingContent = {
                                     Icon(

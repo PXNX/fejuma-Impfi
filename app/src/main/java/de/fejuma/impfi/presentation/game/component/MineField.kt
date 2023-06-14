@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -47,8 +46,20 @@ fun MineField(
 
     Box(
         modifier = Modifier
-            .padding(1.dp)
-            .size(20.dp)
+
+            .size(24.dp)
+
+
+            .then(
+                if (tile.coverMode == TileCoverMode.UNCOVERED)
+
+                    Modifier
+                        .background(Color.Transparent)
+                        .border(1.dp, Color.DarkGray) else Modifier
+
+
+            )
+
             //       .indication(interactionSource, LocalIndication.current)
 
             .combinedClickable(
@@ -61,13 +72,21 @@ fun MineField(
                     onTileSelectedSecondary(tile.x, tile.y)
                 },
             )
-            // .clip(RoundedCornerShape(4.dp))
-            //    .neumorphic(neuShape =  Pressed.Rounded(4.dp), strokeWidth = 2.dp),
-            .background(if (tile.coverMode == TileCoverMode.UNCOVERED) Color.Transparent else Color.DarkGray),
-
+        // .clip(RoundedCornerShape(4.dp))
+        //    .neumorphic(neuShape =  Pressed.Rounded(4.dp), strokeWidth = 2.dp),
+        //    .background(if (tile.coverMode == TileCoverMode.UNCOVERED) Color.Transparent else Color.DarkGray),
+        ,
         contentAlignment = Alignment.Center
 
     ) {
+        if (tile.coverMode != TileCoverMode.UNCOVERED) {
+            Image(
+                painter = painterResource(id = R.mipmap.box),
+                contentDescription = "",
+                Modifier.fillMaxSize()
+            )
+        }
+
         when (tile.coverMode) {
             TileCoverMode.COVERED -> {
 
@@ -88,12 +107,25 @@ fun MineField(
             )
 
             TileCoverMode.UNCOVERED -> when (tile) {
-                is Tile.Adjacent -> Text(
-                    "${tile.risk}",
-                    fontSize = 8.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+
+
+                is Tile.Adjacent -> {
+                    val riskColor = when (tile.risk) {
+                        1 -> Color.Blue
+                        2 -> Color.Green
+                        3 -> Color.Red
+                        4 -> Color.Magenta
+                        else -> Color.White
+
+                    }
+
+                    Text(
+                        "${tile.risk}",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = riskColor
+                    )
+                }
 
                 is Tile.Empty -> {
 
@@ -171,14 +203,6 @@ fun MineFieldPreview() {
             ) {
 
             }
-
-
-
-            Image(
-                painterResource(id = R.mipmap.box),
-                contentDescription = null,
-                Modifier.fillMaxSize()
-            )
 
 
         }

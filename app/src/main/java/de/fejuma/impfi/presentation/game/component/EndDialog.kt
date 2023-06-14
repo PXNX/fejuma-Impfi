@@ -32,7 +32,7 @@ fun GameEndDialog(
 ) {
 
     var (userName, setUserName) = remember { mutableStateOf("") }
-    val timeFormat = formatTime(timePlayed.toLong())
+    val timeFormat = formatTime(timePlayed)
 
 
     //if verzweigung, welches jeweil unterschiedliche Dialogbox öffnet? (Gewonnen und neuer HighScore || Gewonnen aber kein neuer HS || verloren

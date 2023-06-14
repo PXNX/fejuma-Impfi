@@ -39,13 +39,6 @@
         android:name="de.fejuma.impfi.presentation.about.AboutFragment"
         android:label="fragment_about"
         tools:layout="@layout/fragment_about" >
-        <action
-            android:id="@+id/action_about_license"
-            app:destination="@id/licenseFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/licenseFragment"
-        android:name="de.fejuma.impfi.presentation.license.LicenseFragment"
-        android:label="fragment_license"
-        tools:layout="@layout/fragment_license" />
+
 </navigation>
