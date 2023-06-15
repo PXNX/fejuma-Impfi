@@ -18,6 +18,12 @@ object RepositoryMock : Repository {
         return true
     }
 
+    override fun getHapticsEnabled() = true
+
+    override fun setHapticsEnabled(isEnabled: Boolean): Boolean {
+        return true
+    }
+
     override fun getDifficulty(): DifficultyLevel =
         DifficultyLevel.valueOf(DifficultyLevel.NORMAL.toString())
 

@@ -3,6 +3,7 @@ package de.fejuma.impfi.data.repository
 import android.content.Context
 import android.content.SharedPreferences
 import de.fejuma.impfi.data.data_source.DIFFICULTY
+import de.fejuma.impfi.data.data_source.HAPTICS_ENABLED
 import de.fejuma.impfi.data.data_source.HighscoreDao
 import de.fejuma.impfi.data.data_source.SFX_VOLUME
 import de.fejuma.impfi.model.DifficultyLevel
@@ -24,6 +25,13 @@ class RepositoryImpl(
     }
 
     override fun getSfxVolume() = pref.getInt(SFX_VOLUME, 50)
+
+    override fun setHapticsEnabled(isEnabled: Boolean): Boolean {
+        editor.putBoolean(HAPTICS_ENABLED, isEnabled)
+        return editor.commit()
+    }
+
+    override fun getHapticsEnabled(): Boolean = pref.getBoolean(HAPTICS_ENABLED, true)
 
     override fun setDifficulty(difficultyLevel: DifficultyLevel): Boolean {
         editor.putString(DIFFICULTY, difficultyLevel.toString())

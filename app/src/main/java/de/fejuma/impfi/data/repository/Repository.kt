@@ -9,6 +9,9 @@ interface Repository {
     fun setSfxVolume(volume: Int): Boolean
     fun getSfxVolume(): Int
 
+    fun setHapticsEnabled(isEnabled: Boolean): Boolean
+    fun getHapticsEnabled(): Boolean
+
     fun setDifficulty(difficultyLevel: DifficultyLevel): Boolean
     fun getDifficulty(): DifficultyLevel
 

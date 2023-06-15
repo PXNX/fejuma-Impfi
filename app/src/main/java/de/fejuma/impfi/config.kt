@@ -5,9 +5,9 @@ import de.fejuma.impfi.model.Difficulty
 import de.fejuma.impfi.model.DifficultyLevel
 
 val difficulties = mapOf(
-    DifficultyLevel.EASY to Difficulty("Leicht", 10, 10, 10, Color.Green),
-    DifficultyLevel.NORMAL to Difficulty("Mittel", 16, 16, 40, Color.Yellow),
-    DifficultyLevel.HARD to Difficulty("Schwer", 30, 16, 80, Color.Red)
+    DifficultyLevel.EASY to Difficulty("Leicht", 8, 8, 8, Color.Green),
+    DifficultyLevel.NORMAL to Difficulty("Mittel", 16, 12, 25, Color.Yellow),
+    DifficultyLevel.HARD to Difficulty("Schwer", 25, 16, 60, Color.Red)
 )
 
 const val timeLimit = 3_600

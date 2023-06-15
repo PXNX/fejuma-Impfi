@@ -10,12 +10,13 @@ import androidx.compose.foundation.gestures.calculateRotation
 import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -47,7 +48,7 @@ internal fun GameMap(
     onTileSelectedSecondary: (column: Int, row: Int) -> Unit,
 ) {
 
-    var zoom by remember { mutableStateOf(1f) }
+    var zoom by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     var parentSize by remember { mutableStateOf(IntSize.Zero) }
 
@@ -199,10 +200,7 @@ internal fun GameMap(
         Column(
 
             modifier = Modifier
-                //   .clipToBounds()
-                //      .wrapContentSize(unbounded = true)
-                //       .fillMaxSize()
-                //       .clipToBounds()
+                .wrapContentSize(unbounded = true)
 
 
                 .onSizeChanged {
@@ -216,30 +214,31 @@ internal fun GameMap(
                     scaleY = zoom
                 }
 
-
             //   .background(Color.Cyan)
 
 
         ) {
 
+
             map.forEach { row ->
-                LazyRow {
-                    items(row) { cell ->
 
-
+                Row(
+                    Modifier
+                        .wrapContentSize(unbounded = true)
+                ) {
+                    row.forEach { cell ->
                         MineField(
                             cell,
 
                             onTileSelected,
                             onTileSelectedSecondary
                         )
-
                     }
                 }
+
+
             }
         }
-
-
     }
 }
 

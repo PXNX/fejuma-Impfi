@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_game_scoreboard"
             app:destination="@id/scoreboardFragment" />
+        <action
+            android:id="@+id/action_game_start"
+            app:destination="@id/startFragment" />
     </fragment>
     <fragment
         android:id="@+id/scoreboardFragment"

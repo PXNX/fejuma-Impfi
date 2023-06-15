@@ -1,6 +1,7 @@
 package de.fejuma.impfi.presentation.game
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -33,6 +34,11 @@ class GameViewModel @Inject constructor(
 
     val difficulty = difficulties[repo.getDifficulty()]!!
 
+    var sfxVolume by mutableIntStateOf(repo.getSfxVolume())
+        private set
+    var hapticsEnabled by mutableStateOf(repo.getHapticsEnabled())
+        private set
+
     var recordTime: Int? = null
 
     var isSurrenderDialog by mutableStateOf(false)
@@ -57,6 +63,12 @@ class GameViewModel @Inject constructor(
 
 
         }
+
+        configure(
+            difficulty.width,
+            difficulty.height,
+            difficulty.mines
+        )
     }
 
     fun saveHighScore(highScore: Highscore) {

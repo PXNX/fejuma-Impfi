@@ -12,13 +12,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush.Companion.linearGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -46,24 +47,72 @@ fun MineField(
 
     Box(
         modifier = Modifier
-            .clip(CircleShape)
+
+
+            .padding(2.dp)
             .size(48.dp)
 
 
-            .then(
-                if (tile.coverMode == TileCoverMode.UNCOVERED)
+            .clip(CircleShape)
 
-                    if (tile is Tile.Empty || tile is Tile.Adjacent)
-                        Modifier
+
+            .then(
+                when (tile.coverMode) {
+                    TileCoverMode.UNCOVERED -> when (tile) {
+                        is Tile.Adjacent -> Modifier
                             .background(Color.Transparent)
-                            .border(1.dp, Color.DarkGray)
-                    else
-                        Modifier.background(Color.Red)
-                else if (tile.coverMode == TileCoverMode.FLAGGED)
-                    Modifier.background(Color.Yellow)
-                else if (tile.coverMode == TileCoverMode.QUESTIONED)
-                    Modifier.background(Color.Green)
-                else Modifier
+                            .border(2.dp, Color.LightGray, CircleShape)
+
+                        is Tile.Empty -> Modifier
+                            .background(Color.Transparent)
+                            .border(2.dp, Color.DarkGray, CircleShape)
+
+                        else -> Modifier.background(Color.Red)
+                    }
+
+                    TileCoverMode.FLAGGED -> Modifier
+                        .background(Color(0xFF4CAF50))
+                        .border(
+                            2.dp, linearGradient(
+                                colors = listOf(
+                                    Color(0xAAFFFFFF),
+                                    Color(0xAACCCCCC),
+                                    Color(0xAA444444)
+                                ),
+
+                                ), CircleShape
+                        )
+                        .padding(6.dp)
+
+                    TileCoverMode.QUESTIONED -> Modifier
+                        .background(Color.Yellow)
+                        .border(
+                            2.dp, linearGradient(
+                                colors = listOf(
+                                    Color(0xAAFFFFFF),
+                                    Color(0xAACCCCCC),
+                                    Color(0xAA444444)
+                                ),
+
+                                ), CircleShape
+                        )
+                        .padding(6.dp)
+
+                    else -> Modifier
+                        .background(
+                            MaterialTheme.colorScheme.secondary
+                        )
+                        .border(
+                            2.dp, linearGradient(
+                                colors = listOf(
+                                    Color(0xAAFFFFFF),
+                                    Color(0xAACCCCCC),
+                                    Color(0xAA444444)
+                                ),
+
+                                ), CircleShape
+                        )
+                }
 
 
             )
@@ -80,7 +129,9 @@ fun MineField(
                 onLongClick = {
                     onTileSelectedSecondary(tile.x, tile.y)
                 },
-            )
+
+                )
+
         // .clip(RoundedCornerShape(4.dp))
         //    .neumorphic(neuShape =  Pressed.Rounded(4.dp), strokeWidth = 2.dp),
         //    .background(if (tile.coverMode == TileCoverMode.UNCOVERED) Color.Transparent else Color.DarkGray),
@@ -88,13 +139,7 @@ fun MineField(
         contentAlignment = Alignment.Center
 
     ) {
-        if (tile.coverMode != TileCoverMode.UNCOVERED) {
-            Image(
-                painter = painterResource(id = R.mipmap.box),
-                contentDescription = "",
-                Modifier.fillMaxSize()
-            )
-        }
+
 
         when (tile.coverMode) {
             TileCoverMode.COVERED -> {
@@ -105,14 +150,14 @@ fun MineField(
                 painter = painterResource(id = R.drawable.needle),
                 contentDescription = "Flag",
                 modifier = Modifier.fillMaxSize(),
-                tint = Color.Green
+                tint = Color.White
             )
 
             TileCoverMode.QUESTIONED -> Icon(
                 painter = painterResource(id = R.drawable.help),
                 contentDescription = "Question",
                 modifier = Modifier.fillMaxSize(),
-                tint = Color.Yellow
+                tint = Color.Black
             )
 
             TileCoverMode.UNCOVERED -> when (tile) {
@@ -124,13 +169,13 @@ fun MineField(
                         2 -> Color.Green
                         3 -> Color.Red
                         4 -> Color.Magenta
-                        else -> Color.White
+                        else -> Color.Yellow
 
                     }
 
                     Text(
                         "${tile.risk}",
-                        fontSize = 16.sp,
+                        fontSize = 26.sp,
                         fontWeight = FontWeight.Bold,
                         color = riskColor
                     )
@@ -141,12 +186,51 @@ fun MineField(
                 }
 
                 is Tile.Bomb -> when (tile.userSelection) {
-                    true -> Icon(
-                        painter = painterResource(id = R.drawable.virus_outline),
-                        contentDescription = "Virus",
-                        modifier = Modifier.fillMaxSize(),
-                        tint = Color.Red
-                    )
+                    true -> {
+                        Icon(
+                            painter = painterResource(id = R.drawable.virus_outline),
+                            contentDescription = "Virus",
+                            modifier = Modifier.fillMaxSize(),
+                            tint = Color.White
+                        )
+
+
+                        /*       val vibrator: Vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                   val vibratorManager: VibratorManager = LocalContext.current.getSystemService(
+                                       Context.
+                                       VIBRATOR_MANAGER_SERVICE
+                                   ) as VibratorManager
+                                   vibratorManager.defaultVibrator
+
+                               } else {
+                                   // backward compatibility for Android API < 31,
+                                   // VibratorManager was only added on API level 31 release.
+                                   @Suppress("DEPRECATION")
+                                   LocalContext.current.getSystemService( Context.VIBRATOR_SERVICE) as Vibrator
+                               }
+                               val DELAY = 0L
+                               val VIBRATE = 1000L
+                               val SLEEP = 1000L
+                               val START = 0
+                               val vibratePattern = longArrayOf(DELAY, VIBRATE, SLEEP)
+
+                               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+
+
+                                   vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, START))
+
+
+
+                               } else {
+                                   // backward compatibility for Android API < 26
+                                   @Suppress("DEPRECATION")
+                                   vibrator.vibrate(vibratePattern, START)
+                               }
+
+                         */
+
+                    }
 
                     /*   false -> Icon(
                            painter = painterResource(id = R.drawable.virus_outline),
@@ -182,36 +266,42 @@ fun MineFieldPreview() {
                 onTileSelected = { _, _ -> },
                 onTileSelectedSecondary = { _, _ -> })
 
-            Box(
-                modifier = Modifier
-                    .padding(1.dp)
-                    .size(20.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .border(2.dp, Color.White, RoundedCornerShape(4.dp))
+            MineField(
+                tile = Tile.Empty(TileCoverMode.UNCOVERED, 0, 0),
+                onTileSelected = { _, _ -> },
+                onTileSelectedSecondary = { _, _ -> })
 
-                    .background(Color.DarkGray),
+            MineField(
+                tile = Tile.Adjacent(1, TileCoverMode.UNCOVERED, 0, 0),
+                onTileSelected = { _, _ -> },
+                onTileSelectedSecondary = { _, _ -> })
 
-                contentAlignment = Alignment.Center
+            MineField(
+                tile = Tile.Adjacent(2, TileCoverMode.UNCOVERED, 0, 0),
+                onTileSelected = { _, _ -> },
+                onTileSelectedSecondary = { _, _ -> })
 
-            ) {
+            MineField(
+                tile = Tile.Adjacent(3, TileCoverMode.UNCOVERED, 0, 0),
+                onTileSelected = { _, _ -> },
+                onTileSelectedSecondary = { _, _ -> })
 
-            }
+            MineField(
+                tile = Tile.Adjacent(2, TileCoverMode.COVERED, 0, 0),
+                onTileSelected = { _, _ -> },
+                onTileSelectedSecondary = { _, _ -> })
 
-            Box(
-                modifier = Modifier
-                    .padding(1.dp)
-                    .size(20.dp)
+            MineField(
+                tile = Tile.Adjacent(2, TileCoverMode.FLAGGED, 0, 0),
+                onTileSelected = { _, _ -> },
+                onTileSelectedSecondary = { _, _ -> })
+
+            MineField(
+                tile = Tile.Adjacent(2, TileCoverMode.QUESTIONED, 0, 0),
+                onTileSelected = { _, _ -> },
+                onTileSelectedSecondary = { _, _ -> })
 
 
-                    .clip(CircleShape)
-                    .border(2.dp, Color.White, CircleShape)
-                    .background(Color.DarkGray),
-
-                contentAlignment = Alignment.Center
-
-            ) {
-
-            }
 
 
         }

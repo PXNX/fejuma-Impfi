@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -122,26 +123,47 @@ private fun SheetContent(viewModel: StartViewModel) {
     Spacer(modifier = Modifier.height(32.dp))
 
     Text(
-        "Effektlautstärke • ${viewModel.sfxVolume}%",
+        "Effektlautstärke • ${viewModel.sfxVolume.toInt()}%",
         Modifier
             .padding(horizontal = 16.dp),
         style = MaterialTheme.typography.titleMedium
     )
 
-
-
-
     Slider(
-        value = viewModel.sfxVolume.toFloat(),
-        onValueChange = {
-            viewModel.changeSfxVolume(it.toInt())
-        },
+        value = viewModel.sfxVolume,
+        onValueChange = viewModel::changeSfxVolume,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+            .padding(horizontal = 16.dp),
         valueRange = 0f..100f,
         steps = 9
     )
+
+    Spacer(modifier = Modifier.height(32.dp))
+
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            "Haptisches Feedback",
+
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Switch(
+            checked = viewModel.hapticsEnabled,
+            onCheckedChange =
+            viewModel::changeHapticEnabled
+        )
+    }
+
+    Spacer(modifier = Modifier.height(56.dp))
+
+
 }
 
 
@@ -151,7 +173,7 @@ private fun StartScreen(
     navController: NavController,
     viewModel: StartViewModel  //= hiltViewModel()
 ) {
-  val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState()
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
 
 

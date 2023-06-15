@@ -8,8 +8,8 @@ internal fun formatTime(secs: Int): String = String.format("%02d:%02d", secs % 3
 
 internal fun formatNumber(amount: Int): String = String.format("%02d", amount)
 
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Preview(locale = "de")
-@Preview(fontScale = 1.5f)
+@Preview(name = "background", showBackground = true)
+@Preview(name = "darkmode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(name = "german", locale = "de")
+@Preview(name = "enlarged", fontScale = 1.5f)
 annotation class DefaultPreviews

@@ -15,8 +15,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -30,11 +28,15 @@ import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentGameBinding
+import de.fejuma.impfi.feedback.AudioManager
+import de.fejuma.impfi.feedback.HapticManager
 import de.fejuma.impfi.formatTime
+import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.presentation.game.component.AnimatingCharacter
-import de.fejuma.impfi.presentation.game.component.GameEndDialog
 import de.fejuma.impfi.presentation.game.component.GameMap
 import de.fejuma.impfi.presentation.game.component.TopRow
+import de.fejuma.impfi.presentation.game.component.dialogs.GameLostDialog
+import de.fejuma.impfi.presentation.game.component.dialogs.GameWonDialog
 import de.fejuma.impfi.presentation.game.game.Status
 import de.fejuma.impfi.timeLimit
 import de.fejuma.impfi.ui.MinesweeperTheme
@@ -63,14 +65,8 @@ class GameFragment : Fragment() {
         val view = binding.root
 
 
-        //fixme: this bleongs to VM, also GAME should maybe be VM?
-        //  val game = Game()
-        viewModel.configure(
-            viewModel.difficulty.width,
-            viewModel.difficulty.height,
-            viewModel.difficulty.mines
-        )
-
+        val audio = AudioManager(requireContext(), viewModel.sfxVolume)
+        val haptics = HapticManager(requireContext(), viewModel.hapticsEnabled)
 
 
         binding.composeViewGame.apply {
@@ -82,29 +78,11 @@ class GameFragment : Fragment() {
                 MinesweeperTheme {
 
 
-                    /*        MainView(
-                            time,
-                            minesRemaining,
-                            map,
-                            gameState,
-                            { column, row -> game.primaryAction(column, row) },
-                            { column, row -> game.secondaryAction(column, row) },
-                            { game.configure() },
-                        )
-
-                     */
-
-
-
-
-
                     Column(modifier = Modifier.fillMaxSize()) {
 
 
                         val map by viewModel.gameStateHolder.map.collectAsStateWithLifecycle()
-                        val time by viewModel.gameStateHolder.time.collectAsStateWithLifecycle(
-                            initialValue = 0
-                        )
+                        val time by viewModel.gameStateHolder.time.collectAsStateWithLifecycle()
                         val minesRemaining by viewModel.gameStateHolder.minesRemaining.collectAsStateWithLifecycle()
                         val gameState by viewModel.gameStateHolder.status.collectAsStateWithLifecycle()
 
@@ -159,7 +137,9 @@ class GameFragment : Fragment() {
                                 }
 
 
-                            }, minesRemaining, viewModel::setOpenSurrenderDialog
+                            },
+                            minesRemaining,
+                            viewModel::setOpenSurrenderDialog
                         )
 
                         Divider(
@@ -168,7 +148,6 @@ class GameFragment : Fragment() {
                             color = MaterialTheme.colorScheme.onPrimary
                         )
 
-                        val (openEndDialog, setOpenEndDialog) = remember { mutableStateOf(false) }
 
                         GameMap(
                             map = map,
@@ -176,23 +155,27 @@ class GameFragment : Fragment() {
                             onTileSelectedSecondary = viewModel::secondaryAction
                         )
 
-                        //     GameField(viewModel) { setOpenEndDialog(true) } //replace with loss diaolog
 
 
-                        if (gameState == Status.LOST) {
-                            GameEndDialog(false,
-                                { findNavController().navigate(R.id.startFragment) }, {
-                                    setOpenEndDialog(it)
-                                }, viewModel, time
+
+                        if (gameState == Status.WON) {
+                            GameWonDialog(time,
+                                DifficultyLevel.valueOf(viewModel.difficulty.name),
+                                {
+                                    viewModel::saveHighScore
+                                    findNavController().navigate(R.id.action_game_scoreboard)
+
+                                },
+                                {
+                                    findNavController().navigate(R.id.action_game_start)
+                                }
                             )
                         }
 
                         if (gameState == Status.WON) {
-                            GameEndDialog(true,
-                                { findNavController().navigate(R.id.action_game_scoreboard) }, {
-                                    setOpenEndDialog(it)
-                                }, viewModel, time
-                            )
+                            GameLostDialog {
+                                findNavController().navigate(R.id.action_game_start)
+                            }
                         }
 
                         if (viewModel.isSurrenderDialog) {
@@ -225,6 +208,7 @@ class GameFragment : Fragment() {
 
                                         onClick = {
 
+                                            audio.cancel()
                                             viewModel.setOpenSurrenderDialog(false)
 
                                         }) {
