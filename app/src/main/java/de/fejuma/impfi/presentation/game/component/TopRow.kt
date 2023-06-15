@@ -72,14 +72,14 @@ fun TopRow(
             )
 
 
-        Column(
-            modifier = Modifier.padding(start = 8.dp),
-            horizontalAlignment = Alignment.End
-        ) {
+            Column(
+                modifier = Modifier.padding(start = 8.dp),
+                horizontalAlignment = Alignment.End
+            ) {
 
 
-            time()
-        }
+                time()
+            }
             Spacer(modifier = Modifier.weight(1f))
 
 

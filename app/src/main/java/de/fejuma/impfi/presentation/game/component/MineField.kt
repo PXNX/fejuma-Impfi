@@ -36,7 +36,6 @@ import de.fejuma.impfi.ui.MinesweeperTheme
 @Composable
 fun MineField(
     tile: Tile,
-
     onTileSelected: (column: Int, row: Int) -> Unit,
     onTileSelectedSecondary: (column: Int, row: Int) -> Unit,
 ) {
@@ -187,62 +186,17 @@ fun MineField(
 
                 is Tile.Bomb -> when (tile.userSelection) {
                     true -> {
-                        Icon(
-                            painter = painterResource(id = R.drawable.virus_outline),
+                        Image(
+                            painterResource(id = R.mipmap.virus),
                             contentDescription = "Virus",
-                            modifier = Modifier.fillMaxSize(),
-                            tint = Color.White
+                            Modifier.fillMaxSize()
                         )
-
-
-                        /*       val vibrator: Vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                   val vibratorManager: VibratorManager = LocalContext.current.getSystemService(
-                                       Context.
-                                       VIBRATOR_MANAGER_SERVICE
-                                   ) as VibratorManager
-                                   vibratorManager.defaultVibrator
-
-                               } else {
-                                   // backward compatibility for Android API < 31,
-                                   // VibratorManager was only added on API level 31 release.
-                                   @Suppress("DEPRECATION")
-                                   LocalContext.current.getSystemService( Context.VIBRATOR_SERVICE) as Vibrator
-                               }
-                               val DELAY = 0L
-                               val VIBRATE = 1000L
-                               val SLEEP = 1000L
-                               val START = 0
-                               val vibratePattern = longArrayOf(DELAY, VIBRATE, SLEEP)
-
-                               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-
-
-                                   vibrator.vibrate(VibrationEffect.createWaveform(vibratePattern, START))
-
-
-
-                               } else {
-                                   // backward compatibility for Android API < 26
-                                   @Suppress("DEPRECATION")
-                                   vibrator.vibrate(vibratePattern, START)
-                               }
-
-                         */
 
                     }
 
-                    /*   false -> Icon(
-                           painter = painterResource(id = R.drawable.virus_outline),
-                           contentDescription = "Virus",
-                           modifier = Modifier.fillMaxSize(),
-                           tint = Color.Yellow
-                       )
-
-                     */
                     false -> Image(
-                        painterResource(id = R.mipmap.ogre),
-                        contentDescription = null,
+                        painterResource(id = R.mipmap.virus),
+                        contentDescription = "Virus",
                         Modifier.fillMaxSize()
                     )
                 }
@@ -300,8 +254,6 @@ fun MineFieldPreview() {
                 tile = Tile.Adjacent(2, TileCoverMode.QUESTIONED, 0, 0),
                 onTileSelected = { _, _ -> },
                 onTileSelectedSecondary = { _, _ -> })
-
-
 
 
         }

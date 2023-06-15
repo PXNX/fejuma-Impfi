@@ -151,15 +151,22 @@ class GameFragment : Fragment() {
 
                         GameMap(
                             map = map,
-                            onTileSelected = viewModel::primaryAction,
-                            onTileSelectedSecondary = viewModel::secondaryAction
+                            onTileSelected = { x, y ->
+                                audio.pop()
+                                viewModel.primaryAction(x, y)
+
+                            },
+                            onTileSelectedSecondary = { x, y ->
+                                haptics.shortVibrationNow()
+                                viewModel.secondaryAction(x, y)
+
+                            }
                         )
 
 
 
-
-                        if (gameState == Status.WON) {
-                            GameWonDialog(time,
+                        when (gameState) {
+                            Status.WON -> GameWonDialog(time,
                                 DifficultyLevel.valueOf(viewModel.difficulty.name),
                                 {
                                     viewModel::saveHighScore
@@ -170,13 +177,21 @@ class GameFragment : Fragment() {
                                     findNavController().navigate(R.id.action_game_start)
                                 }
                             )
+
+                            Status.LOST -> {
+
+                                audio.failure()
+                                haptics.mediumVibrationNow()
+
+                                GameLostDialog {
+                                    findNavController().navigate(R.id.action_game_start)
+                                }
+                            }
+
+                            else -> {}
                         }
 
-                        if (gameState == Status.WON) {
-                            GameLostDialog {
-                                findNavController().navigate(R.id.action_game_start)
-                            }
-                        }
+
 
                         if (viewModel.isSurrenderDialog) {
 
@@ -197,8 +212,10 @@ class GameFragment : Fragment() {
                                     Button(
 
                                         onClick = {
-                                            viewModel.setOpenSurrenderDialog(false)
-                                            findNavController().navigate(R.id.startFragment)
+
+                                            //         viewModel.setOpenSurrenderDialog(false)
+                                            audio.failure()
+                                            findNavController().navigate(R.id.action_game_start)
                                         }) {
                                         Text(stringResource(id = R.string.confirm_button))
                                     }

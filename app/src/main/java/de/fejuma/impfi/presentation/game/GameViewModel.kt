@@ -46,6 +46,28 @@ class GameViewModel @Inject constructor(
     var isTimerActive by mutableStateOf(true)
 
 
+    //Gamelogic
+    private lateinit var random: Random
+
+    private val _map: MutableList<MutableList<Tile>> = mutableListOf()
+    private val _statusHolder = MutableGameStateHolder(
+        MutableStateFlow(0),
+        MutableStateFlow(0),
+        MutableStateFlow(emptyList()),
+        MutableStateFlow(Status.NORMAL)
+
+    )
+    val gameStateHolder: GameStateHolder = _statusHolder
+
+    private var timerJob: Job? = null
+    private var isGameRunning = false
+
+    private var columns: Int = 0
+    private var rows: Int = 0
+    private var mines: Int = 0
+    private var firstSelection = true
+
+
     fun setOpenSurrenderDialog(isOpen: Boolean) {
         isTimerActive = !isOpen
         isSurrenderDialog = isOpen
@@ -78,21 +100,7 @@ class GameViewModel @Inject constructor(
     }
 
 
-    private lateinit var random: Random
-
-
-    private val _map: MutableList<MutableList<Tile>> = mutableListOf()
-    private val _statusHolder = MutableGameStateHolder(
-        MutableStateFlow(0),
-        MutableStateFlow(0),
-        MutableStateFlow(emptyList()),
-        MutableStateFlow(Status.NORMAL)
-
-    )
-    val gameStateHolder: GameStateHolder = _statusHolder
-
-
-    suspend fun timeFlow() = flow {
+    private suspend fun timeFlow() = flow {
         for (i in 0..timeLimit) {
 
 
@@ -109,14 +117,6 @@ class GameViewModel @Inject constructor(
             _statusHolder.time.value = it
         }
 
-
-    private var timerJob: Job? = null
-    private var isGameRunning = false
-
-    private var columns: Int = 0
-    private var rows: Int = 0
-    private var mines: Int = 0
-    private var firstSelection = true
 
     fun configure(
         columns: Int = 15,

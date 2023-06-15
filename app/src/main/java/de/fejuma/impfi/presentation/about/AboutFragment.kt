@@ -74,17 +74,22 @@ class AboutFragment : Fragment() {
                                     fontStyle = MaterialTheme.typography.headlineLarge.fontStyle,
                                     fontSize = MaterialTheme.typography.headlineLarge.fontSize
                                 )
-                                },
+                            },
                                 modifier = Modifier.clickable {
 
-                                startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
+                                    startActivity(
+                                        Intent(
+                                            requireContext(),
+                                            OssLicensesMenuActivity::class.java
+                                        )
+                                    )
                                 },
                                 leadingContent = {
                                     Icon(
                                         painterResource(id = R.drawable.book_open_outline),
                                         contentDescription = ""
                                     )
-                            })
+                                })
 
 
 //Todo: Github, Icons, Lizenzen
