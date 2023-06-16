@@ -39,6 +39,9 @@ class GameViewModel @Inject constructor(
     var hapticsEnabled by mutableStateOf(repo.getHapticsEnabled())
         private set
 
+    var hintsUsed by mutableStateOf(0)
+        private set
+
     var recordTime: Int? = null
 
     var isSurrenderDialog by mutableStateOf(false)
@@ -55,7 +58,6 @@ class GameViewModel @Inject constructor(
         MutableStateFlow(0),
         MutableStateFlow(emptyList()),
         MutableStateFlow(Status.NORMAL)
-
     )
     val gameStateHolder: GameStateHolder = _statusHolder
 
@@ -102,8 +104,8 @@ class GameViewModel @Inject constructor(
     }
 
 
-    private suspend fun timeFlow() = flow {
-        for (i in 0..timeLimit) {
+    private suspend fun timeFlow(start: Int = 0) = flow {
+        for (i in start..timeLimit) {
 
 
             while (!isTimerActive) {
@@ -114,6 +116,8 @@ class GameViewModel @Inject constructor(
 
 
         }
+
+        _statusHolder.status.value = Status.LOST
     }
         .takeWhile { isGameRunning }.collect {
             _statusHolder.time.value = it
@@ -182,7 +186,7 @@ class GameViewModel @Inject constructor(
 
 
 
-        viewModelScope.launch {
+        timerJob = viewModelScope.launch {
             timeFlow()
         }
 
@@ -269,6 +273,45 @@ class GameViewModel @Inject constructor(
         uncoverTile(column + 1, row - 1)
         uncoverTile(column + 1, row)
         uncoverTile(column + 1, row + 1)
+    }
+
+    fun uncoverHintTile() {
+        val hintedTile = _map.asSequence()
+            .flatMap { it.asSequence() }
+            .firstOrNull { inner ->
+                val isSafe = inner !is Tile.Bomb && inner.coverMode == TileCoverMode.COVERED
+
+                if (!isSafe)
+                    return@firstOrNull false
+
+                val uncoveredNeighbors = listOfNotNull(
+                    _map.getOrNull(inner.x - 1)?.getOrNull(inner.y - 1),
+                    _map.getOrNull(inner.x - 1)?.getOrNull(inner.y),
+                    _map.getOrNull(inner.x - 1)?.getOrNull(inner.y + 1),
+                    _map.getOrNull(inner.x)?.getOrNull(inner.y - 1),
+                    _map.getOrNull(inner.x)?.getOrNull(inner.y + 1),
+                    _map.getOrNull(inner.x + 1)?.getOrNull(inner.y - 1),
+                    _map.getOrNull(inner.x + 1)?.getOrNull(inner.y),
+                    _map.getOrNull(inner.x + 1)?.getOrNull(inner.y + 1),
+                ).count { it.coverMode == TileCoverMode.UNCOVERED }
+
+                uncoveredNeighbors != 0
+            }
+            ?: return //if no fitting tile was found, so only mines would remain, don't uncover them
+
+        timerJob?.cancel()
+
+        //time penalty for using hint
+        _statusHolder.time.value += 30
+
+        timerJob = viewModelScope.launch {
+            timeFlow(_statusHolder.time.value)
+        }
+
+        hintsUsed++
+
+        uncoverTile(hintedTile.x, hintedTile.y)
+        updateMapState()
     }
 
     fun primaryAction(column: Int, row: Int) {

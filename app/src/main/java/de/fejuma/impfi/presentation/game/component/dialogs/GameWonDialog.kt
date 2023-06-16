@@ -8,6 +8,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -24,12 +25,13 @@ import de.fejuma.impfi.ui.lightGray
 fun GameWonDialog(
     timePlayed: Int,
     difficulty: DifficultyLevel,
+    hintsUsed: Int,
     onConfirm: (Highscore) -> Unit,
     onDismiss: () -> Unit
 ) {
 
 
-    var (userName, setUserName) = androidx.compose.runtime.remember {
+    var (userName, setUserName) = remember {
         androidx.compose.runtime.mutableStateOf(
             ""
         )
@@ -60,8 +62,14 @@ fun GameWonDialog(
             Column {
 
 
+                //todo: mit icon daneben aufpeppen, gewinnen muss sich geil anfühlen!
                 Text(
                     "Benötigte Zeit: $timeFormat",
+                    Modifier.padding(start = 10.dp)
+                )
+
+                Text(
+                    "Benutzte Hinweise: $hintsUsed",
                     Modifier.padding(start = 10.dp)
                 )
 
@@ -79,7 +87,7 @@ fun GameWonDialog(
                 {
 
 
-                    onConfirm(Highscore(userName, difficulty, timePlayed))
+                    onConfirm(Highscore(userName, difficulty, timePlayed, hintsUsed))
                 }
             ) {
                 Text("Score speichern")
@@ -99,6 +107,6 @@ fun GameWonDialog(
 @Composable
 fun GameWonDialogPreview() = MinesweeperTheme {
 
-    GameWonDialog(69, DifficultyLevel.EASY, {}, {})
+    GameWonDialog(69, DifficultyLevel.EASY, 1, {}, {})
 
 }

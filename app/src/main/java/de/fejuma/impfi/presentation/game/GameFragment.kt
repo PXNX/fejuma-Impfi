@@ -1,6 +1,7 @@
 package de.fejuma.impfi.presentation.game
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -102,6 +103,8 @@ class GameFragment : Fragment() {
                                             formatTime(time).forEach {
                                                 AnimatingCharacter(it)
                                             }
+
+
                                         }
                                     }
 
@@ -140,7 +143,15 @@ class GameFragment : Fragment() {
 
                                 },
                                 minesRemaining,
-                                viewModel::setOpenSurrenderDialog
+                                viewModel::setOpenSurrenderDialog, {
+                                    Log.d("GAME", "time: $time")
+
+                                    audio.pop()
+
+                                    viewModel.uncoverHintTile()
+                                },
+                                //todo: also grey out if no more fields can be uncovered
+                                time > 5
                             )
 
                             Divider(
@@ -169,6 +180,7 @@ class GameFragment : Fragment() {
                             when (gameState) {
                                 Status.WON -> GameWonDialog(time,
                                     viewModel.difficultyLevel,
+                                    viewModel.hintsUsed,
                                     {
                                         viewModel::saveHighScore
                                         findNavController().navigate(R.id.action_game_scoreboard)

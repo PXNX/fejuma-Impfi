@@ -30,7 +30,9 @@ fun TopRow(
     viewModel: GameViewModel,
     time: @Composable () -> Unit,
     mines: Int,
-    openDialog: (Boolean) -> Unit
+    openDialog: (Boolean) -> Unit,
+    showHint: () -> Unit,
+    canShowHint: Boolean
 ) {
 //todo: using Units (state hoisting) is smoother than passing down state - also when using scope?
 
@@ -43,18 +45,34 @@ fun TopRow(
         contentAlignment = Alignment.Center
     ) {
 
-        FilledIconButton(onClick = {
-            openDialog(true)
+        Row {
+            FilledIconButton(onClick = {
+                openDialog(true)
 
-        }) {
+            }) {
 
-            Icon(
-                painterResource(id = R.drawable.grave_stone),
-                contentDescription = "",
-                modifier = Modifier.size(ButtonDefaults.IconSize)
-            )
+                Icon(
+                    painterResource(id = R.drawable.grave_stone),
+                    contentDescription = "",
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                )
 
+            }
+
+            FilledIconButton(onClick = {
+                showHint()
+
+            }, enabled = canShowHint) {
+
+                Icon(
+                    painterResource(id = R.drawable.help),
+                    contentDescription = "",
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                )
+
+            }
         }
+
 
 
 
@@ -105,8 +123,8 @@ fun TopRow(
 @Composable
 fun TopRowPreview() = MinesweeperTheme {
     Column {
-        TopRow(viewModel = GameViewModel(RepositoryMock), {}, 15) {}
-        TopRow(viewModel = GameViewModel(RepositoryMock), {}, 15) {}
+        TopRow(viewModel = GameViewModel(RepositoryMock), {}, 15, {}, {}, true)
+        TopRow(viewModel = GameViewModel(RepositoryMock), {}, 15, {}, {}, false)
 
     }
 }

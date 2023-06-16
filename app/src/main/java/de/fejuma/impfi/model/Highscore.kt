@@ -18,6 +18,9 @@ data class Highscore(
     @ColumnInfo(name = "seconds")
     val seconds: Int,
 
+    @ColumnInfo(name = "hints")
+    val hintsUsed: Int,
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     var id: Int = 0
