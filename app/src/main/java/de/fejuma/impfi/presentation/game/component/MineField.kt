@@ -1,6 +1,10 @@
 package de.fejuma.impfi.presentation.game.component
 
+import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,21 +45,29 @@ fun MineField(
 ) {
 
 
-    // val interactionSource = remember { MutableInteractionSource() }
-
-
     Box(
         modifier = Modifier
 
 
             .padding(2.dp)
             .size(48.dp)
-
-
             .clip(CircleShape)
+            .combinedClickable(
+                enabled = tile.coverMode != TileCoverMode.UNCOVERED,
+                onClick = {
+                    onTileSelected(tile.x, tile.y)
+
+                },
+                onLongClick = {
+                    onTileSelectedSecondary(tile.x, tile.y)
+                },
+
+                )
 
 
             .then(
+
+
                 when (tile.coverMode) {
                     TileCoverMode.UNCOVERED -> when (tile) {
                         is Tile.Adjacent -> Modifier
@@ -70,7 +82,7 @@ fun MineField(
                     }
 
                     TileCoverMode.FLAGGED -> Modifier
-                        .background(Color(0xFF4CAF50))
+                        .background(Color(0xFF76FF03))
                         .border(
                             2.dp, linearGradient(
                                 colors = listOf(
@@ -117,19 +129,8 @@ fun MineField(
             )
 
 
-            //       .indication(interactionSource, LocalIndication.current)
+        //       .indication(interactionSource, LocalIndication.current)
 
-            .combinedClickable(
-                enabled = tile.coverMode != TileCoverMode.UNCOVERED,
-                onClick = {
-                    onTileSelected(tile.x, tile.y)
-
-                },
-                onLongClick = {
-                    onTileSelectedSecondary(tile.x, tile.y)
-                },
-
-                )
 
         // .clip(RoundedCornerShape(4.dp))
         //    .neumorphic(neuShape =  Pressed.Rounded(4.dp), strokeWidth = 2.dp),
@@ -216,42 +217,42 @@ fun MineFieldPreview() {
 
 
             MineField(
-                tile = Tile.Bomb(TileCoverMode.UNCOVERED, 0, 0, false),
+                Tile.Bomb(TileCoverMode.UNCOVERED, 0, 0, false),
                 onTileSelected = { _, _ -> },
                 onTileSelectedSecondary = { _, _ -> })
 
             MineField(
-                tile = Tile.Empty(TileCoverMode.UNCOVERED, 0, 0),
+                Tile.Empty(TileCoverMode.UNCOVERED, 0, 0),
                 onTileSelected = { _, _ -> },
                 onTileSelectedSecondary = { _, _ -> })
 
             MineField(
-                tile = Tile.Adjacent(1, TileCoverMode.UNCOVERED, 0, 0),
+                Tile.Adjacent(1, TileCoverMode.UNCOVERED, 0, 0),
                 onTileSelected = { _, _ -> },
                 onTileSelectedSecondary = { _, _ -> })
 
             MineField(
-                tile = Tile.Adjacent(2, TileCoverMode.UNCOVERED, 0, 0),
+                Tile.Adjacent(2, TileCoverMode.UNCOVERED, 0, 0),
                 onTileSelected = { _, _ -> },
                 onTileSelectedSecondary = { _, _ -> })
 
             MineField(
-                tile = Tile.Adjacent(3, TileCoverMode.UNCOVERED, 0, 0),
+                Tile.Adjacent(3, TileCoverMode.UNCOVERED, 0, 0),
                 onTileSelected = { _, _ -> },
                 onTileSelectedSecondary = { _, _ -> })
 
             MineField(
-                tile = Tile.Adjacent(2, TileCoverMode.COVERED, 0, 0),
+                Tile.Adjacent(2, TileCoverMode.COVERED, 0, 0),
                 onTileSelected = { _, _ -> },
                 onTileSelectedSecondary = { _, _ -> })
 
             MineField(
-                tile = Tile.Adjacent(2, TileCoverMode.FLAGGED, 0, 0),
+                Tile.Adjacent(2, TileCoverMode.FLAGGED, 0, 0),
                 onTileSelected = { _, _ -> },
                 onTileSelectedSecondary = { _, _ -> })
 
             MineField(
-                tile = Tile.Adjacent(2, TileCoverMode.QUESTIONED, 0, 0),
+                Tile.Adjacent(2, TileCoverMode.QUESTIONED, 0, 0),
                 onTileSelected = { _, _ -> },
                 onTileSelectedSecondary = { _, _ -> })
 
@@ -261,8 +262,24 @@ fun MineFieldPreview() {
 }
 
 
+private const val CONTENT_TRANSFORM_ANIM_DURATION: Int = 300
 
+@ExperimentalAnimationApi
+private fun getContentTransformAnim(): ContentTransform {
 
+    val enterAnim = scaleIn(
+        animationSpec = tween(
+            durationMillis = CONTENT_TRANSFORM_ANIM_DURATION,
+            delayMillis = CONTENT_TRANSFORM_ANIM_DURATION / 2
+        )
+    )
 
+    val exitAnim = scaleOut(
+        animationSpec = tween(
+            durationMillis = CONTENT_TRANSFORM_ANIM_DURATION,
+            delayMillis = 0,
+        )
+    )
 
-
+    return ContentTransform(enterAnim, exitAnim)
+}

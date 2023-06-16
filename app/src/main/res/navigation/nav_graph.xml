@@ -27,10 +27,14 @@
         tools:layout="@layout/fragment_game">
         <action
             android:id="@+id/action_game_scoreboard"
-            app:destination="@id/scoreboardFragment" />
+            app:destination="@id/scoreboardFragment"
+            app:popUpTo="@id/startFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_game_start"
-            app:destination="@id/startFragment" />
+            app:destination="@id/startFragment"
+            app:popUpTo="@id/startFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/scoreboardFragment"
@@ -39,7 +43,9 @@
         tools:layout="@layout/fragment_scoreboard">
         <action
             android:id="@+id/action_scoreboard_start"
-            app:destination="@id/startFragment" />
+            app:destination="@id/startFragment"
+            app:popUpTo="@id/startFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"

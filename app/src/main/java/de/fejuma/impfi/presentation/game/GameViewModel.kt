@@ -32,7 +32,7 @@ class GameViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    val difficulty = difficulties[repo.getDifficulty()]!!
+    val difficultyLevel = repo.getDifficulty()
 
     var sfxVolume by mutableIntStateOf(repo.getSfxVolume())
         private set
@@ -85,6 +85,8 @@ class GameViewModel @Inject constructor(
 
 
         }
+
+        val difficulty = difficulties[difficultyLevel]!!
 
         configure(
             difficulty.width,

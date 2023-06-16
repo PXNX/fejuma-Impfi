@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,7 +48,6 @@ import de.fejuma.impfi.databinding.FragmentStartBinding
 import de.fejuma.impfi.difficulties
 import de.fejuma.impfi.presentation.start.component.DifficultyCard
 import de.fejuma.impfi.ui.MinesweeperTheme
-import de.fejuma.impfi.ui.lightGray
 
 
 @AndroidEntryPoint
@@ -74,7 +74,9 @@ class StartFragment : Fragment() {
             // is destroyed
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                MinesweeperTheme { StartScreen(findNavController(), viewModel) }
+                MinesweeperTheme {
+                    StartScreen(findNavController(), viewModel)
+                }
             }
         }
         return view
@@ -134,12 +136,12 @@ private fun SheetContent(viewModel: StartViewModel) {
         onValueChange = viewModel::changeSfxVolume,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 14.dp),
         valueRange = 0f..100f,
         steps = 9
     )
 
-    Spacer(modifier = Modifier.height(32.dp))
+    Spacer(modifier = Modifier.height(22.dp))
 
     Row(
         Modifier
@@ -161,7 +163,7 @@ private fun SheetContent(viewModel: StartViewModel) {
         )
     }
 
-    Spacer(modifier = Modifier.height(56.dp))
+    Spacer(modifier = Modifier.height(64.dp))
 
 
 }
@@ -190,11 +192,13 @@ private fun StartScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Icon(
-                painter = painterResource(id = R.drawable.virus_outline),
-                contentDescription = "",
-                tint = lightGray
+            Image(
+                painterResource(id = R.mipmap.applogo),
+                contentDescription = "Virus",
+                Modifier.size(64.dp)
             )
+
+            Spacer(modifier = Modifier.height(28.dp))
 
 
             Button(onClick = {

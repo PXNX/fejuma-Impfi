@@ -48,7 +48,7 @@ internal fun GameMap(
     onTileSelectedSecondary: (column: Int, row: Int) -> Unit,
 ) {
 
-    var zoom by remember { mutableFloatStateOf(1f) }
+    var zoom by remember { mutableFloatStateOf(.5f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     var parentSize by remember { mutableStateOf(IntSize.Zero) }
 
@@ -134,6 +134,8 @@ internal fun GameMap(
                         .wrapContentSize(unbounded = true)
                 ) {
                     row.forEach { cell ->
+
+
                         MineField(
                             cell,
 
