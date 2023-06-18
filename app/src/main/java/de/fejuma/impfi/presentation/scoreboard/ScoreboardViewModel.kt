@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.fejuma.impfi.data.repository.Repository
+import de.fejuma.impfi.difficulties
 import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.Highscore
 import kotlinx.coroutines.launch
@@ -20,7 +21,7 @@ class ScoreboardViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    var highscores by mutableStateOf<List<Highscore>>(emptyList())
+    var highscores : Map<List<Highscore>>
         private set
 
     init {
@@ -28,14 +29,18 @@ class ScoreboardViewModel @Inject constructor(
     }
 
 
-    fun loadHighscores(difficultyLevel: DifficultyLevel) {
+    fun loadHighscores() {
+        val result = emptyList<List<Highscore>()
         viewModelScope.launch {
+difficulties.keys.forEachIndexed{index, level ->
 
+    val result = repo.getHighscoresByDifficulty(level)
+    result.collect {
+        highscores[index] = it
+    }
+}
             //TODO: use some actual result sealed class here, that allows for loading states with circularprogressindicator later on
-            val result = repo.getHighscoresByDifficulty(difficultyLevel)
-            result.collect {
-                highscores = it
-            }
+
 
 
         }

@@ -87,7 +87,8 @@ fun GameWonDialog(
                 {
 
 
-                    onConfirm(Highscore(userName, difficulty, timePlayed, hintsUsed))
+                  onConfirm(Highscore(userName, difficulty, timePlayed, hintsUsed))
+
                 }
             ) {
                 Text("Score speichern")

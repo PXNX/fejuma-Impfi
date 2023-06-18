@@ -182,7 +182,7 @@ class GameFragment : Fragment() {
                                     viewModel.difficultyLevel,
                                     viewModel.hintsUsed,
                                     {
-                                        viewModel::saveHighScore
+                                        viewModel.saveHighScore(it)
                                         findNavController().navigate(R.id.action_game_scoreboard)
 
                                     },
