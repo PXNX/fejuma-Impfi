@@ -1,14 +1,11 @@
 package de.fejuma.impfi.presentation.scoreboard
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.fejuma.impfi.data.repository.Repository
 import de.fejuma.impfi.difficulties
-import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.Highscore
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,47 +16,27 @@ import javax.inject.Inject
 class ScoreboardViewModel @Inject constructor(
     private val repo: Repository
 ) : ViewModel() {
+    //TODO: use some actual result sealed class here, that allows for loading states with circularprogressindicator later on
 
-
-    var highscores : Map<List<Highscore>>
-        private set
 
     init {
-        loadHighscores(repo.getDifficulty())
+        loadHighscores()
     }
 
-
-    fun loadHighscores() {
-        val result = emptyList<List<Highscore>()
-        viewModelScope.launch {
-difficulties.keys.forEachIndexed{index, level ->
-
-    val result = repo.getHighscoresByDifficulty(level)
-    result.collect {
-        highscores[index] = it
-    }
-}
-            //TODO: use some actual result sealed class here, that allows for loading states with circularprogressindicator later on
+    var highscores = mutableStateListOf<List<Highscore>?>(null, null, null)
+        private set
 
 
+    fun loadHighscores() = viewModelScope.launch {
 
+
+        difficulties.keys.forEachIndexed { index, level ->
+            repo.getHighscoresByDifficulty(level).collect {
+                highscores[index] = it
+            }
         }
 
     }
 
-
-    /*fun createEntries() {
-        viewModelScope.launch {
-            repo.insertHighscore(
-                Highscore(
-                    listOf("Felix", "Julian", "Max", "Test").random(),
-                    DifficultyLevel.EASY,
-                    //DifficultyLevel.values().random(),
-                    (10..10000 step 250).toList().random()
-                )
-            )
-        }
-
-    }*/
 }
 
