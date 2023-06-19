@@ -17,6 +17,7 @@ import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Tab
@@ -65,22 +66,23 @@ class ScoreboardFragment : Fragment() {
             setContent {
                 // In Compose world
                 MinesweeperTheme {
-
-
                     Box(
                         contentAlignment = Alignment.BottomCenter,
                         modifier = Modifier.fillMaxSize()
                     ) {
 
-
-                        ScoreboardContent(viewModel) {
-                            findNavController().navigateUp()
+                        if (viewModel.highscores.filterNotNull().size == viewModel.highscores.size) {
+                            ScoreboardContent(viewModel) {
+                                findNavController().navigateUp()
+                            }
+                        } else {
+                            CircularProgressIndicator(
+                                Modifier
+                                    .size(32.dp)
+                                    .align(Alignment.Center)
+                            )
                         }
-
-
                     }
-
-
                 }
             }
             return view
@@ -101,7 +103,9 @@ fun ScoreboardContent(
 ) {
     Column(Modifier.fillMaxSize()) {
 
+
         val pages = difficulties.keys
+
 
         val pagerState = rememberPagerState(
             initialPage = 0,
