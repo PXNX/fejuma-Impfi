@@ -38,11 +38,10 @@ import de.fejuma.impfi.presentation.game.component.LaunchWithCircularReveal
 import de.fejuma.impfi.presentation.game.component.TopRow
 import de.fejuma.impfi.presentation.game.component.dialogs.GameLostDialog
 import de.fejuma.impfi.presentation.game.component.dialogs.GameWonDialog
-import de.fejuma.impfi.presentation.game.game.Status
+import de.fejuma.impfi.presentation.game.model.Status
 import de.fejuma.impfi.timeLimit
 import de.fejuma.impfi.ui.MinesweeperTheme
 import kotlin.math.abs
-
 
 @AndroidEntryPoint
 class GameFragment : Fragment() {
@@ -65,10 +64,8 @@ class GameFragment : Fragment() {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
         val view = binding.root
 
-
         val audio = AudioManager(requireContext(), viewModel.sfxVolume)
         val haptics = HapticManager(requireContext(), viewModel.hapticsEnabled)
-
 
         binding.composeViewGame.apply {
             // Dispose of the Composition when the view's LifecycleOwner
@@ -79,20 +76,13 @@ class GameFragment : Fragment() {
                 MinesweeperTheme {
                     LaunchWithCircularReveal {
 
-
                         Column(modifier = Modifier.fillMaxSize()) {
-
-
                             val map by viewModel.gameStateHolder.map.collectAsStateWithLifecycle()
                             val time by viewModel.gameStateHolder.time.collectAsStateWithLifecycle()
                             val minesRemaining by viewModel.gameStateHolder.minesRemaining.collectAsStateWithLifecycle()
                             val gameState by viewModel.gameStateHolder.status.collectAsStateWithLifecycle()
 
-
-
-
                             TopRow(
-                                viewModel,
                                 {
 
 
@@ -234,29 +224,19 @@ class GameFragment : Fragment() {
                                         }
                                     },
                                     dismissButton = {
-                                        Button(
-
-                                            onClick = {
-
-                                                audio.cancel()
-                                                viewModel.setOpenSurrenderDialog(false)
-
-                                            }) {
+                                        Button(onClick = {
+                                            audio.cancel()
+                                            viewModel.setOpenSurrenderDialog(false)
+                                        }) {
                                             Text(stringResource(id = R.string.dismiss_button))
                                         }
                                     }
                                 )
                             }
-
-
                         }
-
-
                     }
                 }
             }
-
-
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -283,6 +263,4 @@ class GameFragment : Fragment() {
         if (!viewModel.isSurrenderDialog)
             viewModel.isTimerActive = true
     }
-
-
 }

@@ -1,7 +1,8 @@
-package de.fejuma.impfi.presentation.game.game
+package de.fejuma.impfi.presentation.game.model
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+
 
 interface GameStateHolder {
     val time: StateFlow<Int>
@@ -16,3 +17,9 @@ class MutableGameStateHolder(
     override val map: MutableStateFlow<List<List<Tile>>>,
     override val status: MutableStateFlow<Status>,
 ) : GameStateHolder
+
+enum class Status {
+    NORMAL,
+    WON,
+    LOST
+}

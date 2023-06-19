@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
-import de.fejuma.impfi.presentation.game.game.Tile
-import de.fejuma.impfi.presentation.game.game.TileCoverMode
+import de.fejuma.impfi.presentation.game.model.Tile
+import de.fejuma.impfi.presentation.game.model.TileCoverMode
 import de.fejuma.impfi.ui.MinesweeperTheme
 
 
@@ -210,7 +210,7 @@ fun MineField(
 
 @DefaultPreviews
 @Composable
-fun MineFieldPreview() {
+private fun MineFieldPreview() {
     MinesweeperTheme {
 
         Row {

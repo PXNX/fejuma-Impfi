@@ -50,11 +50,8 @@ import de.fejuma.impfi.ui.MinesweeperTheme
 @Composable
 fun HighscoreTable(
     scores: List<Highscore>?,
-    difficultyLevel: DifficultyLevel,
-
-    ) {
-
-
+    difficultyLevel: DifficultyLevel
+) {
     scores?.let {
 
         //Display a scrollable list of scores using LazyColumn
@@ -66,17 +63,10 @@ fun HighscoreTable(
             // .background(Color.White)
         ) {
 
-            // Display the header row with icons for "username" and "time"
-            //TODO: navigate back
-
             // Display each score as a row in the table
             itemsIndexed(scores) { key, item ->
-
                 ScoreEntry(key + 1, item)
-
-
             }
-
         }
     } ?: run {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -89,7 +79,6 @@ fun HighscoreTable(
                     modifier = Modifier.size(60.dp)
                 )
                 Text(
-
                     text = stringResource(
                         id = R.string.no_score,
                         difficulties[difficultyLevel]!!.name
@@ -100,14 +89,11 @@ fun HighscoreTable(
                 )
             }
         }
-
-
     }
-
 }
 
 @Composable
-fun ScoreEntry(position: Int, item: Highscore) {
+private fun ScoreEntry(position: Int, item: Highscore) {
     // Display the score as a card with "username" and "time" columns
     Card {
         Row(
@@ -185,17 +171,13 @@ fun ScoreEntry(position: Int, item: Highscore) {
             }
 
 
-
         }
     }
 }
 
 @DefaultPreviews
 @Composable
-fun ScoreBoardPreview() {
-    MinesweeperTheme {
-        val viewModel = ScoreboardViewModel(RepositoryMock)
-        HighscoreTable(scores = viewModel.highscores[0], DifficultyLevel.EASY)
-    }
-
+private fun ScoreBoardPreview() = MinesweeperTheme {
+    val viewModel = ScoreboardViewModel(RepositoryMock)
+    HighscoreTable(scores = viewModel.highscores[0], DifficultyLevel.EASY)
 }

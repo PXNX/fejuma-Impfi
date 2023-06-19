@@ -12,3 +12,9 @@ data class Difficulty(
 )
 
 //TODO: replace with string resource
+
+enum class DifficultyLevel {
+    EASY,
+    NORMAL,
+    HARD
+}

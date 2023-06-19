@@ -1,5 +1,6 @@
 package de.fejuma.impfi.presentation.scoreboard
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +19,6 @@ class ScoreboardViewModel @Inject constructor(
 ) : ViewModel() {
     //TODO: use some actual result sealed class here, that allows for loading states with circularprogressindicator later on
 
-
     init {
         loadHighscores()
     }
@@ -26,17 +26,15 @@ class ScoreboardViewModel @Inject constructor(
     var highscores = mutableStateListOf<List<Highscore>?>(null, null, null)
         private set
 
-
-    fun loadHighscores() = viewModelScope.launch {
-
-
+    private fun loadHighscores() {
         difficulties.keys.forEachIndexed { index, level ->
-            repo.getHighscoresByDifficulty(level).collect {
-                highscores[index] = it
+            viewModelScope.launch {
+                Log.e("SCO_VM", "index: $index - level: $level")
+                repo.getHighscoresByDifficulty(level).collect {
+                    Log.e("SCO_VM", "index: $index --- it: $it")
+                    highscores[index] = it
+                }
             }
         }
-
     }
-
 }
-

@@ -18,16 +18,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
-import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.formatNumber
-import de.fejuma.impfi.presentation.game.GameViewModel
 import de.fejuma.impfi.ui.MinesweeperTheme
 import de.fejuma.impfi.ui.lightGray
 
 
 @Composable
 fun TopRow(
-    viewModel: GameViewModel,
     time: @Composable () -> Unit,
     mines: Int,
     openDialog: (Boolean) -> Unit,
@@ -48,22 +45,17 @@ fun TopRow(
         Row {
             FilledIconButton(onClick = {
                 openDialog(true)
-
             }) {
-
                 Icon(
                     painterResource(id = R.drawable.grave_stone),
                     contentDescription = "",
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
-
             }
 
             FilledIconButton(onClick = {
                 showHint()
-
             }, enabled = canShowHint) {
-
                 Icon(
                     painterResource(id = R.drawable.help),
                     contentDescription = "",
@@ -72,11 +64,6 @@ fun TopRow(
 
             }
         }
-
-
-
-
-
 
         Row(
             Modifier.fillMaxWidth(),
@@ -94,12 +81,10 @@ fun TopRow(
                 modifier = Modifier.padding(start = 8.dp),
                 horizontalAlignment = Alignment.End
             ) {
-
-
                 time()
             }
-            Spacer(modifier = Modifier.weight(1f))
 
+            Spacer(modifier = Modifier.weight(1f))
 
             Icon(
                 modifier = Modifier.padding(end = 8.dp),
@@ -111,11 +96,7 @@ fun TopRow(
             formatNumber(mines).forEach {
                 AnimatingCharacter(it)
             }
-
-
         }
-
-
     }
 }
 
@@ -123,8 +104,8 @@ fun TopRow(
 @Composable
 fun TopRowPreview() = MinesweeperTheme {
     Column {
-        TopRow(viewModel = GameViewModel(RepositoryMock), {}, 15, {}, {}, true)
-        TopRow(viewModel = GameViewModel(RepositoryMock), {}, 15, {}, {}, false)
+        TopRow({}, 15, {}, {}, true)
+        TopRow({}, 15, {}, {}, false)
 
     }
 }

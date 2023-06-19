@@ -10,11 +10,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.fejuma.impfi.data.repository.Repository
 import de.fejuma.impfi.difficulties
 import de.fejuma.impfi.model.Highscore
-import de.fejuma.impfi.presentation.game.game.GameStateHolder
-import de.fejuma.impfi.presentation.game.game.MutableGameStateHolder
-import de.fejuma.impfi.presentation.game.game.Status
-import de.fejuma.impfi.presentation.game.game.Tile
-import de.fejuma.impfi.presentation.game.game.TileCoverMode
+import de.fejuma.impfi.presentation.game.model.GameStateHolder
+import de.fejuma.impfi.presentation.game.model.MutableGameStateHolder
+import de.fejuma.impfi.presentation.game.model.Status
+import de.fejuma.impfi.presentation.game.model.Tile
+import de.fejuma.impfi.presentation.game.model.TileCoverMode
 import de.fejuma.impfi.timeLimit
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -39,7 +39,7 @@ class GameViewModel @Inject constructor(
     var hapticsEnabled by mutableStateOf(repo.getHapticsEnabled())
         private set
 
-    var hintsUsed by mutableStateOf(0)
+    var hintsUsed by mutableIntStateOf(0)
         private set
 
     var recordTime: Int? = null

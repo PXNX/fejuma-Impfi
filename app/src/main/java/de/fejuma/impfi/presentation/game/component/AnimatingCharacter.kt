@@ -32,7 +32,6 @@ fun AnimatingCharacter(
         },
         targetState = character, label = "",
     ) { targetState ->
-
         Text(
             text = targetState.toString(),
             style = MaterialTheme.typography.bodyMedium.copy(
