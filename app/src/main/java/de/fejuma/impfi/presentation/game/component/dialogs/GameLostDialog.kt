@@ -21,7 +21,7 @@ fun GameLostDialog(
         },
         title = {
             // three states: won, lost, new highsscroe?
-            //todo: some icon?
+
             Text(text = stringResource(id = R.string.game_over))
         },
 

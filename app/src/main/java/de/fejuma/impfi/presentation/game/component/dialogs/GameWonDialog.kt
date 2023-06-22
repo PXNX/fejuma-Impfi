@@ -41,7 +41,7 @@ fun GameWonDialog(
 
 
 //if verzweigung, welches jeweil unterschiedliche Dialogbox öffnet? (Gewonnen und neuer HighScore || Gewonnen aber kein neuer HS || verloren
-//TODO: Fix focus and layout (Material Compose TextField Validation...)
+
 
 
     AlertDialog(
@@ -63,7 +63,7 @@ fun GameWonDialog(
             Column {
 
 
-                //todo: mit icon daneben aufpeppen, gewinnen muss sich geil anfühlen!
+
                 Text(
                     stringResource(id = R.string.time_needed,": $timeFormat",),
                     Modifier.padding(start = 10.dp)

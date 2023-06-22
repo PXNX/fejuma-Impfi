@@ -27,7 +27,7 @@ import de.fejuma.impfi.ui.MinesweeperTheme
 
 
 class AboutFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+
 
 
     private var _binding: FragmentAboutBinding? = null
@@ -103,7 +103,7 @@ class AboutFragment : Fragment() {
                                 )
                             )
                         }
-//Todo: sollen hier alle Interpreten der Soundeffekte einzeln genannt werden?
+
 
                     }
 

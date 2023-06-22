@@ -11,7 +11,6 @@ data class Difficulty(
     val difficultyColor: Color
 )
 
-//TODO: replace with string resource
 
 enum class DifficultyLevel {
     EASY,

@@ -31,7 +31,7 @@ fun TopRow(
     showHint: () -> Unit,
     canShowHint: Boolean
 ) {
-//todo: using Units (state hoisting) is smoother than passing down state - also when using scope?
+
 
     // use Box to place items on top of each other
     Box(
