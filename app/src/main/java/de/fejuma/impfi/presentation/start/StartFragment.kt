@@ -50,8 +50,8 @@ class StartFragment : Fragment() {
 
     private var _binding: FragmentStartBinding? = null
 
-    // This property is only valid between onCreateView and
-// onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
+    //provides access to the views in the layout
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -68,6 +68,7 @@ class StartFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 MinesweeperTheme {
+                    // Displaying the StartScreen composable with the provided NavController and viewModel
                     StartScreen(findNavController(), viewModel)
                 }
             }
@@ -105,6 +106,7 @@ private fun StartScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            // Displaying the app logo image
             Image(
                 painterResource(id = R.mipmap.applogo),
                 contentDescription = "Virus",
@@ -114,6 +116,7 @@ private fun StartScreen(
             Spacer(modifier = Modifier.height(28.dp))
 
 
+            // Button to navigate to the game screen
             Button(onClick = {
                 navController.navigate(R.id.action_start_game)
             }, modifier = Modifier.fillMaxWidth()) {
@@ -125,7 +128,7 @@ private fun StartScreen(
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 Text(stringResource(id = R.string.vaccinate))
             }
-
+            // Button to navigate to the scoreboard screen
             Button(onClick = {
                 navController.navigate(R.id.action_start_scoreboard)
             }, modifier = Modifier.fillMaxWidth()) {
@@ -138,6 +141,7 @@ private fun StartScreen(
                 Text("Highscores")
             }
 
+            // Button to open the preference settings bottom sheet
             Button(onClick = {
                 openBottomSheet = true
             }, modifier = Modifier.fillMaxWidth()) {
@@ -150,6 +154,7 @@ private fun StartScreen(
                 Text(stringResource(id = R.string.settings))
             }
 
+            // Button to navigate to the about screen
             Button(onClick = {
                 navController.navigate(R.id.action_start_about)
 

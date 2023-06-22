@@ -14,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.fejuma.impfi.DefaultPreviews
+import de.fejuma.impfi.R
 import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.difficulties
 import de.fejuma.impfi.presentation.start.StartViewModel
@@ -25,9 +27,9 @@ import de.fejuma.impfi.ui.MinesweeperTheme
 @Composable
 fun PreferenceSheetContent(viewModel: StartViewModel) {
 
-
+// Displaying the title for the "Schwierigkeit" section
     Text(
-        "Schwierigkeit",
+        stringResource(id = R.string.difficulty),
         Modifier
             .padding(horizontal = 16.dp),
         style = MaterialTheme.typography.titleMedium
@@ -35,7 +37,7 @@ fun PreferenceSheetContent(viewModel: StartViewModel) {
 
     Spacer(modifier = Modifier.height(16.dp))
 
-
+// Creating a row to display the difficulty cards
     Row(
         Modifier
             .padding(horizontal = 16.dp)
@@ -43,7 +45,7 @@ fun PreferenceSheetContent(viewModel: StartViewModel) {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
-
+        // Iterating through the difficulties and creating a DifficultyCard for each one
         difficulties.forEach { (level, difficulty) ->
             // Modifier.weight(1f,false)
             DifficultyCard(
@@ -57,13 +59,15 @@ fun PreferenceSheetContent(viewModel: StartViewModel) {
 
     Spacer(modifier = Modifier.height(32.dp))
 
+    // Displaying the title for the "Effektlautstärke" section along with the current value
     Text(
-        "Effektlautstärke • ${viewModel.sfxVolume.toInt()}%",
+        stringResource(id = R.string.effect_sound, 
+        " • ${viewModel.sfxVolume.toInt()}%"),
         Modifier
             .padding(horizontal = 16.dp),
         style = MaterialTheme.typography.titleMedium
     )
-
+    // Creating a slider to control the sound effects volume
     Slider(
         value = viewModel.sfxVolume,
         onValueChange = viewModel::changeSfxVolume,
@@ -75,7 +79,8 @@ fun PreferenceSheetContent(viewModel: StartViewModel) {
     )
 
     Spacer(modifier = Modifier.height(22.dp))
-
+    
+    // Creating a row to display the "Haptisches Feedback" option along with a switch
     Row(
         Modifier
             .fillMaxWidth()
@@ -84,11 +89,12 @@ fun PreferenceSheetContent(viewModel: StartViewModel) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            "Haptisches Feedback",
+            stringResource(id = R.string.haptic_feedback),
 
             style = MaterialTheme.typography.titleMedium
         )
 
+        // Creating a switch to enable/disable haptic feedback
         Switch(
             checked = viewModel.hapticsEnabled,
             onCheckedChange =

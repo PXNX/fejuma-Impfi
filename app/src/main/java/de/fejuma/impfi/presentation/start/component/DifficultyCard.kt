@@ -41,6 +41,7 @@ fun RowScope.DifficultyCard(
     setActive: () -> Unit
 ) {
 
+    // Determine the colors for stroke, text, and background based on the active state
     val strokeColor: Color?
     val textColor: Color?
     val backgroundColor: Color by animateColorAsState(
@@ -57,6 +58,7 @@ fun RowScope.DifficultyCard(
         textColor = darkGray
     }
 
+    // Define the layout and appearance of the DifficultyCard
     Column(modifier = Modifier
         .fillMaxWidth()
         .weight(1f, false)
@@ -69,6 +71,7 @@ fun RowScope.DifficultyCard(
         verticalArrangement = Arrangement.Center
     ) {
 
+        // Display the difficulty name
         Text(
             text = difficulty.name,
             modifier = Modifier.weight(1f, fill = false),
@@ -77,6 +80,7 @@ fun RowScope.DifficultyCard(
             fontSize = 16.sp,
         )
 
+        // Display the dimensions of the difficulty
         Text(
             text = "${difficulty.height} × ${difficulty.width} ${stringResource(id = R.string.field_amount)}",
             modifier = Modifier.weight(1f, fill = false),
@@ -84,6 +88,7 @@ fun RowScope.DifficultyCard(
             fontSize = 10.sp,
         )
 
+        // Display the number of mines in the difficulty
         Text(
             text = "${difficulty.mines} ${stringResource(id = R.string.mines_amount)}",
             modifier = Modifier.weight(1f, fill = false),

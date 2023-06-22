@@ -16,6 +16,7 @@ class StartViewModel @Inject constructor(
     private val repo: Repository
 ) : ViewModel() {
 
+    //volume for sound effects
     var sfxVolume by mutableFloatStateOf(repo.getSfxVolume().toFloat())
         private set
     var hapticsEnabled by mutableStateOf(repo.getHapticsEnabled())
@@ -24,8 +25,9 @@ class StartViewModel @Inject constructor(
         private set
 
     fun changeSfxVolume(sfxVolume: Float) {
+        // Set the SFX volume in the repository and get the result
         val result = repo.setSfxVolume(round(sfxVolume).toInt())
-
+        // If the volume change was successful, update the sfxVolume property
         if (result) {
             this.sfxVolume = round(sfxVolume)
         }
@@ -41,8 +43,9 @@ class StartViewModel @Inject constructor(
     }
 
     fun changeDifficulty(difficultyLevel: DifficultyLevel) {
+        // Set the haptics enabled/disabled status in the repository and get the result
         val result = repo.setDifficulty(difficultyLevel)
-
+        // If the status change was successful, update the hapticsEnabled property
         if (result) {
             this.difficulty = difficultyLevel
         }

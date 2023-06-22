@@ -49,6 +49,7 @@ class GameFragment : Fragment() {
     private val viewModel by viewModels<GameViewModel>()
 
 
+    //ref to the view binding
     private var _binding: FragmentGameBinding? = null
 
     // This property is only valid between onCreateView and
@@ -61,9 +62,11 @@ class GameFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Inflating the view binding and obtaining the root view
         _binding = FragmentGameBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        // Creating instances of AudioManager and HapticManager
         val audio = AudioManager(requireContext(), viewModel.sfxVolume)
         val haptics = HapticManager(requireContext(), viewModel.hapticsEnabled)
 
@@ -73,15 +76,18 @@ class GameFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 // In Compose world
+                // Applying the MinesweeperTheme
                 MinesweeperTheme {
                     LaunchWithCircularReveal {
 
                         Column(modifier = Modifier.fillMaxSize()) {
+                            // Collecting the necessary game state information
                             val map by viewModel.gameStateHolder.map.collectAsStateWithLifecycle()
                             val time by viewModel.gameStateHolder.time.collectAsStateWithLifecycle()
                             val minesRemaining by viewModel.gameStateHolder.minesRemaining.collectAsStateWithLifecycle()
                             val gameState by viewModel.gameStateHolder.status.collectAsStateWithLifecycle()
 
+                            // Displaying the top row with time, record time, give up
                             TopRow(
                                 {
 
@@ -90,6 +96,7 @@ class GameFragment : Fragment() {
                                         if (time >= timeLimit) { //end after 1h
                                             //TODO -- maybe end game
                                         } else {
+                                            //display the formatted time
                                             formatTime(time).forEach {
                                                 AnimatingCharacter(it)
                                             }
@@ -110,6 +117,7 @@ class GameFragment : Fragment() {
                                                 if (timeDifference >= 0) Color.Red else Color.Green
 
 
+                                            // Displaying the time difference from the best time
                                             AnimatingCharacter(
 
                                                 if (timeDifference >= 0) '+' else '-',
@@ -136,6 +144,7 @@ class GameFragment : Fragment() {
                                 viewModel::setOpenSurrenderDialog, {
                                     Log.d("GAME", "time: $time")
 
+                                    //play sound
                                     audio.pop()
 
                                     viewModel.uncoverHintTile()
@@ -151,6 +160,8 @@ class GameFragment : Fragment() {
                             )
 
 
+
+                            // Displaying the game map
                             GameMap(
                                 map = map,
                                 onTileSelected = { x, y ->
@@ -159,6 +170,7 @@ class GameFragment : Fragment() {
 
                                 },
                                 onTileSelectedSecondary = { x, y ->
+                                    // Trigger a short vibration
                                     haptics.shortVibrationNow()
                                     viewModel.secondaryAction(x, y)
 
@@ -168,6 +180,7 @@ class GameFragment : Fragment() {
 
 
                             when (gameState) {
+                                // Display the "GameWonDialog" when the game state is "WON"
                                 Status.WON -> GameWonDialog(time,
                                     viewModel.difficultyLevel,
                                     viewModel.hintsUsed,
@@ -181,6 +194,7 @@ class GameFragment : Fragment() {
                                     }
                                 )
 
+                                // Display the "GameLostDialog" when the game state is "LOST"
                                 Status.LOST -> {
 
                                     audio.failure()
@@ -238,7 +252,7 @@ class GameFragment : Fragment() {
                 }
             }
         }
-
+        // Set the surrender dialog flag to true when the back button is pressed
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
 
             viewModel.setOpenSurrenderDialog(true)
