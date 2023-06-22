@@ -44,6 +44,8 @@ fun RowScope.DifficultyCard(
     // Determine the colors for stroke, text, and background based on the active state
     val strokeColor: Color?
     val textColor: Color?
+    // Smooth switching between colors, as this is a larger surface and just turning it on an off
+    // feels bad and is very noticeable
     val backgroundColor: Color by animateColorAsState(
         if (isActive)
             MaterialTheme.colorScheme.primary else Color.Transparent,
@@ -73,7 +75,7 @@ fun RowScope.DifficultyCard(
 
         // Display the difficulty name
         Text(
-            text = difficulty.name,
+            text = stringResource(id = difficulty.nameResource),
             modifier = Modifier.weight(1f, fill = false),
             color = textColor,
             fontWeight = FontWeight.Bold,
@@ -82,6 +84,7 @@ fun RowScope.DifficultyCard(
 
         // Display the dimensions of the difficulty
         Text(
+            // Interpolating strings
             text = "${difficulty.height} × ${difficulty.width} ${stringResource(id = R.string.field_amount)}",
             modifier = Modifier.weight(1f, fill = false),
             color = textColor,
@@ -101,6 +104,7 @@ fun RowScope.DifficultyCard(
 
 }
 
+// Displaying the DifficultyCard in different states and with different device settings
 @DefaultPreviews
 @Composable
 private fun DifficultyCardPreview() = MinesweeperTheme {

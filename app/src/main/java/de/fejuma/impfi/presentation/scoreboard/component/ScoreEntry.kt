@@ -46,6 +46,7 @@ fun ScoreEntry(position: Int, item: Highscore) {
 
         ) {
 
+            // Gold, silver, bronze to the top three highscores
             val color = when (position) {
                 1 -> Color(0xFFC5B358)
                 2 -> Color(0xFFC0C0C0)
@@ -84,8 +85,6 @@ fun ScoreEntry(position: Int, item: Highscore) {
             )
 
             Column(modifier = Modifier.padding(horizontal = 12.dp)) {
-                // Display the index as the place an the Username
-
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -94,7 +93,7 @@ fun ScoreEntry(position: Int, item: Highscore) {
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = formatTime(item.seconds)) //todo: parse to some actual time or pass timestamp
+                    Text(text = formatTime(item.seconds))
                 }
 
                 Spacer(modifier = Modifier.height(2.dp))
@@ -119,5 +118,8 @@ fun ScoreEntry(position: Int, item: Highscore) {
 @DefaultPreviews
 @Composable
 private fun ScoreEntryPreview() = MinesweeperTheme {
-    ScoreEntry(position = 1, item = Highscore("Username", DifficultyLevel.EASY, 41, 5))
+    ScoreEntry(
+        position = 1,
+        item = Highscore("Username", DifficultyLevel.EASY, 41, 5)
+    )
 }

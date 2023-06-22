@@ -47,11 +47,13 @@ fun MineField(
 
     Box(
         modifier = Modifier
-
-
+            // Space between fields
             .padding(2.dp)
             .size(48.dp)
+            // Making them round
             .clip(CircleShape)
+            // This allows us to handle different click events while also giving it a nice ripple
+            // effect
             .combinedClickable(
                 enabled = tile.coverMode != TileCoverMode.UNCOVERED,
                 onClick = {
@@ -64,7 +66,7 @@ fun MineField(
 
                 )
 
-
+            // Allows to chain additional Modifiers based on conditions
             .then(
 
 
@@ -83,63 +85,25 @@ fun MineField(
 
                     TileCoverMode.FLAGGED -> Modifier
                         .background(Color(0xFF76FF03))
-                        .border(
-                            2.dp, linearGradient(
-                                colors = listOf(
-                                    Color(0xAAFFFFFF),
-                                    Color(0xAACCCCCC),
-                                    Color(0xAA444444)
-                                ),
-
-                                ), CircleShape
-                        )
+                        .gradientBorder()
                         .padding(6.dp)
 
                     TileCoverMode.QUESTIONED -> Modifier
                         .background(Color.Yellow)
-                        .border(
-                            2.dp, linearGradient(
-                                colors = listOf(
-                                    Color(0xAAFFFFFF),
-                                    Color(0xAACCCCCC),
-                                    Color(0xAA444444)
-                                ),
-
-                                ), CircleShape
-                        )
+                        .gradientBorder()
                         .padding(6.dp)
 
                     else -> Modifier
                         .background(
                             MaterialTheme.colorScheme.secondary
                         )
-                        .border(
-                            2.dp, linearGradient(
-                                colors = listOf(
-                                    Color(0xAAFFFFFF),
-                                    Color(0xAACCCCCC),
-                                    Color(0xAA444444)
-                                ),
+                        .gradientBorder()
 
-                                ), CircleShape
-                        )
                 }
-
-
             )
-
-
-        //       .indication(interactionSource, LocalIndication.current)
-
-
-        // .clip(RoundedCornerShape(4.dp))
-        //    .neumorphic(neuShape =  Pressed.Rounded(4.dp), strokeWidth = 2.dp),
-        //    .background(if (tile.coverMode == TileCoverMode.UNCOVERED) Color.Transparent else Color.DarkGray),
         ,
         contentAlignment = Alignment.Center
-
     ) {
-
 
         when (tile.coverMode) {
             TileCoverMode.COVERED -> {
@@ -162,8 +126,8 @@ fun MineField(
 
             TileCoverMode.UNCOVERED -> when (tile) {
 
-
                 is Tile.Adjacent -> {
+                    // Different colors for the different amounts of mines surrounding a Field
                     val riskColor = when (tile.risk) {
                         1 -> Color.Blue
                         2 -> Color.Green
@@ -181,11 +145,10 @@ fun MineField(
                     )
                 }
 
-                is Tile.Empty -> {
-
-                }
+                is Tile.Empty -> {}
 
                 is Tile.Bomb -> when (tile.userSelection) {
+                    // The virus we tapped on that made us lose the game
                     true -> {
                         Image(
                             painterResource(id = R.mipmap.virus),
@@ -262,8 +225,24 @@ private fun MineFieldPreview() {
 }
 
 
+// Shortcut for adding a semi transparent border around Fields, giving it this mild 3D-effect. It's
+// an extension function, so adds additional functionality to Modifier.
+private fun Modifier.gradientBorder() = this.border(
+    2.dp, linearGradient(
+        colors = listOf(
+            Color(0xAAFFFFFF),
+            Color(0xAACCCCCC),
+            Color(0xAA444444)
+        ),
+
+        ), CircleShape
+)
+
 private const val CONTENT_TRANSFORM_ANIM_DURATION: Int = 300
 
+
+// Not in use as it well lag a lot on big map sizes, but if applied to the minefield each tap will
+// make it pop like a little bubble
 @ExperimentalAnimationApi
 private fun getContentTransformAnim(): ContentTransform {
 

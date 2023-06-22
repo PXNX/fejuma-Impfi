@@ -5,6 +5,10 @@ import de.fejuma.impfi.model.Highscore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
+// Here we just give back some example data which allows for testing our ViewModels and previewing
+// Composables. It's important that we implement the Repository interface here, so that we can
+// exchange the actual Repository (which also implements this interface) for the one with example
+// data.
 object RepositoryMock : Repository {
 
 

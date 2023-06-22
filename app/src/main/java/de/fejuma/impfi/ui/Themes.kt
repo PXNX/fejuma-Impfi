@@ -10,16 +10,15 @@ import androidx.compose.runtime.Composable
 private val LightColors = lightColorScheme(
     primary = darkGreen,
     onPrimary = white,
-    //background = lightGray,
 )
 private val DarkColors = darkColorScheme(
     primary = purple_200,
     onPrimary = white,
-    // background = darkGray,
-
 )
 
-
+// Changing the colors based onn device settings. We could also change typography, shapes and
+// dimensions here to centrally influence the look of our app. If we want to apply our defined
+// themes, we have to wrap a Composable with it.
 @Composable
 fun MinesweeperTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),

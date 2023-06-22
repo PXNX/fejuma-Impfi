@@ -8,6 +8,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,26 +28,24 @@ fun GameWonDialog(
     timePlayed: Int,
     difficulty: DifficultyLevel,
     hintsUsed: Int,
+    // This requires a function that returns Highscore
     onConfirm: (Highscore) -> Unit,
     onDismiss: () -> Unit
 ) {
 
-
-    var (userName, setUserName) = remember {
-        androidx.compose.runtime.mutableStateOf(
+    // Destructuring it into getter and setter may be useful. Instead for setting a value, you can
+    // also call userName.value = yourValue
+    val (userName, setUserName) = remember {
+        mutableStateOf(
             ""
         )
     }
     val timeFormat = formatTime(timePlayed)
 
 
-//if verzweigung, welches jeweil unterschiedliche Dialogbox öffnet? (Gewonnen und neuer HighScore || Gewonnen aber kein neuer HS || verloren
-
-
-
     AlertDialog(
         onDismissRequest = {
-
+            // We don't want anything to happen when the user clicks outside of the dialog
         }, icon = {
             Icon(
                 painterResource(id = R.drawable.alarm),
@@ -55,7 +54,6 @@ fun GameWonDialog(
             )
         },
         title = {
-            // three states: won, lost, new highsscroe?
             Text(text = stringResource(id = R.string.game_won))
         },
         text = {
@@ -63,14 +61,13 @@ fun GameWonDialog(
             Column {
 
 
-
                 Text(
-                    stringResource(id = R.string.time_needed,": $timeFormat",),
+                    stringResource(id = R.string.time_needed, ": $timeFormat"),
                     Modifier.padding(start = 10.dp)
                 )
 
                 Text(
-                    stringResource(id = R.string.used_hints,  ": $hintsUsed"),
+                    stringResource(id = R.string.used_hints, ": $hintsUsed"),
                     Modifier.padding(start = 10.dp)
                 )
 
@@ -86,10 +83,8 @@ fun GameWonDialog(
         confirmButton = {
             Button(
                 {
-
-
+                    // As noted above: We have the return a Highscore when calling onConfirm
                     onConfirm(Highscore(userName, difficulty, timePlayed, hintsUsed))
-
                 }
             ) {
                 Text(stringResource(id = R.string.save_button))
@@ -108,7 +103,5 @@ fun GameWonDialog(
 @DefaultPreviews
 @Composable
 private fun GameWonDialogPreview() = MinesweeperTheme {
-
     GameWonDialog(69, DifficultyLevel.EASY, 1, {}, {})
-
 }

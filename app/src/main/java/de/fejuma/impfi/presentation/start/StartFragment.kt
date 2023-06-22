@@ -10,16 +10,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,6 +34,7 @@ import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentStartBinding
+import de.fejuma.impfi.presentation.start.component.NavigationButton
 import de.fejuma.impfi.presentation.start.component.PreferenceSheetContent
 import de.fejuma.impfi.ui.MinesweeperTheme
 
@@ -87,11 +83,12 @@ class StartFragment : Fragment() {
 @Composable
 private fun StartScreen(
     navController: NavController,
-    viewModel: StartViewModel  //= hiltViewModel()
+    viewModel: StartViewModel
 ) {
     val sheetState = rememberModalBottomSheetState()
+    // Saveable will keep the state, even if we were to change something with our device, e.g. the
+    // darkmode or screen orientation
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
-
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -117,61 +114,42 @@ private fun StartScreen(
 
 
             // Button to navigate to the game screen
-            Button(onClick = {
-                navController.navigate(R.id.action_start_game)
-            }, modifier = Modifier.fillMaxWidth()) {
-                Icon(
-                    painterResource(id = R.drawable.needle),
-                    contentDescription = "",
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(stringResource(id = R.string.vaccinate))
-            }
-            // Button to navigate to the scoreboard screen
-            Button(onClick = {
-                navController.navigate(R.id.action_start_scoreboard)
-            }, modifier = Modifier.fillMaxWidth()) {
-                Icon(
-                    painterResource(id = R.drawable.trophy_variant_outline),
-                    contentDescription = "",
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("Highscores")
-            }
-
-            // Button to open the preference settings bottom sheet
-            Button(onClick = {
-                openBottomSheet = true
-            }, modifier = Modifier.fillMaxWidth()) {
-                Icon(
-                    painterResource(id = R.drawable.cog_outline),
-                    contentDescription = "",
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(stringResource(id = R.string.settings))
-            }
-
-            // Button to navigate to the about screen
-            Button(onClick = {
-                navController.navigate(R.id.action_start_about)
-
-            }, modifier = Modifier.fillMaxWidth()) {
-                Icon(
-                    painterResource(id = R.drawable.information_outline),
-                    contentDescription = "",
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(stringResource(id = R.string.about))
-            }
-
-
+            NavigationButton(
+                onClick = {
+                    navController.navigate(R.id.action_start_game)
+                },
+                painterResource(id = R.drawable.needle),
+                stringResource(id = R.string.vaccinate)
+            )
         }
+
+        // Button to navigate to the scoreboard screen
+        NavigationButton(
+            onClick = {
+                navController.navigate(R.id.action_start_scoreboard)
+            }, painterResource(id = R.drawable.trophy_variant_outline),
+            "Highscores"
+        )
+
+        // Button to open the preference settings bottom sheet
+        NavigationButton(
+            onClick = {
+                openBottomSheet = true
+            },
+            painterResource(id = R.drawable.cog_outline),
+            stringResource(id = R.string.settings)
+        )
+
+        // Button to navigate to the about screen
+        NavigationButton(
+            onClick = {
+                navController.navigate(R.id.action_start_about)
+            }, painterResource(id = R.drawable.information_outline),
+            stringResource(id = R.string.about)
+        )
     }
 
+    // As this state changes, it may display the bottom sheet
     if (openBottomSheet) {
         ModalBottomSheet(
             onDismissRequest = { openBottomSheet = false },

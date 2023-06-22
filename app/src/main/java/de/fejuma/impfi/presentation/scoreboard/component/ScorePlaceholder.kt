@@ -33,9 +33,10 @@ fun ScorePlaceholder(difficultyLevel: DifficultyLevel) =
                 modifier = Modifier.size(60.dp)
             )
             Text(
+                // Reading a string resource with place holders for the selected difficulty
                 text = stringResource(
                     id = R.string.no_score,
-                    difficulties[difficultyLevel]!!.name
+                    stringResource(id = difficulties[difficultyLevel]!!.nameResource)
                 ),
                 color = colorResource(id = R.color.darkGreen),
                 modifier = Modifier.fillMaxSize(.7f),

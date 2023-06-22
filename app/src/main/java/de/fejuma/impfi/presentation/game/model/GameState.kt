@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 
+// We want an immutable version in the viewModel that we expose to our UI
 interface GameStateHolder {
     val time: StateFlow<Int>
     val minesRemaining: StateFlow<Int>

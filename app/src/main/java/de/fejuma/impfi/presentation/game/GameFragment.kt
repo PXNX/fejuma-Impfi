@@ -52,8 +52,7 @@ class GameFragment : Fragment() {
     //ref to the view binding
     private var _binding: FragmentGameBinding? = null
 
-    // This property is only valid between onCreateView and
-// onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
 
@@ -71,12 +70,10 @@ class GameFragment : Fragment() {
         val haptics = HapticManager(requireContext(), viewModel.hapticsEnabled)
 
         binding.composeViewGame.apply {
-            // Dispose of the Composition when the view's LifecycleOwner
-            // is destroyed
+            // Dispose of the Composition when the view's LifecycleOwner is destroyed
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                // In Compose world
-                // Applying the MinesweeperTheme
+                // In Compose world applying the MinesweeperTheme
                 MinesweeperTheme {
                     LaunchWithCircularReveal {
 
@@ -91,21 +88,14 @@ class GameFragment : Fragment() {
                             TopRow(
                                 {
 
-
                                     Row {
-                                        if (time >= timeLimit) { //end after 1h
-                                            //TODO -- maybe end game
-                                        } else {
+                                        if (time < timeLimit) {
                                             //display the formatted time
                                             formatTime(time).forEach {
                                                 AnimatingCharacter(it)
                                             }
-
-
                                         }
                                     }
-
-
 
                                     viewModel.recordTime?.let { recTime ->
 
@@ -119,7 +109,6 @@ class GameFragment : Fragment() {
 
                                             // Displaying the time difference from the best time
                                             AnimatingCharacter(
-
                                                 if (timeDifference >= 0) '+' else '-',
                                                 fontSize = 14.sp,
                                                 color = color
@@ -127,14 +116,11 @@ class GameFragment : Fragment() {
 
                                             recordTimeFormat.forEach {
                                                 AnimatingCharacter(
-
                                                     it,
                                                     fontSize = 14.sp,
                                                     color = color
                                                 )
                                             }
-
-
                                         }
                                     }
 
@@ -149,7 +135,7 @@ class GameFragment : Fragment() {
 
                                     viewModel.uncoverHintTile()
                                 },
-                                //todo: also grey out if no more fields can be uncovered
+                                // The user has to play the game a bit before using hints
                                 time > 5
                             )
 
@@ -158,8 +144,6 @@ class GameFragment : Fragment() {
                                 thickness = 1.dp,
                                 color = MaterialTheme.colorScheme.onPrimary
                             )
-
-
 
                             // Displaying the game map
                             GameMap(
@@ -176,8 +160,6 @@ class GameFragment : Fragment() {
 
                                 }
                             )
-
-
 
                             when (gameState) {
                                 // Display the "GameWonDialog" when the game state is "WON"
@@ -252,26 +234,29 @@ class GameFragment : Fragment() {
                 }
             }
         }
-        // Set the surrender dialog flag to true when the back button is pressed
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
 
+        // Show the surrender dialog when the user presses back to prevent him from mistakenly
+        // quitting a round
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             viewModel.setOpenSurrenderDialog(true)
         }
 
         return view
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
+    // If the user decides to put the app in the background, we will just pause the time for him.
     override fun onStop() {
         super.onStop()
         viewModel.isTimerActive = false
     }
 
+    // If the user comes back to the app and did not open a surrender dialog prior (which pauses
+    // the time), we resume the timer
     override fun onResume() {
         super.onResume()
         if (!viewModel.isSurrenderDialog)

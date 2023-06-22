@@ -1,6 +1,5 @@
 package de.fejuma.impfi.presentation.game.component
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.calculateCentroid
@@ -31,8 +30,8 @@ import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
+import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.presentation.game.GameViewModel
 import de.fejuma.impfi.presentation.game.model.Tile
@@ -41,7 +40,6 @@ import kotlin.math.PI
 import kotlin.math.abs
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun GameMap(
     map: List<List<Tile>>,
@@ -78,9 +76,6 @@ internal fun GameMap(
                         val maxX = abs((size.width - parentSize.width * newScale) / 2)
                         val maxY = abs((size.height - parentSize.height * newScale) / 2)
 
-                        /*  val newOffset =
-                              (offset + gestureCentroid / zoom) - (gestureCentroid / newScale + gesturePan / zoom) */
-
                         val newOffset = offset + gesturePan
 
                         offset = Offset(
@@ -91,9 +86,9 @@ internal fun GameMap(
                         zoom = newScale
 
 
-// 🔥Consume touch when multiple fingers down
-// This prevents click and long click if your finger touches a
-// button while pinch gesture is being invoked
+                        // Consume touch when multiple fingers down. This prevents click and long
+                        // click if your finger touches a button while pinch gesture is being
+                        // invoked
                         val size = changes.size
                         if (size > 1) {
                             changes.forEach { it.consume() }
@@ -107,28 +102,25 @@ internal fun GameMap(
         Column(
 
             modifier = Modifier
+                // Has to be unbounded if we don't want to clip elements that are outside of the
+                // visible screen area, e.g. when zoomed in
                 .wrapContentSize(unbounded = true)
 
-
+                // THis have to come first as the dragging depends on parentSize
                 .onSizeChanged {
                     parentSize = it
                 }
-
+                // Here we modify how to input changes will transform the Column visually
                 .graphicsLayer {
                     translationX = offset.x
                     translationY = offset.y
                     scaleX = zoom
                     scaleY = zoom
                 }
-
-            //   .background(Color.Cyan)
-
-
         ) {
 
 
             map.forEach { row ->
-
                 Row(
                     Modifier
                         .wrapContentSize(unbounded = true)
@@ -262,7 +254,7 @@ internal suspend fun PointerInputScope.detectTransformGestures(
     }
 }
 
-@Preview
+@DefaultPreviews
 @Composable
 fun GameFieldPreview() = MinesweeperTheme {
     val viewModel = GameViewModel(RepositoryMock)

@@ -58,6 +58,7 @@ class AboutFragment : Fragment() {
                             "Julian Alber, Felix Huber, Maximilian Wankmiller\nProjekt an der DHBW Ravensburg",
                             painterResource(id = R.drawable.account_multiple_outline),
                         ) {
+                            // This opens up a given URL in the phone's default browser
                             startActivity(
                                 Intent(
                                     Intent.ACTION_VIEW,
@@ -70,6 +71,9 @@ class AboutFragment : Fragment() {
                             "Open Source-Lizenzen", "Generiert via play-services-oss-licenses",
                             painterResource(id = R.drawable.book_open_outline),
                         ) {
+
+                            // This opens up another activity. In this case the predefined Open
+                            // Source Licenses
                             startActivity(
                                 Intent(
                                     requireContext(),
@@ -122,18 +126,21 @@ class AboutFragment : Fragment() {
 
 }
 
+// Whenever you notice that you do the same layout over and over again, but with different data, it
+// is worth considering to transform it into its own components that you then call with the different data
 @Composable
 private fun AboutItem(
     headline: String,
     description: String,
     icon: Painter,
     onClick: () -> Unit
-) = ListItem(headlineContent = {
-    Text(
-        headline,
-        fontStyle = MaterialTheme.typography.headlineMedium.fontStyle,
-        fontSize = MaterialTheme.typography.headlineMedium.fontSize
-    )
+) = ListItem(
+    headlineContent = {
+        Text(
+            headline,
+            fontStyle = MaterialTheme.typography.headlineMedium.fontStyle,
+            fontSize = MaterialTheme.typography.headlineMedium.fontSize
+        )
 },
     modifier = Modifier.clickable {
         onClick()
@@ -154,7 +161,7 @@ private fun AboutItem(
 
 @DefaultPreviews
 @Composable
-private fun AboutItem() = MinesweeperTheme {
+private fun AboutItemPreview() = MinesweeperTheme {
 
     AboutItem(
         headline = "Headline",

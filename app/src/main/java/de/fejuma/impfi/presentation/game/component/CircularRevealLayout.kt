@@ -27,14 +27,15 @@ import kotlinx.coroutines.delay
 
 private const val REVEAL_DURATION: Long = 250L
 
+
 @Composable
 fun LaunchWithCircularReveal(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
 
+    // We want to draw a little circle whenever we enter a new game, so only once.
     val isFirstLaunch = rememberSaveable { mutableStateOf(true) }
-
     LaunchedEffect(key1 = true) {
         delay(REVEAL_DURATION * 2)
         isFirstLaunch.value = false
@@ -76,6 +77,7 @@ private fun CircularRevealLayout(
         label = "",
     )
 
+    // Here the inner circle and the bright stroke around it are created
     Spacer(
         modifier = modifier
             .fillMaxSize()

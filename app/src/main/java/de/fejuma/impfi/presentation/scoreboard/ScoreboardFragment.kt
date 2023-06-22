@@ -74,6 +74,10 @@ class ScoreboardFragment : Fragment() {
 
                         if (viewModel.highscores.filterNotNull().size == viewModel.highscores.size) {
                             ScoreboardContent(viewModel) {
+                                // Navigates on step back on the navigation stack, because we
+                                // replaced the top element in the stack with StartFragment when
+                                // navigating to this screen in case we come from GameScreen,
+                                // this will lead us back to Start
                                 findNavController().navigateUp()
                             }
                         } else {
@@ -104,9 +108,7 @@ fun ScoreboardContent(
 ) {
     Column(Modifier.fillMaxSize()) {
 
-
         val pages = difficulties.keys
-
 
         val pagerState = rememberPagerState(
             initialPage = 0,
@@ -127,7 +129,7 @@ fun ScoreboardContent(
             // Add tabs for all of our pages
             pages.forEachIndexed { index, title ->
                 Tab(
-                    text = { Text(difficulties[title]!!.name) },
+                    text = { Text(stringResource(id = difficulties[title]!!.nameResource)) },
                     selected = pagerState.currentPage == index,
                     onClick = {
                         scope.launch {
@@ -135,13 +137,8 @@ fun ScoreboardContent(
                         }
                     },
                 )
-
-            }/* set current index of tab / difficulties to show entries */
-
+            }
         }
-
-
-
 
         HorizontalPager(
             modifier = Modifier.fillMaxSize(),

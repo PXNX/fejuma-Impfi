@@ -18,6 +18,8 @@ class HapticManager(
 
 
     private val vibrator: Vibrator by lazy {
+        // Some Android features may change over time, so if that's the case you should implement
+        // the new one and maintain a fallback to previous versions.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager: VibratorManager =
                 (context.getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager)
@@ -30,10 +32,12 @@ class HapticManager(
         }
     }
 
-    fun pop() = vibrationNow(mills = 2, amplitude = 100)
+    // Utilities for the different vibration patterns we use
+    fun pop() = vibrationNow(mills = 2, amplitude = 80)
     fun shortVibrationNow() = vibrationNow(mills = 200, amplitude = 100)
     fun mediumVibrationNow() = vibrationNow(mills = 500, amplitude = 100)
 
+    // Simplifies vibration and doesn't vibrate if user requested not to.
     private fun vibrationNow(
         mills: Long,
         amplitude: Int,
@@ -41,7 +45,7 @@ class HapticManager(
 
         if (!isHapticFeedbackAllowed) return
 
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator.vibrate(VibrationEffect.createOneShot(mills, amplitude))
         } else {
             @Suppress("DEPRECATION")

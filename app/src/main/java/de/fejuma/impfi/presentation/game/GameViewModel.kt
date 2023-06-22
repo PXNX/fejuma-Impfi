@@ -122,18 +122,18 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    // Coroutine flow for tracking time during the game
+    // Coroutine flow for tracking time during the game. This runs off a background thread, to not
+    // make the UI freeze every second. We let it run until a set time limit, so the user can't
+    // play until eternity which may break the UI. If the game is paused we check every second if
+    // it is resumed.
     private suspend fun timeFlow(start: Int = 0) = flow {
         for (i in start..timeLimit) {
-
 
             while (!isTimerActive) {
                 delay(1_000)
             }
             emit(i)
             delay(1_000)
-
-
         }
 
         _statusHolder.status.value = Status.LOST
@@ -213,9 +213,8 @@ class GameViewModel @Inject constructor(
         timerJob = viewModelScope.launch {
             timeFlow()
         }
-
-
     }
+
     // Updates the risk factor for a given tile on the map based on the adjacent bombs
     private fun updateRiskFactor(column: Int, row: Int) {
         val tile = _map[row][column]

@@ -36,7 +36,6 @@ fun TopRow(
     // use Box to place items on top of each other
     Box(
         Modifier
-
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center
@@ -84,6 +83,7 @@ fun TopRow(
                 time()
             }
 
+            // To give enough room for the two icon buttons in the center
             Spacer(modifier = Modifier.weight(1f))
 
             Icon(

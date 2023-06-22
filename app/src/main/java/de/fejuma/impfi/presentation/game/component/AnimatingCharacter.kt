@@ -24,6 +24,9 @@ fun AnimatingCharacter(
     color: Color = MaterialTheme.colorScheme.primary,
 ) {
 
+    // Here we define how a composable should transition to another state visually: We want whatever
+    // character we get to move up and fade out while the new character should also move up - but
+    // starting from the bottom of this Composable - and fade in
     AnimatedContent(
         modifier = modifier,
         transitionSpec = {

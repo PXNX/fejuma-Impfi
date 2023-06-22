@@ -16,7 +16,8 @@ class StartViewModel @Inject constructor(
     private val repo: Repository
 ) : ViewModel() {
 
-    //volume for sound effects
+    // Using private setters here, so that the UI can only read data, but has to call functions in
+    // the viewModel to change it. Like this we can avoid messy state changes
     var sfxVolume by mutableFloatStateOf(repo.getSfxVolume().toFloat())
         private set
     var hapticsEnabled by mutableStateOf(repo.getHapticsEnabled())

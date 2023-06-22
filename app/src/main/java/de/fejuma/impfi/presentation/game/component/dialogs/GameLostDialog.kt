@@ -11,7 +11,6 @@ import de.fejuma.impfi.ui.MinesweeperTheme
 
 @Composable
 fun GameLostDialog(
-
     onConfirm: () -> Unit,
 ) {
 
@@ -20,11 +19,8 @@ fun GameLostDialog(
             onConfirm()
         },
         title = {
-            // three states: won, lost, new highsscroe?
-
             Text(text = stringResource(id = R.string.game_over))
         },
-
 
         confirmButton = {
             Button(

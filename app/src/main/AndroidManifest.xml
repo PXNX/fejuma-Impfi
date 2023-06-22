@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Is required if we want to vibrate -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -14,7 +15,9 @@
         android:roundIcon="@mipmap/applogo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Impfi"
-        tools:targetApi="31">
+        tools:targetApi="33">
+
+        <!-- screen Orientation should always be portrait for our app -->
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"

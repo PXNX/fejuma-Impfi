@@ -27,7 +27,7 @@ import de.fejuma.impfi.ui.MinesweeperTheme
 @Composable
 fun PreferenceSheetContent(viewModel: StartViewModel) {
 
-// Displaying the title for the "Schwierigkeit" section
+    // Displaying the title for the "Schwierigkeit" section
     Text(
         stringResource(id = R.string.difficulty),
         Modifier
@@ -37,7 +37,7 @@ fun PreferenceSheetContent(viewModel: StartViewModel) {
 
     Spacer(modifier = Modifier.height(16.dp))
 
-// Creating a row to display the difficulty cards
+    // Creating a row to display the difficulty cards
     Row(
         Modifier
             .padding(horizontal = 16.dp)
@@ -97,14 +97,12 @@ fun PreferenceSheetContent(viewModel: StartViewModel) {
         // Creating a switch to enable/disable haptic feedback
         Switch(
             checked = viewModel.hapticsEnabled,
-            onCheckedChange =
-            viewModel::changeHapticEnabled
+            onCheckedChange = viewModel::changeHapticEnabled
         )
     }
 
+    // Additional Space at the bottom makes it a bit nicer to interact with the Switch above
     Spacer(modifier = Modifier.height(64.dp))
-
-
 }
 
 @DefaultPreviews

@@ -4,6 +4,9 @@ import de.fejuma.impfi.model.DifficultyLevel
 import de.fejuma.impfi.model.Highscore
 import kotlinx.coroutines.flow.Flow
 
+// A repository serves as the single source of truth of an application, meaning that it integrates
+// the various data sources we use, so that we don't have to look in multiple places where our data
+// comes from
 interface Repository {
 
     fun setSfxVolume(volume: Int): Boolean
