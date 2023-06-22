@@ -35,7 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.presentation.game.GameViewModel
-import de.fejuma.impfi.presentation.game.game.Tile
+import de.fejuma.impfi.presentation.game.model.Tile
+import de.fejuma.impfi.ui.MinesweeperTheme
 import kotlin.math.PI
 import kotlin.math.abs
 
@@ -101,7 +102,6 @@ internal fun GameMap(
                 )
             }, contentAlignment = Alignment.Center
     ) {
-
 
 
         Column(
@@ -264,16 +264,13 @@ internal suspend fun PointerInputScope.detectTransformGestures(
 
 @Preview
 @Composable
-fun GameFieldPreview() {
+fun GameFieldPreview() = MinesweeperTheme {
     val viewModel = GameViewModel(RepositoryMock)
 
-    // val game = Game()
     viewModel.configure(20, 10, 20)
-
 
     val map by viewModel.gameStateHolder.map.collectAsState()
 
-    //   viewModel.startGame(10,20,10)
     GameMap(map,
         { column, row -> viewModel.primaryAction(column, row) },
         { column, row -> viewModel.secondaryAction(column, row) }

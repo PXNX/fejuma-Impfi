@@ -1,4 +1,4 @@
-package de.fejuma.impfi.presentation.game.game
+package de.fejuma.impfi.presentation.game.model
 
 sealed class Tile(
     open var coverMode: TileCoverMode,
@@ -24,4 +24,11 @@ sealed class Tile(
         override val y: Int,
 
         ) : Tile(coverMode, x, y)
+}
+
+enum class TileCoverMode {
+    COVERED,
+    FLAGGED,
+    QUESTIONED,
+    UNCOVERED,
 }

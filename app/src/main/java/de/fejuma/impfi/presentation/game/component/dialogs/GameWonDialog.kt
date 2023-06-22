@@ -88,7 +88,7 @@ fun GameWonDialog(
                 {
 
 
-                  onConfirm(Highscore(userName, difficulty, timePlayed, hintsUsed))
+                    onConfirm(Highscore(userName, difficulty, timePlayed, hintsUsed))
 
                 }
             ) {
@@ -107,7 +107,7 @@ fun GameWonDialog(
 
 @DefaultPreviews
 @Composable
-fun GameWonDialogPreview() = MinesweeperTheme {
+private fun GameWonDialogPreview() = MinesweeperTheme {
 
     GameWonDialog(69, DifficultyLevel.EASY, 1, {}, {})
 

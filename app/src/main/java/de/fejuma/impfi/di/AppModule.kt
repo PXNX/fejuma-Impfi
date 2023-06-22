@@ -14,7 +14,7 @@ import de.fejuma.impfi.data.repository.RepositoryImpl
 import javax.inject.Singleton
 
 
-//define, how long dependencies in this module will life (this case, as long as the application dose)
+//define, how long dependencies in this module will life (this case, as long as the application does)
 @InstallIn(SingletonComponent::class)
 @Module
 object AppModule {

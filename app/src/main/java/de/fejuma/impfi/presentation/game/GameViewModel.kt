@@ -10,11 +10,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.fejuma.impfi.data.repository.Repository
 import de.fejuma.impfi.difficulties
 import de.fejuma.impfi.model.Highscore
-import de.fejuma.impfi.presentation.game.game.GameStateHolder
-import de.fejuma.impfi.presentation.game.game.MutableGameStateHolder
-import de.fejuma.impfi.presentation.game.game.Status
-import de.fejuma.impfi.presentation.game.game.Tile
-import de.fejuma.impfi.presentation.game.game.TileCoverMode
+import de.fejuma.impfi.presentation.game.model.GameStateHolder
+import de.fejuma.impfi.presentation.game.model.MutableGameStateHolder
+import de.fejuma.impfi.presentation.game.model.Status
+import de.fejuma.impfi.presentation.game.model.Tile
+import de.fejuma.impfi.presentation.game.model.TileCoverMode
 import de.fejuma.impfi.timeLimit
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -43,7 +43,7 @@ class GameViewModel @Inject constructor(
         private set
 
     // Tracks the number of hints used
-    var hintsUsed by mutableStateOf(0)
+    var hintsUsed by mutableIntStateOf(0)
         private set
 
     // Records the time taken to complete the game

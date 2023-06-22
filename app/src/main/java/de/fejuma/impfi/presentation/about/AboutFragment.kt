@@ -12,12 +12,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
 import de.fejuma.impfi.databinding.FragmentAboutBinding
 import de.fejuma.impfi.ui.MinesweeperTheme
@@ -46,116 +49,60 @@ class AboutFragment : Fragment() {
             // is destroyed
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-
                 MinesweeperTheme {
 
-
                     Column {
-                        ListItem(headlineContent = {
-                            Text(
-                                stringResource(id = R.string.developers),
-                                fontStyle = MaterialTheme.typography.headlineMedium.fontStyle,
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+
+                        AboutItem(
+                            stringResource(id = R.string.developers),
+                            "Julian Alber, Felix Huber, Maximilian Wankmiller\nProjekt an der DHBW Ravensburg",
+                            painterResource(id = R.drawable.account_multiple_outline),
+                        ) {
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://www.ravensburg.dhbw.de/")
+                                )
                             )
-                        }, leadingContent = {
-                            Icon(
-                                painterResource(id = R.drawable.account_multiple_outline),
-                                contentDescription = ""
+                        }
+
+                        AboutItem(
+                            "Open Source-Lizenzen", "Generiert via play-services-oss-licenses",
+                            painterResource(id = R.drawable.book_open_outline),
+                        ) {
+                            startActivity(
+                                Intent(
+                                    requireContext(),
+                                    OssLicensesMenuActivity::class.java
+                                )
                             )
-                        }, supportingContent = {
-                            Text(
-                                text = "Julian Alber, Felix Huber, Maximilian Wankmiller",
-                                softWrap = true
+                        }
+
+                        AboutItem(
+                            "Icons",
+                            "materialdesignicons.com",
+                            painterResource(id = R.drawable.sticker_emoji),
+                        ) {
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://materialdesignicons.com/")
+                                )
                             )
-                        })
+                        }
 
-                        ListItem(headlineContent = {
-                            Text(
-                                "Open Source-Licences",
-                                fontStyle = MaterialTheme.typography.headlineMedium.fontStyle,
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
+                        AboutItem(
+                            "Sound Effekte",
+                            "freesound.org",
+                            painterResource(id = R.drawable.music_circle_outline),
+                        ) {
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://freesound.org/")
+                                )
                             )
-                        },
-                            modifier = Modifier.clickable {
-
-                                startActivity(
-                                    Intent(
-                                        requireContext(),
-                                        OssLicensesMenuActivity::class.java
-                                    )
-                                )
-                            },
-                            leadingContent = {
-                                Icon(
-                                    painterResource(id = R.drawable.book_open_outline),
-                                    contentDescription = ""
-                                )
-                            })
-
-
-                        ListItem(headlineContent = {
-                            Text(
-                                "Icons",
-                                fontStyle = MaterialTheme.typography.headlineMedium.fontStyle,
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
-                            )
-                        },
-                            modifier = Modifier.clickable {
-
-                                startActivity(
-                                    Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://materialdesignicons.com/")
-                                    )
-                                )
-                            },
-                            leadingContent = {
-                                Icon(
-                                    painterResource(id = R.drawable.sticker_emoji),
-                                    contentDescription = ""
-                                )
-                            },
-                            supportingContent = {
-                                Text(
-                                    text = "materialdesignicons.com",
-                                    softWrap = true
-                                )
-                            }
-
-                        )
-
-                        ListItem(headlineContent = {
-                            Text(
-                                "Sound Effekte",
-                                fontStyle = MaterialTheme.typography.headlineMedium.fontStyle,
-                                fontSize = MaterialTheme.typography.headlineMedium.fontSize
-                            )
-                        },
-                            modifier = Modifier.clickable {
-
-
-                                startActivity(
-                                    Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://freesound.org/")
-                                    )
-                                )
-                            },
-                            leadingContent = {
-                                Icon(
-                                    painterResource(id = R.drawable.music_circle_outline),
-                                    contentDescription = ""
-                                )
-                            },
-                            supportingContent = {
-
-                                Text(
-                                    text = "freesound.org"
-                                )
-
-                            }
-
-                        )
+                        }
 //Todo: sollen hier alle Interpreten der Soundeffekte einzeln genannt werden?
 
                     }
@@ -173,4 +120,47 @@ class AboutFragment : Fragment() {
     }
 
 
+}
+
+@Composable
+private fun AboutItem(
+    headline: String,
+    description: String,
+    icon: Painter,
+    onClick: () -> Unit
+) = ListItem(headlineContent = {
+    Text(
+        headline,
+        fontStyle = MaterialTheme.typography.headlineMedium.fontStyle,
+        fontSize = MaterialTheme.typography.headlineMedium.fontSize
+    )
+},
+    modifier = Modifier.clickable {
+        onClick()
+    },
+    leadingContent = {
+        Icon(
+            icon,
+            contentDescription = null
+        )
+    },
+    supportingContent = {
+        Text(
+            text = description,
+            softWrap = true
+        )
+    }
+)
+
+@DefaultPreviews
+@Composable
+private fun AboutItem() = MinesweeperTheme {
+
+    AboutItem(
+        headline = "Headline",
+        description = "Description",
+        icon = painterResource(id = R.drawable.music_circle_outline)
+    ) {
+
+    }
 }

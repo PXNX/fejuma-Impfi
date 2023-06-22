@@ -8,22 +8,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -42,12 +37,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
-import de.fejuma.impfi.data.repository.RepositoryMock
 import de.fejuma.impfi.databinding.FragmentStartBinding
-import de.fejuma.impfi.difficulties
-import de.fejuma.impfi.presentation.start.component.DifficultyCard
+import de.fejuma.impfi.presentation.start.component.PreferenceSheetContent
 import de.fejuma.impfi.ui.MinesweeperTheme
 
 
@@ -87,86 +79,6 @@ class StartFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-}
-
-
-@Composable
-private fun SheetContent(viewModel: StartViewModel) {
-
-
-    Text(
-        stringResource(id = R.string.difficulty),
-        Modifier
-            .padding(horizontal = 16.dp),
-        style = MaterialTheme.typography.titleMedium
-    )
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-
-    Row(
-        Modifier
-            .padding(horizontal = 16.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-
-
-        difficulties.forEach { (level, difficulty) ->
-            // Modifier.weight(1f,false)
-            DifficultyCard(
-                difficulty,
-                viewModel.difficulty == level
-            ) { viewModel.changeDifficulty(level) }
-        }
-
-
-    }
-
-    Spacer(modifier = Modifier.height(32.dp))
-
-    Text(
-        stringResource(id = R.string.effect_sound," • ${viewModel.sfxVolume.toInt()}%"),
-        Modifier
-            .padding(horizontal = 16.dp),
-        style = MaterialTheme.typography.titleMedium
-    )
-
-    Slider(
-        value = viewModel.sfxVolume,
-        onValueChange = viewModel::changeSfxVolume,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 14.dp),
-        valueRange = 0f..100f,
-        steps = 9
-    )
-
-    Spacer(modifier = Modifier.height(22.dp))
-
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            stringResource(id = R.string.haptic_feedback),
-
-            style = MaterialTheme.typography.titleMedium
-        )
-
-        Switch(
-            checked = viewModel.hapticsEnabled,
-            onCheckedChange =
-            viewModel::changeHapticEnabled
-        )
-    }
-
-    Spacer(modifier = Modifier.height(64.dp))
-
-
 }
 
 
@@ -259,20 +171,8 @@ private fun StartScreen(
         ModalBottomSheet(
             onDismissRequest = { openBottomSheet = false },
             sheetState = sheetState,
-
-            ) {
-            SheetContent(viewModel = viewModel)
+        ) {
+            PreferenceSheetContent(viewModel = viewModel)
         }
     }
-
-
 }
-
-@DefaultPreviews
-@Composable
-fun SheetPreview() = MinesweeperTheme {
-    Column {
-        SheetContent(viewModel = StartViewModel(RepositoryMock))
-    }
-}
-
