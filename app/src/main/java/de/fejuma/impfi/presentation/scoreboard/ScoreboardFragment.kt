@@ -130,19 +130,16 @@ fun ScoreboardContent(
                     text = { Text(difficulties[title]!!.name) },
                     selected = pagerState.currentPage == index,
                     onClick = {
-                        //   viewModel.getHighscores( pages[index])
-                        //      viewModel.getHighscores(pages[pagerState.currentPage])
                         scope.launch {
                             pagerState.scrollToPage(index)
                         }
-
-
                     },
                 )
 
             }/* set current index of tab / difficulties to show entries */
 
         }
+
 
 
 
