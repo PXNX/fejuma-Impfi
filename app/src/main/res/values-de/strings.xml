@@ -14,6 +14,8 @@
     <string name="about">Über die App</string>
     <string name="developers">Entwickler</string>
     <string name="effect_sound">Effektlautstärke</string>
+    <string name="used_hints">Benutzte Hinweise</string>
+    <string name="time_needed">Benötigte Zeit</string>
 
     <string name="game_abort_dialog">Spiel beenden?</string>
     <string name="confirm_button">Bestätigen</string>

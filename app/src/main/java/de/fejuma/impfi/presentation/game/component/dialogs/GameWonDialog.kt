@@ -65,12 +65,12 @@ fun GameWonDialog(
 
                 //todo: mit icon daneben aufpeppen, gewinnen muss sich geil anfühlen!
                 Text(
-                    "Benötigte Zeit: $timeFormat",
+                    stringResource(id = R.string.time_needed,": $timeFormat",),
                     Modifier.padding(start = 10.dp)
                 )
 
                 Text(
-                    "Benutzte Hinweise: $hintsUsed",
+                    stringResource(id = R.string.used_hints,  ": $hintsUsed"),
                     Modifier.padding(start = 10.dp)
                 )
 

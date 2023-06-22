@@ -13,6 +13,9 @@
     <string name="about">About the App</string>
     <string name="developers">Developers</string>
     <string name="effect_sound">Effect sounds</string>
+    <string name="used_hints">Used hints</string>
+    <string name="time_needed">Time needed</string>
+
 
     <string name="game_abort_dialog">Quit Game?</string>
     <string name="confirm_button">Confirm</string>
