@@ -66,8 +66,7 @@ fun HighscoreTable(
             // .background(Color.White)
         ) {
 
-            // Display the header row with icons for "username" and "time"
-            //TODO: navigate back
+
 
             // Display each score as a row in the table
             itemsIndexed(scores) { key, item ->
@@ -78,6 +77,7 @@ fun HighscoreTable(
             }
 
         }
+        //Empty Scoreboard Screen
     } ?: run {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {

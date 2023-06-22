@@ -31,45 +31,61 @@ class GameViewModel @Inject constructor(
     private val repo: Repository
 ) : ViewModel() {
 
-
+    // Holds the current difficulty level
     val difficultyLevel = repo.getDifficulty()
 
+    // Represents the sound effects volume
     var sfxVolume by mutableIntStateOf(repo.getSfxVolume())
         private set
+
+    // Indicates whether haptics are enabled or disabled
     var hapticsEnabled by mutableStateOf(repo.getHapticsEnabled())
         private set
 
+    // Tracks the number of hints used
     var hintsUsed by mutableStateOf(0)
         private set
 
+    // Records the time taken to complete the game
     var recordTime: Int? = null
 
+    // Indicates whether the surrender dialog is open
     var isSurrenderDialog by mutableStateOf(false)
         private set
+
+    // Indicates whether the game timer is active
     var isTimerActive by mutableStateOf(true)
 
 
-    //Gamelogic
+    // Random number generator for game logic
     private lateinit var random: Random
 
+    // Represents the game map
     private val _map: MutableList<MutableList<Tile>> = mutableListOf()
+
+    // Holds the current game state
     private val _statusHolder = MutableGameStateHolder(
         MutableStateFlow(0),
         MutableStateFlow(0),
         MutableStateFlow(emptyList()),
         MutableStateFlow(Status.NORMAL)
     )
+    // Exposes the game state holder to observe changes
     val gameStateHolder: GameStateHolder = _statusHolder
 
+    //Job for managing game timer
     private var timerJob: Job? = null
+
+    //Tracks if game is running
     private var isGameRunning = false
 
+    //Game config vars
     private var columns: Int = 0
     private var rows: Int = 0
     private var mines: Int = 0
     private var firstSelection = true
 
-
+    // Sets the visibility of the surrender dialog and pauses/resumes the game timer accordingly
     fun setOpenSurrenderDialog(isOpen: Boolean) {
         isTimerActive = !isOpen
         isSurrenderDialog = isOpen
@@ -78,9 +94,10 @@ class GameViewModel @Inject constructor(
     init {
         viewModelScope.launch {
 
-
+            // Fetch highscores for the current difficulty level
             val scores = repo.getHighscoresByDifficulty(repo.getDifficulty()).first()
 
+            // Set the record time if highscores are available
             if (scores.isNotEmpty()) {
                 recordTime = scores[0].seconds
             }
@@ -90,6 +107,7 @@ class GameViewModel @Inject constructor(
 
         val difficulty = difficulties[difficultyLevel]!!
 
+        // Configure the game based on the selected difficulty level
         configure(
             difficulty.width,
             difficulty.height,
@@ -97,13 +115,14 @@ class GameViewModel @Inject constructor(
         )
     }
 
+    // Saves the high score in the repository
     fun saveHighScore(highScore: Highscore) {
         viewModelScope.launch {
             repo.insertHighscore(highScore)
         }
     }
 
-
+    // Coroutine flow for tracking time during the game
     private suspend fun timeFlow(start: Int = 0) = flow {
         for (i in start..timeLimit) {
 
@@ -129,6 +148,8 @@ class GameViewModel @Inject constructor(
         rows: Int = 15,
         mines: Int = 30,
     ) {
+        // Configures the game with the specified number of columns, rows, and mines.
+        // If no values are provided, default values are used (columns = 15, rows = 15, mines = 30)
         this.columns = columns
         this.rows = rows
         this.mines = mines
@@ -138,7 +159,7 @@ class GameViewModel @Inject constructor(
         firstSelection = true
         isGameRunning = false
 
-
+        // Clears the map and initializes it with empty covered tiles.
         _map.clear()
         repeat(rows) { y ->
             val row = mutableListOf<Tile>()
@@ -147,6 +168,7 @@ class GameViewModel @Inject constructor(
             }
             _map.add(row)
         }
+        // Sets the initial values for mines remaining, game status, and time
         _statusHolder.minesRemaining.value = mines
         _statusHolder.status.value = Status.NORMAL
         _statusHolder.time.value = 0
@@ -155,6 +177,7 @@ class GameViewModel @Inject constructor(
 
 
     private fun initializeMap(initialColumn: Int, initialRow: Int) {
+        // Initializes the map by randomly placing the specified number of mines.
         repeat(mines) {
             var randomX: Int
             var randomY: Int
@@ -175,6 +198,7 @@ class GameViewModel @Inject constructor(
             }
         }
 
+        // Calculates and updates the risk factor for each tile on the map.
         repeat(rows) { row ->
             repeat(columns) { column ->
                 updateRiskFactor(column, row)
@@ -185,14 +209,14 @@ class GameViewModel @Inject constructor(
         isGameRunning = true
 
 
-
+        //start the game timer
         timerJob = viewModelScope.launch {
             timeFlow()
         }
 
 
     }
-
+    // Updates the risk factor for a given tile on the map based on the adjacent bombs
     private fun updateRiskFactor(column: Int, row: Int) {
         val tile = _map[row][column]
 
@@ -216,6 +240,7 @@ class GameViewModel @Inject constructor(
         }
     }
 
+    // Handles the game loss scenario.
     private fun loseGame(targetColumn: Int, targetRow: Int) {
         val userSelectionTile = _map[targetRow][targetColumn]
         isGameRunning = false
@@ -234,7 +259,7 @@ class GameViewModel @Inject constructor(
         _statusHolder.status.value = Status.LOST
 
     }
-
+    //handle game won scenario
     private fun winGame() {
         isGameRunning = false
         timerJob?.cancel()
@@ -243,12 +268,14 @@ class GameViewModel @Inject constructor(
     }
 
     private fun uncoverTile(column: Int, row: Int) {
+        // Get the current tile at the specified position
         val currentTile = _map.getOrNull(row)?.getOrNull(column) ?: return
-
+        // If the current tile is already uncovered, return
         if (currentTile.coverMode == TileCoverMode.UNCOVERED) {
             return
         }
 
+        // Uncover the tile based on its type
         _map[row][column] = when (currentTile) {
             is Tile.Bomb -> return
             is Tile.Adjacent -> Tile.Adjacent(
@@ -256,11 +283,12 @@ class GameViewModel @Inject constructor(
                 TileCoverMode.UNCOVERED,
                 column,
                 row
-            )
+            ) // If it's an adjacent tile, set its cover mode to uncovered
 
             is Tile.Empty -> Tile.Empty(TileCoverMode.UNCOVERED, column, row)
         }
 
+        // If the current tile is empty, recursively uncover its neighbors
         if (currentTile !is Tile.Empty) {
             return
         }
@@ -276,6 +304,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun uncoverHintTile() {
+        // Find the first covered safe tile with uncovered neighbors
         val hintedTile = _map.asSequence()
             .flatMap { it.asSequence() }
             .firstOrNull { inner ->
@@ -304,6 +333,7 @@ class GameViewModel @Inject constructor(
         //time penalty for using hint
         _statusHolder.time.value += 30
 
+        // Restart the timer job with the updated time value
         timerJob = viewModelScope.launch {
             timeFlow(_statusHolder.time.value)
         }
@@ -315,6 +345,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun primaryAction(column: Int, row: Int) {
+        // If it's the first selection, initialize the map with the specified column and row
         if (firstSelection) {
             initializeMap(column, row)
         }
@@ -322,12 +353,13 @@ class GameViewModel @Inject constructor(
         if (!isGameRunning) {
             return
         }
-
+        // Check the tile at the specified position
         when (_map[row][column]) {
-            is Tile.Bomb -> loseGame(column, row)
-            is Tile.Adjacent, is Tile.Empty -> uncoverTile(column, row)
+            is Tile.Bomb -> loseGame(column, row) // If it's a bomb, lose the game
+            is Tile.Adjacent, is Tile.Empty -> uncoverTile(column, row) // If it's an adjacent or empty tile, uncover it
         }
 
+        // Count the number of remaining covered tiles
         var remainingTiles = 0
         repeat(rows) { row ->
             repeat(columns) { column ->
@@ -339,6 +371,7 @@ class GameViewModel @Inject constructor(
 
         updateMapState()
 
+        // If all non-bomb tiles are uncovered, win the game
         if (remainingTiles == mines) {
             winGame()
         }
@@ -349,7 +382,9 @@ class GameViewModel @Inject constructor(
             return
         }
 
+        // Get the tile at the specified position
         val tile = _map[row][column]
+        // Determine the next cover mode based on the current cover mode
         val nextCoverMode = when (tile.coverMode) {
             TileCoverMode.COVERED -> TileCoverMode.FLAGGED
             TileCoverMode.FLAGGED -> TileCoverMode.QUESTIONED
@@ -366,6 +401,7 @@ class GameViewModel @Inject constructor(
             _statusHolder.minesRemaining.value++
         }
 
+        // Update the cover mode of the tile
         _map[row][column] = when (tile) {
             is Tile.Adjacent -> tile.copy(coverMode = nextCoverMode)
             is Tile.Bomb -> tile.copy(coverMode = nextCoverMode)
@@ -374,6 +410,7 @@ class GameViewModel @Inject constructor(
         updateMapState()
     }
 
+    // Update the map state in the status holder
     private fun updateMapState() {
         _statusHolder.map.value = _map.map {
             it.toList()

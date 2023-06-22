@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.fejuma.impfi.DefaultPreviews
 import de.fejuma.impfi.R
@@ -55,7 +56,7 @@ fun GameWonDialog(
         },
         title = {
             // three states: won, lost, new highsscroe?
-            Text(text = "Game Won!")
+            Text(text = stringResource(id = R.string.game_won))
         },
         text = {
 
@@ -79,7 +80,7 @@ fun GameWonDialog(
                     label = { Text(text = "Username") },
                     singleLine = true,
                     isError = userName.isBlank(),
-                    supportingText = { if (userName.isBlank()) Text(text = "Bitte Username angeben") })
+                    supportingText = { if (userName.isBlank()) Text(text = stringResource(id = R.string.support_text)) })
             }
         },
         confirmButton = {
@@ -91,14 +92,14 @@ fun GameWonDialog(
 
                 }
             ) {
-                Text("Score speichern")
+                Text(stringResource(id = R.string.save_button))
             }
         },
         dismissButton = {
             Button(
                 { onDismiss() })
             {
-                Text("Abbrechen")
+                Text(stringResource(id = R.string.dismiss_button))
             }
         }
     )

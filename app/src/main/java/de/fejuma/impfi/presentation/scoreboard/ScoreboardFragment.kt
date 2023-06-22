@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -144,6 +145,7 @@ class ScoreboardFragment : Fragment() {
 
                         }
 
+                        //Go-Back Button which navigates back to the Start-Screen
                         ExtendedFloatingActionButton(
                             onClick = { findNavController().navigateUp() },
 
@@ -154,7 +156,7 @@ class ScoreboardFragment : Fragment() {
                                 modifier = Modifier.size(ButtonDefaults.IconSize)
                             )
                             Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                            Text("Zur Startseite")
+                            Text(stringResource(id = R.string.back_button))
                         }
                     }
 

@@ -4,7 +4,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import de.fejuma.impfi.DefaultPreviews
+import de.fejuma.impfi.R
 import de.fejuma.impfi.ui.MinesweeperTheme
 
 @Composable
@@ -20,7 +22,7 @@ fun GameLostDialog(
         title = {
             // three states: won, lost, new highsscroe?
             //todo: some icon?
-            Text(text = "GAME OVER")
+            Text(text = stringResource(id = R.string.game_over))
         },
 
 
@@ -30,7 +32,7 @@ fun GameLostDialog(
                     onConfirm()
                 }
             ) {
-                Text("Weiter")
+                Text(stringResource(id = R.string.continue_button))
             }
         },
 

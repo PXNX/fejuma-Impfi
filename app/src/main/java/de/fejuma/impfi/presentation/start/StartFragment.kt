@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -94,7 +95,7 @@ private fun SheetContent(viewModel: StartViewModel) {
 
 
     Text(
-        "Schwierigkeit",
+        stringResource(id = R.string.difficulty),
         Modifier
             .padding(horizontal = 16.dp),
         style = MaterialTheme.typography.titleMedium
@@ -125,7 +126,7 @@ private fun SheetContent(viewModel: StartViewModel) {
     Spacer(modifier = Modifier.height(32.dp))
 
     Text(
-        "Effektlautstärke • ${viewModel.sfxVolume.toInt()}%",
+        stringResource(id = R.string.effect_sound," • ${viewModel.sfxVolume.toInt()}%"),
         Modifier
             .padding(horizontal = 16.dp),
         style = MaterialTheme.typography.titleMedium
@@ -151,7 +152,7 @@ private fun SheetContent(viewModel: StartViewModel) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            "Haptisches Feedback",
+            stringResource(id = R.string.haptic_feedback),
 
             style = MaterialTheme.typography.titleMedium
         )
@@ -210,7 +211,7 @@ private fun StartScreen(
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("Impfen")
+                Text(stringResource(id = R.string.vaccinate))
             }
 
             Button(onClick = {
@@ -234,7 +235,7 @@ private fun StartScreen(
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("Einstellungen")
+                Text(stringResource(id = R.string.settings))
             }
 
             Button(onClick = {
@@ -247,7 +248,7 @@ private fun StartScreen(
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("Über die App")
+                Text(stringResource(id = R.string.about))
             }
 
 

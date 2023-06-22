@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Impfi</string>
+
+    <string name="field_amount">Felder</string>
+    <string name="mines_amount">Viren</string>
+    <string name="highscore_user">Nutzername</string>
+    <string name="highscore_time">Benötigte Zeit</string>
+    <string name="no_score">Kein Highscore in der Schwierigkeit %1$s verfügbar.</string>
+    <string name="difficulty">Schwierigkeit</string>
+    <string name="haptic_feedback">Haptisches Feedback</string>
+    <string name="vaccinate">Impfen</string>
+    <string name="settings">Einstellungen</string>
+    <string name="about">Über die App</string>
+    <string name="developers">Entwickler</string>
+    <string name="effect_sound">Effektlautstärke</string>
+
+    <string name="game_abort_dialog">Spiel beenden?</string>
+    <string name="confirm_button">Bestätigen</string>
+    <string name="dismiss_button">Abbrechen</string>
+    <string name="continue_button">Weiter</string>
+    <string name="save_button">Score speichern</string>
+    <string name="back_button">Zur Startseite</string>
+
+    <string name="game_over">GAME OVER</string>
+    <string name="game_won">Spiel gewonnen!</string>
+
+    <string name="support_text">Bitte Usernamen angeben</string>
+</resources>

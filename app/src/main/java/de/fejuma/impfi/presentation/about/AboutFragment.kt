@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import de.fejuma.impfi.R
@@ -52,7 +53,7 @@ class AboutFragment : Fragment() {
                     Column {
                         ListItem(headlineContent = {
                             Text(
-                                "Entwickler",
+                                stringResource(id = R.string.developers),
                                 fontStyle = MaterialTheme.typography.headlineMedium.fontStyle,
                                 fontSize = MaterialTheme.typography.headlineMedium.fontSize
                             )
@@ -70,7 +71,7 @@ class AboutFragment : Fragment() {
 
                         ListItem(headlineContent = {
                             Text(
-                                "Open Source-Lizenzen",
+                                "Open Source-Licences",
                                 fontStyle = MaterialTheme.typography.headlineMedium.fontStyle,
                                 fontSize = MaterialTheme.typography.headlineMedium.fontSize
                             )
