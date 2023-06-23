@@ -24,16 +24,21 @@ android {
         versionCode 1
         versionName "1.0"
 
+        // Creates an Apk with Date in place, you may also rename it to feature a certain version
+        // or so.
         android.applicationVariants.configureEach { variant ->
             variant.outputs.configureEach {
                 outputFileName = "Impfi-${new Date().format("dd-MM-yyyy")}.apk"
             }
         }
 
+        // This drops trnslations other than English or German in our dependencies, thus reducing
+        // output file size.
         resourceConfigurations = ["en", "de"]
     }
 
     buildTypes {
+        // Creates a much smaller and performance optimized release apk
         release {
             minifyEnabled true
             shrinkResources true
@@ -48,61 +53,58 @@ android {
 
     buildFeatures {
         compose true
-        buildFeatures {
-            viewBinding true
-        }
         viewBinding true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.7"
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
     kotlinOptions {
         jvmTarget = '17'
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.7"
     }
 }
 
 dependencies {
+    // ktx-libraries contain some sugar for a more Kotlin way of things
     implementation 'androidx.core:core-ktx:1.10.1'
-    implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
-    implementation "androidx.emoji2:emoji2-views-helper:1.4.0-beta05"
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0-alpha10'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation "androidx.emoji2:emoji2-views-helper:1.3.0"
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.fragment:fragment-ktx:1.6.0'
 
+    // Lifecycle components needed for MVVM
     def lifecycle_version = '2.6.1'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
 
-    def compose_version = '1.5.0-beta01'
+    //Using the Beta-version of Compose here to get some performance improvements
+    def compose_version = '1.5.0-beta02'
     implementation "androidx.compose.foundation:foundation:$compose_version"
     implementation "androidx.compose.material:material-icons-core:$compose_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-util:$compose_version"
 
-    def material_version = '1.2.0-alpha02'
+    // Material3 Components
+    def material_version = '1.1.1'
     implementation "androidx.compose.material3:material3:$material_version"
     implementation "androidx.compose.material3:material3-window-size-class:$material_version"
 
-    def nav_version = '2.7.0-beta01'
+    // Jetpack Navigation
+    def nav_version = '2.6.0'
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.navigation:navigation-compose:$nav_version"
-    implementation "androidx.hilt:hilt-navigation-compose:1.1.0-alpha01"
-
-    // Feature module Support
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
     // Preferences
-    implementation "androidx.datastore:datastore-preferences:1.1.0-alpha04"
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     // Dagger Hilt DI
     def hilt_version = '2.46.1'
@@ -128,11 +130,6 @@ dependencies {
     // Unit Tests
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1'
-
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-
-    testImplementation "org.mockito:mockito-core:5.3.1"
-    testImplementation 'org.mockito.kotlin:mockito-kotlin:5.0.0'
-
 }

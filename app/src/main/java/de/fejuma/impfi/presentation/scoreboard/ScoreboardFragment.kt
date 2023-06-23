@@ -161,8 +161,8 @@ fun ScoreboardContent(
     }
 
     //Go-Back Button which navigates back to the Start-Screen
-                        ExtendedFloatingActionButton(
-                            onClick = onBack
+    ExtendedFloatingActionButton(
+        onClick = onBack
     ) {
         Icon(
             painterResource(id = R.drawable.arrow_left_thin_circle_outline),

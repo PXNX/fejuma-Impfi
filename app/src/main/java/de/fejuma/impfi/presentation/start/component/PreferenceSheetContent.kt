@@ -61,8 +61,10 @@ fun PreferenceSheetContent(viewModel: StartViewModel) {
 
     // Displaying the title for the "Effektlautstärke" section along with the current value
     Text(
-        stringResource(id = R.string.effect_sound, 
-        " • ${viewModel.sfxVolume.toInt()}%"),
+        stringResource(
+            id = R.string.effect_sound,
+            " • ${viewModel.sfxVolume.toInt()}%"
+        ),
         Modifier
             .padding(horizontal = 16.dp),
         style = MaterialTheme.typography.titleMedium
@@ -79,7 +81,7 @@ fun PreferenceSheetContent(viewModel: StartViewModel) {
     )
 
     Spacer(modifier = Modifier.height(22.dp))
-    
+
     // Creating a row to display the "Haptisches Feedback" option along with a switch
     Row(
         Modifier

@@ -98,9 +98,7 @@ internal fun GameMap(
             }, contentAlignment = Alignment.Center
     ) {
 
-
         Column(
-
             modifier = Modifier
                 // Has to be unbounded if we don't want to clip elements that are outside of the
                 // visible screen area, e.g. when zoomed in

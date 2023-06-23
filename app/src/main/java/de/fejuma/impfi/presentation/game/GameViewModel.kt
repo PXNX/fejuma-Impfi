@@ -70,6 +70,7 @@ class GameViewModel @Inject constructor(
         MutableStateFlow(emptyList()),
         MutableStateFlow(Status.NORMAL)
     )
+
     // Exposes the game state holder to observe changes
     val gameStateHolder: GameStateHolder = _statusHolder
 
@@ -258,6 +259,7 @@ class GameViewModel @Inject constructor(
         _statusHolder.status.value = Status.LOST
 
     }
+
     //handle game won scenario
     private fun winGame() {
         isGameRunning = false
@@ -355,7 +357,10 @@ class GameViewModel @Inject constructor(
         // Check the tile at the specified position
         when (_map[row][column]) {
             is Tile.Bomb -> loseGame(column, row) // If it's a bomb, lose the game
-            is Tile.Adjacent, is Tile.Empty -> uncoverTile(column, row) // If it's an adjacent or empty tile, uncover it
+            is Tile.Adjacent, is Tile.Empty -> uncoverTile(
+                column,
+                row
+            ) // If it's an adjacent or empty tile, uncover it
         }
 
         // Count the number of remaining covered tiles

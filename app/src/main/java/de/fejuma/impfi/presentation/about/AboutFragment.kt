@@ -29,7 +29,6 @@ import de.fejuma.impfi.ui.MinesweeperTheme
 class AboutFragment : Fragment() {
 
 
-
     private var _binding: FragmentAboutBinding? = null
 
     // This property is only valid between onCreateView and
@@ -141,7 +140,7 @@ private fun AboutItem(
             fontStyle = MaterialTheme.typography.headlineMedium.fontStyle,
             fontSize = MaterialTheme.typography.headlineMedium.fontSize
         )
-},
+    },
     modifier = Modifier.clickable {
         onClick()
     },

@@ -100,8 +100,7 @@ fun MineField(
                         .gradientBorder()
 
                 }
-            )
-        ,
+            ),
         contentAlignment = Alignment.Center
     ) {
 
