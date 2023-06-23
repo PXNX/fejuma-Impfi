@@ -101,8 +101,7 @@ class GameFragment : Fragment() {
 
                                         Row {
                                             val timeDifference = time - recTime
-                                            val recordTimeFormat =
-                                                formatTime(abs(timeDifference))
+                                            val recordTimeFormat = formatTime(abs(timeDifference))
                                             val color =
                                                 if (timeDifference >= 0) Color.Red else Color.Green
 
@@ -123,8 +122,6 @@ class GameFragment : Fragment() {
                                             }
                                         }
                                     }
-
-
                                 },
                                 minesRemaining,
                                 viewModel::setOpenSurrenderDialog, {
@@ -150,6 +147,7 @@ class GameFragment : Fragment() {
                                 map = map,
                                 onTileSelected = { x, y ->
                                     audio.pop()
+                                    haptics.pop()
                                     viewModel.primaryAction(x, y)
 
                                 },
@@ -163,18 +161,23 @@ class GameFragment : Fragment() {
 
                             when (gameState) {
                                 // Display the "GameWonDialog" when the game state is "WON"
-                                Status.WON -> GameWonDialog(time,
-                                    viewModel.difficultyLevel,
-                                    viewModel.hintsUsed,
-                                    {
-                                        viewModel.saveHighScore(it)
-                                        findNavController().navigate(R.id.action_game_scoreboard)
+                                Status.WON -> {
 
-                                    },
-                                    {
-                                        findNavController().navigate(R.id.action_game_start)
-                                    }
-                                )
+                                    audio.success()
+
+                                    GameWonDialog(time,
+                                        viewModel.difficultyLevel,
+                                        viewModel.hintsUsed,
+                                        {
+                                            viewModel.saveHighScore(it)
+                                            audio.affirmative()
+                                            findNavController().navigate(R.id.action_game_scoreboard)
+                                        },
+                                        {
+                                            findNavController().navigate(R.id.action_game_start)
+                                        }
+                                    )
+                                }
 
                                 // Display the "GameLostDialog" when the game state is "LOST"
                                 Status.LOST -> {

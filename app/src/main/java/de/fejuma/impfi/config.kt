@@ -8,8 +8,8 @@ import de.fejuma.impfi.model.DifficultyLevel
 val difficulties = mapOf(
     DifficultyLevel.EASY to Difficulty(
         R.string.difficulty_easy,
-        9,
-        6,
+        10,
+        10,
         10,
         Color.Green
     ),
@@ -17,7 +17,7 @@ val difficulties = mapOf(
         R.string.difficulty_medium,
         16,
         10,
-        35,
+        30,
         Color.Yellow
     ),
     DifficultyLevel.HARD to Difficulty(

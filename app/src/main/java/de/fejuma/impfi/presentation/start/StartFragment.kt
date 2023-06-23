@@ -121,41 +121,43 @@ private fun StartScreen(
                 painterResource(id = R.drawable.needle),
                 stringResource(id = R.string.vaccinate)
             )
+
+
+            // Button to navigate to the scoreboard screen
+            NavigationButton(
+                onClick = {
+                    navController.navigate(R.id.action_start_scoreboard)
+                }, painterResource(id = R.drawable.trophy_variant_outline),
+                "Highscores"
+            )
+
+            // Button to open the preference settings bottom sheet
+            NavigationButton(
+                onClick = {
+                    openBottomSheet = true
+                },
+                painterResource(id = R.drawable.cog_outline),
+                stringResource(id = R.string.settings)
+            )
+
+            // Button to navigate to the about screen
+            NavigationButton(
+                onClick = {
+                    navController.navigate(R.id.action_start_about)
+                }, painterResource(id = R.drawable.information_outline),
+                stringResource(id = R.string.about)
+            )
         }
 
-        // Button to navigate to the scoreboard screen
-        NavigationButton(
-            onClick = {
-                navController.navigate(R.id.action_start_scoreboard)
-            }, painterResource(id = R.drawable.trophy_variant_outline),
-            "Highscores"
-        )
 
-        // Button to open the preference settings bottom sheet
-        NavigationButton(
-            onClick = {
-                openBottomSheet = true
-            },
-            painterResource(id = R.drawable.cog_outline),
-            stringResource(id = R.string.settings)
-        )
-
-        // Button to navigate to the about screen
-        NavigationButton(
-            onClick = {
-                navController.navigate(R.id.action_start_about)
-            }, painterResource(id = R.drawable.information_outline),
-            stringResource(id = R.string.about)
-        )
-    }
-
-    // As this state changes, it may display the bottom sheet
-    if (openBottomSheet) {
-        ModalBottomSheet(
-            onDismissRequest = { openBottomSheet = false },
-            sheetState = sheetState,
-        ) {
-            PreferenceSheetContent(viewModel = viewModel)
+        // As this state changes, it may display the bottom sheet
+        if (openBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { openBottomSheet = false },
+                sheetState = sheetState,
+            ) {
+                PreferenceSheetContent(viewModel = viewModel)
+            }
         }
     }
 }

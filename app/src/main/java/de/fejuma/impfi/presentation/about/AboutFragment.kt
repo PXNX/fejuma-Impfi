@@ -55,7 +55,7 @@ class AboutFragment : Fragment() {
 
                         AboutItem(
                             stringResource(id = R.string.developers),
-                            "Julian Alber, Felix Huber, Maximilian Wankmiller\nProjekt an der DHBW Ravensburg",
+                            "Julian Alber, Felix Huber, Maximilian Wankmiller • Projekt an der DHBW Ravensburg",
                             painterResource(id = R.drawable.account_multiple_outline),
                         ) {
                             // This opens up a given URL in the phone's default browser
@@ -68,7 +68,7 @@ class AboutFragment : Fragment() {
                         }
 
                         AboutItem(
-                            "Open Source-Lizenzen", "Generiert via play-services-oss-licenses",
+                            "Open Source-Lizenzen", "Automatisch generiert",
                             painterResource(id = R.drawable.book_open_outline),
                         ) {
 
